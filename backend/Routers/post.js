@@ -262,7 +262,7 @@ router.post("/save-device-info", async (req, res) => {
   };
   try {
     if (req.body.userid && req.body.msgid === "") {
-      const deviceDetails = {};
+      let deviceDetails = {};
       try {
         deviceDetails = await deviceInfo.findOne({
           userid: req.body.userid,
@@ -293,35 +293,76 @@ router.post("/save-device-info", async (req, res) => {
           return res.status(400).send(resType);
         }
       } else {
-        if (deviceDetails.userAgent != req.body.userAgent) {
-          try {
-            await deviceInfo.updateMany({
-              browser: deviceDetails.browser + "_" + req.body.browser,
-              browser_version:
-                deviceDetails.browser_version + "_" + req.body.browser_version,
-              device: deviceDetails.device + "_" + req.body.device,
-              deviceType: deviceDetails.deviceType + "_" + req.body.deviceType,
-              orientation:
-                deviceDetails.orientation + "_" + req.body.orientation,
-              os: deviceDetails.os + "_" + req.body.os,
-              os_version: deviceDetails.os_version + "_" + req.body.os_version,
-              userAgent: deviceDetails.userAgent + "_" + req.body.userAgent,
-            });
-            resType["Message"] = "Successful";
+        if (deviceDetails.userAgent.includes("#")) {
+          let userAgent = deviceDetails.userAgent.slice(
+            0,
+            deviceDetails.userAgent.lastIndexOf("#")
+          );
+          if (userAgent != req.body.userAgent) {
+            try {
+              await deviceInfo.updateMany({
+                browser: deviceDetails.browser + "#" + req.body.browser,
+                browser_version:
+                  deviceDetails.browser_version +
+                  "#" +
+                  req.body.browser_version,
+                device: deviceDetails.device + "#" + req.body.device,
+                deviceType:
+                  deviceDetails.deviceType + "#" + req.body.deviceType,
+                orientation:
+                  deviceDetails.orientation + "#" + req.body.orientation,
+                os: deviceDetails.os + "#" + req.body.os,
+                os_version:
+                  deviceDetails.os_version + "#" + req.body.os_version,
+                userAgent: deviceDetails.userAgent + "#" + req.body.userAgent,
+              });
+              resType["Message"] = "Successful";
+              resType["Status"] = true;
+              return res.status(200).send(resType);
+            } catch (err) {
+              resType["Message"] = err.message;
+              return res.status(400).send(resType);
+            }
+          } else {
+            resType["Message"] = "Device details is already Exist";
             resType["Status"] = true;
             return res.status(200).send(resType);
-          } catch (err) {
-            resType["Message"] = err.message;
-            return res.status(400).send(resType);
           }
         } else {
-          resType["Message"] = "Device details is already Exist";
-          resType["Status"] = true;
-          return res.status(200).send(resType);
+          if (deviceDetails.userAgent != req.body.userAgent) {
+            try {
+              await deviceInfo.updateMany({
+                browser: deviceDetails.browser + "#" + req.body.browser,
+                browser_version:
+                  deviceDetails.browser_version +
+                  "#" +
+                  req.body.browser_version,
+                device: deviceDetails.device + "#" + req.body.device,
+                deviceType:
+                  deviceDetails.deviceType + "#" + req.body.deviceType,
+                orientation:
+                  deviceDetails.orientation + "#" + req.body.orientation,
+                os: deviceDetails.os + "#" + req.body.os,
+                os_version:
+                  deviceDetails.os_version + "#" + req.body.os_version,
+                userAgent: deviceDetails.userAgent + "#" + req.body.userAgent,
+              });
+              resType["Message"] = "Successful";
+              resType["Status"] = true;
+              return res.status(200).send(resType);
+            } catch (err) {
+              resType["Message"] = err.message;
+              return res.status(400).send(resType);
+            }
+          } else {
+            resType["Message"] = "Device details is already Exist";
+            resType["Status"] = true;
+            return res.status(200).send(resType);
+          }
         }
       }
     } else if (req.body.userid === "" && req.body.msgid) {
-      const deviceDetails = {};
+      let deviceDetails = {};
       try {
         deviceDetails = await deviceInfo.findOne({ msgid: req.body.msgid });
       } catch (err) {
@@ -350,31 +391,24 @@ router.post("/save-device-info", async (req, res) => {
           return res.status(400).send(resType);
         }
       } else {
-        if (deviceDetails.userAgent != req.body.userAgent) {
-          try {
-            await deviceInfo.updateMany({
-              browser: deviceDetails.browser + "_" + req.body.browser,
-              browser_version:
-                deviceDetails.browser_version + "_" + req.body.browser_version,
-              device: deviceDetails.device + "_" + req.body.device,
-              deviceType: deviceDetails.deviceType + "_" + req.body.deviceType,
-              orientation:
-                deviceDetails.orientation + "_" + req.body.orientation,
-              os: deviceDetails.os + "_" + req.body.os,
-              os_version: deviceDetails.os_version + "_" + req.body.os_version,
-              userAgent: deviceDetails.userAgent + "_" + req.body.userAgent,
-            });
-            resType["Message"] = "Successful";
-            resType["Status"] = true;
-            return res.status(200).send(resType);
-          } catch (err) {
-            resType["Message"] = err.message;
-            return res.status(400).send(resType);
-          }
-        } else {
-          resType["Message"] = "Device details is already Exist";
+        try {
+          await deviceInfo.updateMany({
+            browser: deviceDetails.browser + "#" + req.body.browser,
+            browser_version:
+              deviceDetails.browser_version + "#" + req.body.browser_version,
+            device: deviceDetails.device + "#" + req.body.device,
+            deviceType: deviceDetails.deviceType + "#" + req.body.deviceType,
+            orientation: deviceDetails.orientation + "#" + req.body.orientation,
+            os: deviceDetails.os + "#" + req.body.os,
+            os_version: deviceDetails.os_version + "#" + req.body.os_version,
+            userAgent: deviceDetails.userAgent + "#" + req.body.userAgent,
+          });
+          resType["Message"] = "Successful";
           resType["Status"] = true;
           return res.status(200).send(resType);
+        } catch (err) {
+          resType["Message"] = err.message;
+          return res.status(400).send(resType);
         }
       }
     }
