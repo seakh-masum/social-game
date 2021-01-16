@@ -22,26 +22,78 @@ router.post("/savedetails", async (req, res) => {
     return res.status(400).send(resType);
   }
   try {
-    const prevData = await userDetails.findOne({ username: req.body.username });
+    let checkname = req.body.username.split(" ").join("");
+    const prevData = await userDetails.findOne({ username: checkname });
     if (prevData) {
-      resType["Message"] = "Username is already exist";
-      return res.status(400).send(resType);
-    } else {
+      let username = "";
+      if (req.body.username.includes(" ")) {
+        username =
+          req.body.username.split(" ").join("") +
+          Math.random().toString(36).substring(7);
+      } else {
+        username = req.body.username + Math.random().toString(36).substring(7);
+      }
+      const afterUserNameSet = await userDetails.findOne({
+        username: username,
+      });
+      if (afterUserNameSet) {
+        let username = "";
+        if (req.body.username.includes(" ")) {
+          username =
+            req.body.username.split(" ").join("") +
+            Math.random().toString(36).substring(7);
+        } else {
+          username =
+            req.body.username + Math.random().toString(36).substring(7);
+        }
+      }
       const token = jwt.sign(
-        { _id: req.body.username, role: req.body.role },
+        { _id: username, role: req.body.role },
         process.env.TOKEN_SECRET,
         {
           issuer: "sayonchakraborty1998@gmail.com",
-          audience: req.body.username,
+          audience: username,
         }
       );
       const saveDetails = new userDetails({
-        username: req.body.username,
+        username: username,
+        displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link:
-          "https://anonymous-ssr.herokuapp.com/sender/" +
-          btoa(req.body.username),
+        link: "https://socail-game.web.app/" + btoa(username),
+        longitude: "",
+        latitude: "",
+      });
+      try {
+        resType["Message"] = "Successful";
+        resType["Status"] = true;
+        resType["Data"] = [await saveDetails.save()];
+        return res.status(200).send(resType);
+      } catch (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+    } else {
+      let username = "";
+      if (req.body.username.includes(" ")) {
+        username = req.body.username.split(" ").join("");
+      } else {
+        username = req.body.username;
+      }
+      const token = jwt.sign(
+        { _id: username, role: req.body.role },
+        process.env.TOKEN_SECRET,
+        {
+          issuer: "sayonchakraborty1998@gmail.com",
+          audience: username,
+        }
+      );
+      const saveDetails = new userDetails({
+        username: username,
+        displayname: req.body.username,
+        role: req.body.role,
+        token: token,
+        link: "https://socail-game.web.app/" + btoa(username),
         longitude: "",
         latitude: "",
       });
