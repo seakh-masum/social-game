@@ -51,7 +51,7 @@ router.post("/savedetails", async (req, res) => {
         { _id: username, role: req.body.role },
         process.env.TOKEN_SECRET,
         {
-          issuer: "sayonchakraborty1998@gmail.com",
+          issuer: "unimansyst@gmail.com",
           audience: username,
         }
       );
