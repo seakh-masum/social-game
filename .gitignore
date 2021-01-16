@@ -3,6 +3,7 @@
 # env files
 backend/.env
 backend/credentials.json
+backend/.git
 
 # compiled output
 frontend/dist
