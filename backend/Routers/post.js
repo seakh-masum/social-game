@@ -37,7 +37,7 @@ router.post("/savedetails", async (req, res) => {
         username: username,
       });
       if (afterUserNameSet) {
-        let username = "";
+        // let username = "";
         if (req.body.username.includes(" ")) {
           username =
             req.body.username.split(" ").join("") +
