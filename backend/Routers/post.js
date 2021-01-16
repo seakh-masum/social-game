@@ -126,32 +126,45 @@ router.post(
       resType["Message"] = "User's Id is Required";
       return res.status(400).send(resType);
     }
-    const Data = await messages.findOne({ userid: req.body.userid });
-    // console.log(Data);
-    if (Data) {
-      await messages.findOneAndUpdate(
-        { _id: Data._id },
-        { message: Data.message + "_" + req.body.message + "|" + new Date() },
-        async (err, params) => {
-          if (err) {
-            resType["Message"] = err.message;
-            return res.status(400).send(resType);
-          }
+    try {
+      const userData = await userDetails.findOne({ _id: req.body.userid });
+      if (userData) {
+        const Data = await messages.findOne({ userid: req.body.userid });
+        // console.log(Data);
+        if (Data) {
+          await messages.findOneAndUpdate(
+            { _id: Data._id },
+            {
+              message: Data.message + "_" + req.body.message + "|" + new Date(),
+            },
+            async (err, params) => {
+              if (err) {
+                resType["Message"] = err.message;
+                return res.status(400).send(resType);
+              }
+              resType["Message"] = "Successfully Message Sent";
+              resType["Status"] = true;
+              resType["Data"] = [params._id];
+              return res.status(200).send(resType);
+            }
+          );
+        } else {
+          const messageDetails = new messages({
+            userid: req.body.userid,
+            message: req.body.message + "|" + new Date(),
+          });
           resType["Message"] = "Successfully Message Sent";
           resType["Status"] = true;
-          resType["Data"] = [params._id];
+          resType["Data"] = [(await messageDetails.save())._id];
           return res.status(200).send(resType);
         }
-      );
-    } else {
-      const messageDetails = new messages({
-        userid: req.body.userid,
-        message: req.body.message + "|" + new Date(),
-      });
-      resType["Message"] = "Successfully Message Sent";
-      resType["Status"] = true;
-      resType["Data"] = [(await messageDetails.save())._id];
-      return res.status(200).send(resType);
+      } else {
+        resType["Message"] = "Username is not Valid";
+        return res.status(400).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
     }
   }
 );
