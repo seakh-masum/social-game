@@ -95,6 +95,7 @@ router.post("/savedetails", async (req, res) => {
         role: req.body.role,
         token: token,
         link: "/secret-message/view/" + btoa(username),
+        encyptduser: btoa(username),
         longitude: "",
         latitude: "",
       });
