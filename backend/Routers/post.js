@@ -60,7 +60,8 @@ router.post("/savedetails", async (req, res) => {
         displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link: "https://socail-game.web.app/" + btoa(username),
+        link:
+          "https://socail-game.web.app/secret-message/view/" + btoa(username),
         longitude: "",
         latitude: "",
       });
