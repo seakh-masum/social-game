@@ -1,0 +1,38 @@
+.mat-card.background {
+  min-height: 100vh;
+}
+
+.mat-form-field {
+  border-radius: 1.25rem;
+  width: 100%;
+  
+  &-appearance-fill {
+    border-radius: 1.25rem !important;
+  }
+  &-flex {
+    padding: 0 1rem !important;
+    background-color: #F7F7FA !important;
+    border-radius: 1.25rem !important;
+    color: #727897;
+    transition: all 0.3s !important;
+    align-items: center !important;
+  }
+  &-infix {
+    border-top: 0 !important;
+    padding: 1em 0 !important;
+  }
+  &-wrapper {
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+  }
+  &-underline {
+    display: none;
+  }
+  &-prefix {
+    margin-right: .5rem;
+  }
+}
+
+.mat-expansion-panel-body {
+  padding: 0 10px 10px !important;
+}

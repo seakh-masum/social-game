@@ -1,0 +1,15 @@
+.box {
+  color: white;
+  img {
+    max-width: 40px;
+    max-height: 40px;
+  }
+}
+
+.msg-list {
+  background: #CAC1D6;
+}
+
+.msg-list + .msg-list {
+  margin-top: 10px;
+}

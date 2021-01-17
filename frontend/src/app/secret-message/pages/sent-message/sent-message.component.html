@@ -1,0 +1,15 @@
+<mat-card class="background">
+  <mat-card-header>
+    <mat-card-title>Send Your Secret Message</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form fxLayout="column" fxLayoutGap="25px">
+      <mat-form-field appearance="outline">
+        <textarea matInput placeholder="Type your messages" [(ngModel)]="msg" [ngModelOptions]="{standalone: true}" #name></textarea>
+        <mat-hint>your username is anynomous to him/her</mat-hint>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" (click)="sentMessage(name.value)">Send Message</button>
+    </form>
+    <p>Let's make this games for you <a>here</a></p>
+  </mat-card-content>
+</mat-card>

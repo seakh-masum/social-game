@@ -6,10 +6,12 @@ backend/credentials.json
 
 # compiled output
 frontend/dist
-/tmp
-/out-tsc
+frontend/tmp
+frontend/out-tsc
+frontend/.firebase
+# frontend/src/environments
 # Only exists if Bazel was run
-/bazel-out
+frontend/bazel-out
 
 # dependencies
 frontend/node_modules

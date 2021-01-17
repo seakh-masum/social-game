@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "socail-game"
+  },
+  "targets": {
+    "socail-game": {
+      "hosting": {
+        "social-game": [
+          "socail-game"
+        ]
+      }
+    }
+  }
+}
