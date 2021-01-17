@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userpin: {
+    type: String,
+    required: true,
+  },
   link: {
     type: String,
     required: true,

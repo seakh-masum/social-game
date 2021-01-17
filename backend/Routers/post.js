@@ -60,8 +60,9 @@ router.post("/savedetails", async (req, res) => {
         displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link: "/secret-message/view/" + btoa(username),
+        link: "secret-message/view/" + btoa(username),
         encyptduser: btoa(username),
+        userpin: (Math.random() * 1000000).toFixed(),
         longitude: "",
         latitude: "",
       });
@@ -96,6 +97,7 @@ router.post("/savedetails", async (req, res) => {
         token: token,
         link: "/secret-message/view/" + btoa(username),
         encyptduser: btoa(username),
+        userpin: (Math.random() * 1000000).toFixed(),
         longitude: "",
         latitude: "",
       });
@@ -181,6 +183,10 @@ router.post("/user-login", async (req, res) => {
     resType["Message"] = "Username is Required";
     return res.status(400).send(resType);
   }
+  if (!req.body.userpin) {
+    resType["Message"] = "User's pin is Required";
+    return res.status(400).send(resType);
+  }
   if (req.body.role == "user") {
     try {
       const userData = await userDetails.findOne({
@@ -190,19 +196,43 @@ router.post("/user-login", async (req, res) => {
         resType["Message"] = "Username is not registered";
         return res.status(400).send(resType);
       }
-      try {
+      if (
+        userData.userpin &&
+        req.body.userpin &&
+        userData.userpin != req.body.userpin
+      ) {
+        resType["Message"] = "Your pin is Incorrect";
+        return res.status(400).send(resType);
+      } else if (
+        userData.userpin &&
+        req.body.userpin &&
+        userData.userpin === req.body.userpin
+      ) {
         resType["Status"] = true;
         resType["Message"] = "Successful";
-        resType["Data"] = [userData];
+        resType["Data"] = {
+          _id: userData._id,
+          username: userData.username,
+          displayname: userData.displayname,
+          token: userData.token,
+          link: userData.link,
+          encyptduser: userData.encyptduser,
+          longitude: userData.longitude,
+          latitude: userData.latitude,
+          date: userData.date,
+        };
         return res.status(200).send(resType);
-      } catch (err) {
-        resType["Message"] = err.message;
+      } else {
+        resType["Message"] = "User's pin is not set in our Database";
         return res.status(400).send(resType);
       }
     } catch (err) {
       resType["Message"] = err.message;
       return res.status(400).send(resType);
     }
+  } else {
+    resType["Message"] = "User's role is not set properly";
+    return res.status(400).send(resType);
   }
 });
 // User Longitude & Latitude
