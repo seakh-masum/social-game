@@ -1,0 +1,47 @@
+<mat-card class="background">
+  <mat-card-header>
+    <mat-card-title>Share this link with your friend</mat-card-title>
+  </mat-card-header>
+  <mat-card-content fxLayout="column">
+    <form fxLayout="column" fxLayoutGap="10px">
+      <div fxLayout="row" fxLayoutGap="10px">
+        <div fxFlex="80" fxLayoutAlign="start center">
+          <mat-form-field appearance="fill">
+            <input matInput placeholder="Enter your name" [(ngModel)]="url" [ngModelOptions]="{standalone: true}" #name>
+            <mat-icon matSuffix [cdkCopyToClipboard]="url">content_copy</mat-icon>
+          </mat-form-field>
+        </div>
+        <div fxFlex="20" fxLayoutAlign="end center">
+          <button mat-raised-button color="primary" type="submit" (click)="sendToDevice(name.value)">
+            <mat-icon>reply</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-card *ngFor="let item of sharingOptions" [style.backgroundColor]="item.color" class='box' fxFlex=50 fxLayout="column" fxLayoutGap="10px">
+          <div fxLayoutAlign="center center">
+            <img src="assets/img/{{item.icon}}" />
+          </div>
+          <mat-label fxLayoutAlign="center center">{{item.name}}</mat-label>
+        </mat-card>
+      </div>
+
+      <div>
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+              Show your anynomous messages
+            </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card *ngFor="let item of messages" class="msg-list">
+              <h3>{{item.message}}</h3>
+              <h5>{{item.date | date}}</h5>
+            </mat-card>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>
