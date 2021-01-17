@@ -5,11 +5,23 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  displayname: {
+    type: String,
+    required: true,
+  },
   role: {
     type: String,
     required: true,
   },
   token: {
+    type: String,
+    required: true,
+  },
+  encyptduser: {
+    type: String,
+    required: true,
+  },
+  userpin: {
     type: String,
     required: true,
   },
