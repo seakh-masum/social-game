@@ -13,6 +13,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+// import { NgSocialLinksModule } from 'ng-social-links';
 
 @NgModule({
   declarations: [],
@@ -32,6 +33,7 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     MatDividerModule,
     MatExpansionModule,
     ClipboardModule,
+    // NgSocialLinksModule.forRoot(),    
   ],
   exports: [
     HttpClientModule,
@@ -48,6 +50,7 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     MatDividerModule,
     MatExpansionModule,
     ClipboardModule,
+    // NgSocialLinksModule,
   ]
 })
 export class SharedModule { }

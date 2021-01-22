@@ -6,6 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class GlobalService {
 
+  userId: any = '';
+
   constructor(
     private _snackbar: MatSnackBar,
   ) { }
