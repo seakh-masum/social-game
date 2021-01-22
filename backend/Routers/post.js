@@ -95,7 +95,7 @@ router.post("/savedetails", async (req, res) => {
         displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link: "/secret-message/view/" + btoa(username),
+        link: "secret-message/view/" + btoa(username),
         encyptduser: btoa(username),
         userpin: (Math.random() * 1000000).toFixed(),
         longitude: "",
@@ -210,17 +210,19 @@ router.post("/user-login", async (req, res) => {
       ) {
         resType["Status"] = true;
         resType["Message"] = "Successful";
-        resType["Data"] = {
-          _id: userData._id,
-          username: userData.username,
-          displayname: userData.displayname,
-          token: userData.token,
-          link: userData.link,
-          encyptduser: userData.encyptduser,
-          longitude: userData.longitude,
-          latitude: userData.latitude,
-          date: userData.date,
-        };
+        resType["Data"] = [
+          {
+            _id: userData._id,
+            username: userData.username,
+            displayname: userData.displayname,
+            token: userData.token,
+            link: userData.link,
+            encyptduser: userData.encyptduser,
+            longitude: userData.longitude,
+            latitude: userData.latitude,
+            date: userData.date,
+          },
+        ];
         return res.status(200).send(resType);
       } else {
         resType["Message"] = "User's pin is not set in our Database";
