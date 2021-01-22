@@ -1,5 +1,9 @@
 .box {
   color: white;
+  text-decoration: none;
+  padding: 16px;
+  border-radius: 16px;
+
   img {
     max-width: 40px;
     max-height: 40px;
@@ -7,9 +11,32 @@
 }
 
 .msg-list {
-  background: #CAC1D6;
+  background: #C5C9D7;
+  color: #0B2257;
+  h5 {
+    color: #8990AD;
+  }
+}
+
+.mat-flat-button {
+  border-radius: 20px;
+  height: 40px;
 }
 
 .msg-list + .msg-list {
   margin-top: 10px;
+}
+
+.floating-btn {
+  button {
+    z-index: 99;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+.no-msg {
+  padding: 20px;
+  text-align: center;
 }

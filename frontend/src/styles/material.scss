@@ -1,10 +1,22 @@
-.mat-card.background {
-  min-height: 100vh;
+@import 'variables.scss';
+
+.mat-card {
+  border-radius: 16px !important;
+  box-shadow: $shadow;
+  &.background {
+    min-height: 100vh;
+    background: transparent;
+    box-shadow: none !important;
+  }
 }
 
 .mat-form-field {
   border-radius: 1.25rem;
   width: 100%;
+
+  mat-hint {
+    margin-top: 15px;
+  }
   
   &-appearance-fill {
     border-radius: 1.25rem !important;
@@ -33,6 +45,18 @@
   }
 }
 
-.mat-expansion-panel-body {
-  padding: 0 10px 10px !important;
+.mat-expansion-panel {
+  border-radius: 16px !important;
+  box-shadow: $shadow;
+  &-body {
+    padding: 0 10px 10px !important;
+  }
+}
+
+.mat-raised-button, button:disabled {
+  height: 45px;
+  border-radius: 30px !important;
+  font-size: 16px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
 }
