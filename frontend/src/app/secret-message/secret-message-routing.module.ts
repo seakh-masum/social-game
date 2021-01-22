@@ -5,13 +5,24 @@ import { SentMessageComponent } from './pages/sent-message/sent-message.componen
 import { ViewMessageComponent } from './pages/view-message/view-message.component';
 
 const routes: Routes = [
-  { path: 'view/:id', component: ViewMessageComponent},
-  { path: 'sent', component: SentMessageComponent},
-  { path: 'create', component: CreateProfileComponent},
+  {
+    path: '',
+    redirectTo: 'create',
+    pathMatch: 'full',
+  },
+  {
+    path: 'view/:id',
+    component: ViewMessageComponent,
+  },
+  { path: 'sent/:id', component: SentMessageComponent },
+  {
+    path: 'create',
+    component: CreateProfileComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class SecretMessageRoutingModule { }
+export class SecretMessageRoutingModule {}

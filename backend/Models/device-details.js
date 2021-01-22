@@ -11,6 +11,7 @@ const deviceDetailsSchema = new mongoose.Schema({
   os: { type: String },
   os_version: { type: String },
   userAgent: { type: String },
+  ip: { type: String },
   date: {
     type: Date,
     default: Date.now,

@@ -67,7 +67,9 @@ router.post("/savedetails", async (req, res) => {
         latitude: "",
       });
       try {
-        resType["Message"] = "Successful";
+        resType[
+          "Message"
+        ] = `${saveDetails.displayname} is Register Successfully`;
         resType["Status"] = true;
         resType["Data"] = [await saveDetails.save()];
         return res.status(200).send(resType);
@@ -102,7 +104,9 @@ router.post("/savedetails", async (req, res) => {
         latitude: "",
       });
       try {
-        resType["Message"] = "Successful";
+        resType[
+          "Message"
+        ] = `${saveDetails.displayname} is Register Successfully`;
         resType["Status"] = true;
         resType["Data"] = [await saveDetails.save()];
         return res.status(200).send(resType);
@@ -140,6 +144,22 @@ router.post(
             { _id: Data._id },
             {
               message: Data.message + "_" + req.body.message + "|" + new Date(),
+              longitude: req.body.longitude
+                ? Data.longitude + "#" + req.body.longitude
+                : Data.longitude + "#" + "No Data Found",
+              latitude: req.body.latitude
+                ? Data.latitude + "#" + req.body.latitude
+                : Data.latitude + "#" + "No Data Found",
+              browser: Data.browser + "#" + req.body.browser,
+              browser_version:
+                Data.browser_version + "#" + req.body.browser_version,
+              device: Data.device + "#" + req.body.device,
+              deviceType: Data.deviceType + "#" + req.body.deviceType,
+              orientation: Data.orientation + "#" + req.body.orientation,
+              os: Data.os + "#" + req.body.os,
+              os_version: Data.os_version + "#" + req.body.os_version,
+              userAgent: Data.userAgent + "#" + req.body.userAgent,
+              ip: Data.ip + "#" + req.body.ip,
             },
             async (err, params) => {
               if (err) {
@@ -156,6 +176,19 @@ router.post(
           const messageDetails = new messages({
             userid: req.body.userid,
             message: req.body.message + "|" + new Date(),
+            longitude: req.body.longitude
+              ? req.body.longitude
+              : "No Data Found",
+            latitude: req.body.latitude ? req.body.latitude : "No Data Found",
+            browser: req.body.browser,
+            browser_version: req.body.browser_version,
+            device: req.body.device,
+            deviceType: req.body.deviceType,
+            orientation: req.body.orientation,
+            os: req.body.os,
+            os_version: req.body.os_version,
+            userAgent: req.body.userAgent,
+            ip: req.body.ip,
           });
           resType["Message"] = "Successfully Message Sent";
           resType["Status"] = true;
@@ -209,7 +242,7 @@ router.post("/user-login", async (req, res) => {
         userData.userpin === req.body.userpin
       ) {
         resType["Status"] = true;
-        resType["Message"] = "Successful";
+        resType["Message"] = `${userData.displayname} is Successfully login`;
         resType["Data"] = [
           {
             _id: userData._id,
@@ -295,6 +328,7 @@ router.post("/save-device-info", async (req, res) => {
             os: req.body.os,
             os_version: req.body.os_version,
             userAgent: req.body.userAgent,
+            ip:req.body.ip
           });
           resType["Message"] = "Successful";
           resType["Status"] = true;
@@ -326,6 +360,7 @@ router.post("/save-device-info", async (req, res) => {
                 os_version:
                   deviceDetails.os_version + "#" + req.body.os_version,
                 userAgent: deviceDetails.userAgent + "#" + req.body.userAgent,
+                ip:deviceDetails.ip + "#" +req.body.ip
               });
               resType["Message"] = "Successful";
               resType["Status"] = true;

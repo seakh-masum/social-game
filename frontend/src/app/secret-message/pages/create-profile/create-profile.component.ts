@@ -9,13 +9,14 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-create-profile',
   templateUrl: './create-profile.component.html',
-  styleUrls: ['./create-profile.component.scss']
+  styleUrls: ['./create-profile.component.scss'],
 })
 export class CreateProfileComponent implements OnInit {
-
   public userName: string = '';
   public pin: string = '';
-  public isPassword: boolean = false;
+
+  public availableFlag: boolean = true;
+  public timer: any;
 
   public keyUp = new Subject<KeyboardEvent>();
 
@@ -24,60 +25,119 @@ export class CreateProfileComponent implements OnInit {
 
   constructor(
     private _generic: GenericService,
-    private _router: Router, 
-    private _global: GlobalService,
-  ) { }
+    private _router: Router,
+    private _global: GlobalService
+  ) {}
 
   ngOnInit(): void {
-
-    this.keyupSubs = this.keyUp.pipe(
-      map((event: KeyboardEvent)=> (event.target as HTMLInputElement).value),
-      // debounceTime(1000),
-      // distinctUntilChanged(),
-      // mergeMap(search=> of(search).pipe(delay(500))),
-    ).subscribe(value=> {
-      const url = environment.secretbaseurl + 'search-user/' + value;
-
-      this._generic.get(url).subscribe((res: any)=> {
-        if(res) {
-          this.isButtonDisabled = false;
-          if(res['Status']) {
-            this.isPassword = true;
+    // this.keyupSubs = this.keyUp.pipe(
+    //   map((event: KeyboardEvent)=> (event.target as HTMLInputElement).value),
+    //   // debounceTime(1000),
+    //   // distinctUntilChanged(),
+    //   // mergeMap(search=> of(search).pipe(delay(500))),
+    // ).subscribe(value=> {
+    //   const url = environment.secretbaseurl + 'search-user/' + value;
+    //   this._generic.get(url).subscribe((res: any)=> {
+    //     if(res) {
+    //       this.isButtonDisabled = false;
+    //       if(res['Status']) {
+    //         this.isPassword = true;
+    //       }
+    //     }
+    //   })
+    // });
+  }
+  searchChange(filter: any, to = false) {
+    filter = (<HTMLInputElement>filter.target).value;
+    if (to) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        if (filter != '') {
+          this.isButtonDisabled = true;
+          this.availableFlag = true;
+          this._generic.get('search-user/', filter).subscribe(
+            (res: any) => {
+              if (res['Status']) {
+                this.availableFlag = true;
+                this.isButtonDisabled = false;
+              } else {
+                this.availableFlag = false;
+                this.isButtonDisabled = false;
+              }
+            },
+            (err) => {
+              this.availableFlag = false;
+              this.isButtonDisabled = false;
+            }
+          );
+        } else {
+          this.availableFlag = true;
+          this.isButtonDisabled = true;
+        }
+      }, 700);
+    }
+  }
+  createAccount(type: boolean) {
+    if (type) {
+      let data = {
+        username: this.userName,
+        role: 'user',
+      };
+      this.isButtonDisabled = true;
+      this._generic.post('savedetails', data).subscribe(
+        (response: any) => {
+          console.log(response);
+          if (response['Status']) {
+            if (response['Data']) {
+              this.isButtonDisabled = false;
+              localStorage.setItem('link', response.Data[0].link);
+              localStorage.setItem('token', response.Data[0].token);
+              localStorage.setItem('displayName', response.Data[0].displayname);
+              localStorage.setItem('id', response.Data[0]._id);
+              localStorage.setItem('encyptduser', response.Data[0].encyptduser);
+            }
+            this._global.openSnackbar(response['Message'], 'success');
+            this._router.navigate([response.Data[0].link]);
+          } else {
+            this.isButtonDisabled = false;
+            this._global.openSnackbar(response['Message'], 'error');
           }
+        },
+        (err) => {
+          this.isButtonDisabled = false;
+          this._global.openSnackbar(err.Message, 'error');
         }
-      })
-    });
-    
-  }
-
-  createAccount(value: string) {
-    console.log(value);
-    
-    const url = environment.secretbaseurl + 'savedetails';
-    let data: any = {
-      username: value,
-      role: 'user'
-    }
-
-    if(this.isPassword) {
-      data.userpin = this.pin;;
-    }
-    if(this.isButtonDisabled) {
-      this._global.openSnackbar('Please fill the credentials', 'error');
-    } 
-    this._generic.post(url, data).subscribe((response: any)=> {
-      console.log(response);
-      if(response['Status']) {
-        if(response['Data']) {
-          localStorage.setItem('link', response.Data[0].link);
-          localStorage.setItem('token', response.Data[0].token);
-          localStorage.setItem('displayName', response.Data[0].displayname);
-          localStorage.setItem('id', response.Data[0]._id);
-          localStorage.setItem('encyptduser', response.Data[0].encyptduser);
+      );
+    } else {
+      let params = {
+        username: this.userName,
+        userpin: this.pin,
+        role: 'user',
+      };
+      this._generic.post('user-login', params).subscribe(
+        (response: any) => {
+          console.log(response);
+          if (response['Status']) {
+            if (response['Data']) {
+              localStorage.setItem('link', response.Data[0].link);
+              localStorage.setItem('token', response.Data[0].token);
+              localStorage.setItem('displayName', response.Data[0].displayname);
+              localStorage.setItem('id', response.Data[0]._id);
+              localStorage.setItem('encyptduser', response.Data[0].encyptduser);
+            }
+            this.isButtonDisabled = false;
+            this._global.openSnackbar(response['Message'], 'success');
+            this._router.navigate([response.Data[0].link]);
+          } else {
+            this.isButtonDisabled = false;
+            this._global.openSnackbar(response['Message'], 'error');
+          }
+        },
+        (err) => {
+          this.isButtonDisabled = false;
+          this._global.openSnackbar(err.Message, 'error');
         }
-        this._router.navigate([response.Data[0].link]);
-      }
-    });
+      );
+    }
   }
-
 }
