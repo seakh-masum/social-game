@@ -24,6 +24,17 @@ router.get(
         messageDetails.push({
           message: messageSplit[i].split("|")[0],
           date: messageSplit[i].split("|")[1],
+          // ip: userMessages["ip"].split("#")[i],
+          // longitude: userMessages["longitude"].split("#")[i],
+          // latitude: userMessages["latitude"].split("#")[i],
+          // browser: userMessages["browser"].split("#")[i],
+          // browser_version: userMessages["browser_version"].split("#")[i],
+          // device: userMessages["device"].split("#")[i],
+          // deviceType: userMessages["deviceType"].split("#")[i],
+          // orientation: userMessages["orientation"].split("#")[i],
+          // os: userMessages["os"].split("#")[i],
+          // os_version: userMessages["os_version"].split("#")[i],
+          // userAgent: userMessages["userAgent"].split("#")[i],
         });
       }
       resType["Message"] = "Successful";

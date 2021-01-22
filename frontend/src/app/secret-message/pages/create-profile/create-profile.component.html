@@ -4,18 +4,37 @@
   </mat-card-header>
   <mat-card-content>
     <form fxLayout="column" fxLayoutGap="20px">
-      <mat-form-field appearance="fill" >
-        <!-- <mat-label>User Name</mat-label> -->
-        <input matInput placeholder="Enter your name" (keyup)="keyUp.next($event)" [(ngModel)]="userName" [ngModelOptions]="{standalone: true}" #name>
-        <mat-hint *ngIf="isPassword">You have already an user</mat-hint>
+      <mat-form-field appearance="fill">
+        <!-- <mat-label>User Name</mat-label> (keyup)="keyUp.next($event)"-->
+        <input
+          matInput
+          placeholder="Enter your name"
+          (input)="searchChange($event, true)"
+          [(ngModel)]="userName"
+          [ngModelOptions]="{ standalone: true }"
+          #name
+        />
+        <mat-hint *ngIf="!availableFlag">You have already an user</mat-hint>
       </mat-form-field>
-      <mat-form-field appearance="fill" *ngIf="isPassword">
+      <mat-form-field *ngIf="!availableFlag" appearance="fill">
         <!-- <mat-label>User Name</mat-label> -->
-        <input matInput placeholder="Pin" [(ngModel)]="pin" [ngModelOptions]="{standalone: true}" #name>
+        <input
+          matInput
+          placeholder="Pin"
+          [(ngModel)]="pin"
+          [ngModelOptions]="{ standalone: true }"
+          #name
+        />
         <mat-hint> Enter Your pin to login</mat-hint>
       </mat-form-field>
-      <button mat-raised-button [disabled]="isButtonDisabled" color="primary" type="submit" (click)="createAccount(name.value)">
-        {{isPassword ? 'Login' : 'Signup'}}
+      <button
+        mat-raised-button
+        [disabled]="isButtonDisabled"
+        color="primary"
+        type="submit"
+        (click)="createAccount(availableFlag)"
+      >
+        {{ !availableFlag ? "Login" : "Signup" }}
       </button>
     </form>
   </mat-card-content>
