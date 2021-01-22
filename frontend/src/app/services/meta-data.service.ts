@@ -14,7 +14,7 @@ export interface PageMetadata {
 const defaultMetadata: PageMetadata = {
   title: 'Anonymous Messages',
   description: 'Send or get anonymous messages',
-  author: 'Sayon Chakraborty',
+  author: 'Sayon Chakraborty / Sk Masum',
   keywords: ['Annoymous', 'messages', 'Annoymous messages'],
   type: 'website',
 };
@@ -50,7 +50,7 @@ export class MetadataService {
     this.titleService.setTitle(pageMetadata.title);
   }
 
-  private generateMetaDefinitions(metadata: PageMetadata): MetaDefinition[] {
+  generateMetaDefinitions(metadata: PageMetadata): MetaDefinition[] {
     return [
       { name: 'title', content: metadata.title },
       { property: 'og:title', content: metadata.title },

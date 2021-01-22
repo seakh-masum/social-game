@@ -1,1 +1,13 @@
-<router-outlet></router-outlet>
+<div class="background">
+  <div fxLayout="row" class="header">
+    <div fxFlex="90" fxLayoutAlign="start center">
+      <h2>Secret Messages</h2>
+    </div>
+    <div fxFlex="10" fxLayoutAlign="start center">
+      <mat-icon>account_circle</mat-icon>
+    </div>
+  </div>
+  <mat-card class="rounded-box">
+    <router-outlet></router-outlet>
+  </mat-card>
+</div>

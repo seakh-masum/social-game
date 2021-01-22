@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 export class SentMessageComponent implements OnInit {
 
   public msg: string = '';
+  userId: any = '';
 
   constructor(
     private _generic: GenericService,
@@ -18,13 +19,28 @@ export class SentMessageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.getUserDetails();
+  }
+
+  getUserDetails(): void {
+    const url = environment.secretbaseurl + 'user-details/' + atob(this._global.userId);
+    console.log(url);
+    this._generic.get(url).subscribe((res: any)=> {
+      console.log(res);
+      if(res['Status']) {
+        if(res['Data']) {
+          localStorage.setItem('token', res.Data[0].token);
+          this.userId = res.Data[0]._id;
+        }
+      }
+    });
   }
 
   sentMessage(msg: string) {
     console.log(msg);
     const url = environment.secretbaseurl + 'savemessages';
     let data = {
-      userid: localStorage.getItem('id'),
+      userid: this.userId,
       message: msg 
     }
 

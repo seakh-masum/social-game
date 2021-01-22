@@ -3,12 +3,20 @@
     <mat-card-title>Create User Name</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form fxLayout="column">
-      <mat-form-field appearance="fill">
-        <mat-label>User Name</mat-label>
-        <input matInput placeholder="Enter your name" [(ngModel)]="userName" [ngModelOptions]="{standalone: true}" #name>
+    <form fxLayout="column" fxLayoutGap="20px">
+      <mat-form-field appearance="fill" >
+        <!-- <mat-label>User Name</mat-label> -->
+        <input matInput placeholder="Enter your name" (keyup)="keyUp.next($event)" [(ngModel)]="userName" [ngModelOptions]="{standalone: true}" #name>
+        <mat-hint *ngIf="isPassword">You have already an user</mat-hint>
       </mat-form-field>
-      <button mat-raised-button color="primary" type="submit" (click)="createAccount(name.value)">Submit</button>
+      <mat-form-field appearance="fill" *ngIf="isPassword">
+        <!-- <mat-label>User Name</mat-label> -->
+        <input matInput placeholder="Pin" [(ngModel)]="pin" [ngModelOptions]="{standalone: true}" #name>
+        <mat-hint> Enter Your pin to login</mat-hint>
+      </mat-form-field>
+      <button mat-raised-button [disabled]="isButtonDisabled" color="primary" type="submit" (click)="createAccount(name.value)">
+        {{isPassword ? 'Login' : 'Signup'}}
+      </button>
     </form>
   </mat-card-content>
 </mat-card>
