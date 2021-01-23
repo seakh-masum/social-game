@@ -8,9 +8,13 @@ import { environment } from 'src/environments/environment';
 })
 export class AppComponent {
   title = 'social-game';
+  // iconList = [];
+
   constructor() {
     if (environment.production) {
       console.log = console.debug = console.error = () => {};
     }
   }
+
+
 }

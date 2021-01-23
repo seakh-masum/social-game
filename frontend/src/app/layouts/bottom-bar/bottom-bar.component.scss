@@ -1,0 +1,18 @@
+.navbar {
+  box-shadow: 0px 4px 17px 0px rgba($color: #625959, $alpha: 0.25) !important;
+  background:#fff;
+  border-radius: 20px;
+  width: 250px;
+  height: 55px;
+  z-index: 9999;
+  position: fixed;
+  bottom: 10px;
+  i {
+    &.active:before {
+      color: #812FF7;
+    }
+    &:before {
+      font-size: 30px;
+    }
+  }
+}

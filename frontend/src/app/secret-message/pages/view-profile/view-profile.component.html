@@ -1,0 +1,32 @@
+<app-container [title]="'Your Profile'">
+  <form fxLayout="column" fxLayoutGap="20px">
+    <mat-form-field appearance="fill"> <!--  (keyup)="keyUp.next($event)"-->
+      <input
+        matInput
+        placeholder="Enter your name"
+        [(ngModel)]="userName"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      <mat-icon matPrefix>account_circle</mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <input
+        matInput
+        (input) = onKeyup($event)
+        placeholder="Enter your pin"
+        [(ngModel)]="pin"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      <mat-icon matPrefix>lock</mat-icon>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      [disabled]="isButtonDisabled"
+      color="primary"
+      type="submit"
+      (click)="updateProfile()"
+    >
+      Update Account
+    </button>
+  </form>
+</app-container>
