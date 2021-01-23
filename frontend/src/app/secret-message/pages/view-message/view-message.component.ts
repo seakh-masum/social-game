@@ -60,7 +60,7 @@ export class ViewMessageComponent implements OnInit {
           //   title: 'Secret Message',
           //   description: `Send secret message to the user, they don't know who send him`
           // });
-          const imgUrl = 'assets/img/secret-covers.png';
+          const imgUrl = '/assets/img/secret-covers.png';
           title.setTitle('Secret Message');
           meta.updateTag({
             name: 'description',
@@ -120,7 +120,19 @@ export class ViewMessageComponent implements OnInit {
   onReload() {
     window.location.reload();
   }
-
+  async sendToDeviceMessage(messageData: any) {
+    // Social Message Share
+    if (await navigator.share) {
+      console.log('Web Share APIs are supported');
+      navigator.share({
+        title: 'Bits and pieces: Web Share API article',
+        text: 'Web Share API feature is awesome. You must check it',
+        url: window.location.href,
+      });
+    } else {
+      console.log('Web Share APIs are not supported');
+    }
+  }
   getMessageDetails() {
     const url = 'message-details/' + localStorage.getItem('id');
     this._generic.get(url).subscribe((res: any) => {
