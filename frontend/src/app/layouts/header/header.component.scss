@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+
+header {
+  padding: 15px;
+  h1 {
+    font-family: Dancing Script;
+    font-size: 32px;
+    font-weight: 700;
+  }
+  h1, img {
+    background: linear-gradient(180deg, #CA03FC 0%, #4779F6 72.4%, #01F2F2 100%);
+    // box-shadow: 0px 16px 16px 0px rgba($color: #800DA8, $alpha: 0.13);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}

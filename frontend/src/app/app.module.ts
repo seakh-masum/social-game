@@ -11,7 +11,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HtttpIntercept } from './services/http-interceptor';
 import { TokenInterceptor } from './services/token-interceptor';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
-import { SecretGamesAuthGuard } from './guard/secret-games-auth.guard';
+import { SecretGamesAuthGuard } from './guards/secret-games-auth.guard';
 import { AuthService } from './services/auth.service';
 
 @NgModule({

@@ -1,0 +1,27 @@
+<app-container [title]="'Share Your Link'">
+  <form fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="row" fxLayoutGap="20px">
+      <div fxFlex="85" fxLayoutAlign="start center">
+        <mat-form-field appearance="fill">
+          <input disabled matInput placeholder="Enter your name" [(ngModel)]="url" [ngModelOptions]="{standalone: true}" #name>
+          <mat-icon matSuffix [cdkCopyToClipboard]="url">content_copy</mat-icon>
+        </mat-form-field>
+      </div>
+      <div fxFlex="15" fxLayoutAlign="end center">
+        <button mat-flat-button color="primary" type="submit" (click)="sendToDevice(name.value)">
+          <mat-icon>reply</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayoutGap="20px">
+      <a *ngFor="let item of sharingOptions" [href]="item.href" [style.backgroundColor]="item.color" class='box' fxFlex=50 fxLayout="column" fxLayoutGap="10px">
+        <div fxLayoutAlign="center center">
+          <img src="assets/img/{{item.icon}}" />
+        </div>
+        <mat-label fxLayoutAlign="center center">{{item.name}}</mat-label>
+      </a>
+    </div>
+
+  </form>
+</app-container>
+<!-- <app-bottom-bar [iconList]="iconList"></app-bottom-bar> -->
