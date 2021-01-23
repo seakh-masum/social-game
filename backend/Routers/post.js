@@ -5,6 +5,7 @@ const deviceInfo = require("../Models/device-details");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
+const puppeteer = require("puppeteer");
 
 // Save User Name with Id & Token
 router.post("/savedetails", async (req, res) => {
@@ -60,7 +61,7 @@ router.post("/savedetails", async (req, res) => {
         displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link: "secret-message/view/" + btoa(username),
+        link: "secret-message/share-link/" + btoa(username),
         encyptduser: btoa(username),
         userpin: (Math.random() * 1000000).toFixed(),
         longitude: "",
@@ -97,7 +98,7 @@ router.post("/savedetails", async (req, res) => {
         displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link: "secret-message/view/" + btoa(username),
+        link: "secret-message/share-link/" + btoa(username),
         encyptduser: btoa(username),
         userpin: (Math.random() * 1000000).toFixed(),
         longitude: "",
@@ -139,11 +140,110 @@ router.post(
       if (userData) {
         const Data = await messages.findOne({ userid: req.body.userid });
         // console.log(Data);
+        const htmlString = `<html>
+            <head>
+              <title></title>
+              <style>
+                /* General CSS Setup */
+                body {
+                  background-color: lightblue;
+                  font-family: "Ubuntu-Italic", "Lucida Sans", helvetica, sans;
+                }
+
+                /* container */
+                .container {
+                  padding: 5% 5%;
+                }
+
+                /* CSS talk bubble */
+                .talk-bubble {
+                  display: inline-block;
+                  position: relative;
+                  width: 95%;
+                  height: 95%;
+                  background-color: lightyellow;
+                  left: 2%;
+                  top: 2%;
+                }
+                .border {
+                  border: 8px solid #666;
+                }
+                .round {
+                  border-radius: 30px;
+                  -webkit-border-radius: 30px;
+                  -moz-border-radius: 30px;
+                }
+                .tri-right.border.btm-left:before {
+                  content: " ";
+                  position: absolute;
+                  width: 0;
+                  height: 0;
+                  left: -8px;
+                  right: auto;
+                  top: auto;
+                  bottom: -40px;
+                  border: 32px solid;
+                  border-color: transparent transparent transparent #666;
+                }
+                .tri-right.btm-left:after {
+                  content: " ";
+                  position: absolute;
+                  width: 0;
+                  height: 0;
+                  left: 0px;
+                  right: auto;
+                  top: auto;
+                  bottom: -20px;
+                  border: 22px solid;
+                  border-color: transparent transparent transparent lightyellow;
+                }
+                /* talk bubble contents */
+                .talktext {
+                  padding: 1em;
+                  text-align: left;
+                  line-height: 1.5em;
+                  text-align: center;
+                  font-size: xx-large;
+                  font-weight: bold;
+                }
+                .talktext p {
+                  /* remove webkit p margins */
+                  -webkit-margin-before: 0em;
+                  -webkit-margin-after: 0em;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="talk-bubble tri-right border round btm-left-in">
+                <div class="talktext">
+                  <p>${req.body.message}</p>
+                </div>
+              </div>
+            </body>
+          </html>`;
+        let page,
+          path = `assests/${
+            new Date().getTime() + new Date().getMilliseconds()
+          }.png`;
+        (async () => {
+          const browser = await puppeteer.launch();
+          page = await browser.newPage();
+          await page.setContent(htmlString);
+          await page.screenshot({ path: path });
+          await browser.close();
+        })();
         if (Data) {
           await messages.findOneAndUpdate(
             { _id: Data._id },
             {
-              message: Data.message + "_" + req.body.message + "|" + new Date(),
+              message:
+                Data.message +
+                "_" +
+                req.body.message +
+                "|" +
+                new Date() +
+                "#messageimagelink:" +
+                `${req.headers.host}/images/${path}`,
               longitude: req.body.longitude
                 ? Data.longitude + "#" + req.body.longitude
                 : Data.longitude + "#" + "No Data Found",
@@ -175,7 +275,12 @@ router.post(
         } else {
           const messageDetails = new messages({
             userid: req.body.userid,
-            message: req.body.message + "|" + new Date(),
+            message:
+              req.body.message +
+              "|" +
+              new Date() +
+              "#messageimagelink:" +
+              `${req.headers.host}/images/${path}`,
             longitude: req.body.longitude
               ? req.body.longitude
               : "No Data Found",

@@ -96,7 +96,9 @@ export class ViewMessageComponent implements OnInit {
   ngOnInit(): void {
     this.url = environment.hostingurl + localStorage.getItem('link');
     this.fbUrl = 'http://www.facebook.com/sharer.php?u=' + this.url;
-    this.wapUrl = this.sanitizeUrl('whatsapp://send?text=' + this.url);
+    this.wapUrl = this.sanitizeUrl(
+      'whatsapp://send?text=' + encodeURIComponent(this.url)
+    );
 
     this.sharingOptions = [
       {

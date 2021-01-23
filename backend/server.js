@@ -8,6 +8,7 @@ const allPostRoute = require("./Routers/post");
 const allGetRoute = require("./Routers/get");
 //Environment Setup
 dotEnv.config();
+app.use("/images", express.static(__dirname + "/assests/"));
 
 // Connect Mongoose
 mongoose.connect(
