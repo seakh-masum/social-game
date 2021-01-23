@@ -187,5 +187,8 @@
       }
     }
   },
-  "defaultProject": "social-game"
+  "defaultProject": "social-game",
+  "cli": {
+    "analytics": false
+  }
 }

@@ -20,12 +20,11 @@ interface Config {
 @Component({
   selector: 'app-view-message',
   templateUrl: './view-message.component.html',
-  styleUrls: ['./view-message.component.scss']
+  styleUrls: ['./view-message.component.scss'],
 })
 export class ViewMessageComponent implements OnInit {
-
   url: string = '';
-  messages: Array<any> = []; 
+  messages: Array<any> = [];
   facebookShareLink: any;
   wapUrl: SafeUrl = '';
   fbUrl: string = '';
@@ -44,30 +43,52 @@ export class ViewMessageComponent implements OnInit {
     private _generic: GenericService,
     private _router: Router,
     private _global: GlobalService,
-    @Optional() private metadata: MetadataService,
+    @Optional() private metadataService: MetadataService,
     private sanitizer: DomSanitizer,
     private meta: Meta,
-    private title: Title,
-    // private socialLinks: NgSocialLinksService,
-  ) { 
-    _route.params.pipe(map(p => p.id)).subscribe(res=> {
+    private title: Title // private socialLinks: NgSocialLinksService,
+  ) {
+    _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       console.log(res);
-      _global.userId = res;
-      if(typeof localStorage.getItem('encyptduser') !== undefined && localStorage.getItem('encyptduser') == res) {
-        // metadata.updateMetadata({
-        //   title: 'Secret Message',
-        //   description: `Send secret message to the user, they don't know who send him`
-        // });
-        const imgUrl = 'assets/img/secret-covers.png';
-        title.setTitle('Secret Message');
-        meta.updateTag({ name: 'description', content:  `Send secret message to the user, they don't know who send him`})
-        this.meta.updateTag({ property: 'og:image', content: imgUrl, itemprop: 'image' });
-        this.meta.updateTag({ property: 'og:image:url', content: imgUrl, itemprop: 'image' });
-        this.meta.updateTag({ property: 'og:image:type', content: 'image/png' });
-        // metadata.generateMetaDefinitions(this.defaultMetadata);
-        this.getMessageDetails();
+      if (res) {
+        _global.userId = res;
+        if (
+          typeof localStorage.getItem('encyptduser') !== undefined &&
+          localStorage.getItem('encyptduser') == res
+        ) {
+          // metadata.updateMetadata({
+          //   title: 'Secret Message',
+          //   description: `Send secret message to the user, they don't know who send him`
+          // });
+          const imgUrl = 'assets/img/secret-covers.png';
+          title.setTitle('Secret Message');
+          meta.updateTag({
+            name: 'description',
+            content: `Send secret message to the user, they don't know who send him`,
+          });
+          this.meta.updateTag({
+            property: 'og:image',
+            content: imgUrl,
+            itemprop: 'image',
+          });
+          this.meta.updateTag({
+            property: 'og:image:url',
+            content: imgUrl,
+            itemprop: 'image',
+          });
+          this.meta.updateTag({
+            property: 'og:image:type',
+            content: 'image/png',
+          });
+          // metadata.generateMetaDefinitions(this.defaultMetadata);
+          _global.watchPosition();
+          _global.deviceDetection();
+          this.getMessageDetails();
+        } else {
+          this._router.navigate(['/secret-message/sent/' + _global.userId]);
+        }
       } else {
-        this._router.navigate(['/secret-message/sent']);
+        this._router.navigate(['/secret-message/create']);
       }
     });
   }
@@ -78,44 +99,48 @@ export class ViewMessageComponent implements OnInit {
     this.wapUrl = this.sanitizeUrl('whatsapp://send?text=' + this.url);
 
     this.sharingOptions = [
-      { name: 'Whatsapp Status', icon: 'whatsapp.svg', color: '#25D366', href: this.wapUrl},
-      { name: 'Facebook Status', icon: 'facebook.svg', color: '#3B5998', href: this.fbUrl},
+      {
+        name: 'Whatsapp Status',
+        icon: 'whatsapp.svg',
+        color: '#25D366',
+        href: this.wapUrl,
+      },
+      {
+        name: 'Facebook Status',
+        icon: 'facebook.svg',
+        color: '#3B5998',
+        href: this.fbUrl,
+      },
     ];
   }
-    
 
-  sanitizeUrl(url: string): SafeUrl {​​​​​​​​
+  sanitizeUrl(url: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(url);
-  }​​​​​​​​
-
-
-
+  }
   onReload() {
     window.location.reload();
   }
 
-
   getMessageDetails() {
-    const url = environment.secretbaseurl + 'message-details/' + localStorage.getItem('id');
-    this._generic.get(url).subscribe((res: any)=> {
+    const url = 'message-details/' + localStorage.getItem('id');
+    this._generic.get(url).subscribe((res: any) => {
       console.log(res);
-      if(res['Status']) {
+      if (res['Status']) {
         this.messages = res.Data;
       }
     });
   }
 
-  async sendToDevice(url: string) { 
-    try{
+  async sendToDevice(url: string) {
+    try {
       const sharedResponse = await this._nativeShare.share({
-        title:'Sharing to Whatsapp',
+        title: 'Sharing to Whatsapp',
         text: 'Share anynomous message to Friend',
-        url: url
+        url: url,
       });
       console.log(sharedResponse);
-    } catch(error) {
-      console.log('You app is not shared, reason: ',error);
+    } catch (error) {
+      console.log('You app is not shared, reason: ', error);
     }
   }
-
 }

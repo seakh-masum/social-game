@@ -13,6 +13,7 @@
   "author": "sayon chakraborty",
   "license": "ISC",
   "dependencies": {
+    "autocannon": "^7.0.1",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "btoa": "^1.2.1",
@@ -28,6 +29,7 @@
     "googleapis": "^39.2.0",
     "heroku": "^7.47.6",
     "jsonwebtoken": "^8.5.1",
+    "loadtest": "^5.1.2",
     "mongoose": "^5.11.8",
     "nodemon": "^2.0.6",
     "passport": "^0.4.1",

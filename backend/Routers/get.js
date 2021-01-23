@@ -24,6 +24,17 @@ router.get(
         messageDetails.push({
           message: messageSplit[i].split("|")[0],
           date: messageSplit[i].split("|")[1],
+          // ip: userMessages["ip"].split("#")[i],
+          // longitude: userMessages["longitude"].split("#")[i],
+          // latitude: userMessages["latitude"].split("#")[i],
+          // browser: userMessages["browser"].split("#")[i],
+          // browser_version: userMessages["browser_version"].split("#")[i],
+          // device: userMessages["device"].split("#")[i],
+          // deviceType: userMessages["deviceType"].split("#")[i],
+          // orientation: userMessages["orientation"].split("#")[i],
+          // os: userMessages["os"].split("#")[i],
+          // os_version: userMessages["os_version"].split("#")[i],
+          // userAgent: userMessages["userAgent"].split("#")[i],
         });
       }
       resType["Message"] = "Successful";
@@ -73,27 +84,32 @@ router.get("/user-details/:username", async (req, res) => {
     Message: "",
   };
   // const userName = req.userNameFromJWT;
-  await userDetails.findOne(
-    { username: req.params.username },
-    async (err, params) => {
-      if (err) {
-        resType["Message"] = err.message;
-        return res.status(400).send(resType);
+  try {
+    await userDetails.findOne(
+      { username: req.params.username },
+      async (err, params) => {
+        if (err) {
+          resType["Message"] = err.message;
+          return res.status(400).send(resType);
+        }
+        if (!params) {
+          resType["Message"] = "User is not Registered";
+          return res.status(200).send(resType);
+        }
+        try {
+          resType["Data"] = [params];
+          resType["Message"] = "Successful";
+          resType["Status"] = true;
+          return res.status(200).send(resType);
+        } catch (err) {
+          resType["Message"] = err.message;
+          return res.status(400).send(resType);
+        }
       }
-      if (!params) {
-        resType["Message"] = "User is not Registered";
-        return res.status(200).send(resType);
-      }
-      try {
-        resType["Data"] = [params];
-        resType["Message"] = "Successful";
-        resType["Status"] = true;
-        return res.status(200).send(resType);
-      } catch (err) {
-        resType["Message"] = err.message;
-        return res.status(400).send(resType);
-      }
-    }
-  );
+    );
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
+  }
 });
 module.exports = router;

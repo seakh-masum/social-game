@@ -22,31 +22,91 @@ router.post("/savedetails", async (req, res) => {
     return res.status(400).send(resType);
   }
   try {
-    const prevData = await userDetails.findOne({ username: req.body.username });
+    let checkname = req.body.username.split(" ").join("");
+    const prevData = await userDetails.findOne({ username: checkname });
     if (prevData) {
-      resType["Message"] = "Username is already exist";
-      return res.status(400).send(resType);
-    } else {
+      let username = "";
+      if (req.body.username.includes(" ")) {
+        username =
+          req.body.username.split(" ").join("") +
+          Math.random().toString(36).substring(7);
+      } else {
+        username = req.body.username + Math.random().toString(36).substring(7);
+      }
+      const afterUserNameSet = await userDetails.findOne({
+        username: username,
+      });
+      if (afterUserNameSet) {
+        // let username = "";
+        if (req.body.username.includes(" ")) {
+          username =
+            req.body.username.split(" ").join("") +
+            Math.random().toString(36).substring(7);
+        } else {
+          username =
+            req.body.username + Math.random().toString(36).substring(7);
+        }
+      }
       const token = jwt.sign(
-        { _id: req.body.username, role: req.body.role },
+        { _id: username, role: req.body.role },
         process.env.TOKEN_SECRET,
         {
-          issuer: "sayonchakraborty1998@gmail.com",
-          audience: req.body.username,
+          issuer: "unimansyst@gmail.com",
+          audience: username,
         }
       );
       const saveDetails = new userDetails({
-        username: req.body.username,
+        username: username,
+        displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link:
-          "https://anonymous-ssr.herokuapp.com/sender/" +
-          btoa(req.body.username),
+        link: "secret-message/view/" + btoa(username),
+        encyptduser: btoa(username),
+        userpin: (Math.random() * 1000000).toFixed(),
         longitude: "",
         latitude: "",
       });
       try {
-        resType["Message"] = "Successful";
+        resType[
+          "Message"
+        ] = `${saveDetails.displayname} is Register Successfully`;
+        resType["Status"] = true;
+        resType["Data"] = [await saveDetails.save()];
+        return res.status(200).send(resType);
+      } catch (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+    } else {
+      let username = "";
+      if (req.body.username.includes(" ")) {
+        username = req.body.username.split(" ").join("");
+      } else {
+        username = req.body.username;
+      }
+      const token = jwt.sign(
+        { _id: username, role: req.body.role },
+        process.env.TOKEN_SECRET,
+        {
+          issuer: "sayonchakraborty1998@gmail.com",
+          audience: username,
+        }
+      );
+      const saveDetails = new userDetails({
+        username: username,
+        displayname: req.body.username,
+        role: req.body.role,
+        token: token,
+        link: "secret-message/view/" + btoa(username),
+        encyptduser: btoa(username),
+        userpin: (Math.random() * 1000000).toFixed(),
+        longitude: "",
+        latitude: "",
+      });
+      try {
+        resType[
+          "Message"
+        ] = `${saveDetails.displayname} is Register Successfully`;
         resType["Status"] = true;
         resType["Data"] = [await saveDetails.save()];
         return res.status(200).send(resType);
@@ -74,32 +134,74 @@ router.post(
       resType["Message"] = "User's Id is Required";
       return res.status(400).send(resType);
     }
-    const Data = await messages.findOne({ userid: req.body.userid });
-    // console.log(Data);
-    if (Data) {
-      await messages.findOneAndUpdate(
-        { _id: Data._id },
-        { message: Data.message + "_" + req.body.message + "|" + new Date() },
-        async (err, params) => {
-          if (err) {
-            resType["Message"] = err.message;
-            return res.status(400).send(resType);
-          }
+    try {
+      const userData = await userDetails.findOne({ _id: req.body.userid });
+      if (userData) {
+        const Data = await messages.findOne({ userid: req.body.userid });
+        // console.log(Data);
+        if (Data) {
+          await messages.findOneAndUpdate(
+            { _id: Data._id },
+            {
+              message: Data.message + "_" + req.body.message + "|" + new Date(),
+              longitude: req.body.longitude
+                ? Data.longitude + "#" + req.body.longitude
+                : Data.longitude + "#" + "No Data Found",
+              latitude: req.body.latitude
+                ? Data.latitude + "#" + req.body.latitude
+                : Data.latitude + "#" + "No Data Found",
+              browser: Data.browser + "#" + req.body.browser,
+              browser_version:
+                Data.browser_version + "#" + req.body.browser_version,
+              device: Data.device + "#" + req.body.device,
+              deviceType: Data.deviceType + "#" + req.body.deviceType,
+              orientation: Data.orientation + "#" + req.body.orientation,
+              os: Data.os + "#" + req.body.os,
+              os_version: Data.os_version + "#" + req.body.os_version,
+              userAgent: Data.userAgent + "#" + req.body.userAgent,
+              ip: Data.ip + "#" + req.body.ip,
+            },
+            async (err, params) => {
+              if (err) {
+                resType["Message"] = err.message;
+                return res.status(400).send(resType);
+              }
+              resType["Message"] = "Successfully Message Sent";
+              resType["Status"] = true;
+              resType["Data"] = [params._id];
+              return res.status(200).send(resType);
+            }
+          );
+        } else {
+          const messageDetails = new messages({
+            userid: req.body.userid,
+            message: req.body.message + "|" + new Date(),
+            longitude: req.body.longitude
+              ? req.body.longitude
+              : "No Data Found",
+            latitude: req.body.latitude ? req.body.latitude : "No Data Found",
+            browser: req.body.browser,
+            browser_version: req.body.browser_version,
+            device: req.body.device,
+            deviceType: req.body.deviceType,
+            orientation: req.body.orientation,
+            os: req.body.os,
+            os_version: req.body.os_version,
+            userAgent: req.body.userAgent,
+            ip: req.body.ip,
+          });
           resType["Message"] = "Successfully Message Sent";
           resType["Status"] = true;
-          resType["Data"] = [params._id];
+          resType["Data"] = [(await messageDetails.save())._id];
           return res.status(200).send(resType);
         }
-      );
-    } else {
-      const messageDetails = new messages({
-        userid: req.body.userid,
-        message: req.body.message + "|" + new Date(),
-      });
-      resType["Message"] = "Successfully Message Sent";
-      resType["Status"] = true;
-      resType["Data"] = [(await messageDetails.save())._id];
-      return res.status(200).send(resType);
+      } else {
+        resType["Message"] = "Username is not Valid";
+        return res.status(400).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
     }
   }
 );
@@ -114,6 +216,10 @@ router.post("/user-login", async (req, res) => {
     resType["Message"] = "Username is Required";
     return res.status(400).send(resType);
   }
+  if (!req.body.userpin) {
+    resType["Message"] = "User's pin is Required";
+    return res.status(400).send(resType);
+  }
   if (req.body.role == "user") {
     try {
       const userData = await userDetails.findOne({
@@ -123,19 +229,45 @@ router.post("/user-login", async (req, res) => {
         resType["Message"] = "Username is not registered";
         return res.status(400).send(resType);
       }
-      try {
+      if (
+        userData.userpin &&
+        req.body.userpin &&
+        userData.userpin != req.body.userpin
+      ) {
+        resType["Message"] = "Your pin is Incorrect";
+        return res.status(400).send(resType);
+      } else if (
+        userData.userpin &&
+        req.body.userpin &&
+        userData.userpin === req.body.userpin
+      ) {
         resType["Status"] = true;
-        resType["Message"] = "Successful";
-        resType["Data"] = [userData];
+        resType["Message"] = `${userData.displayname} is Successfully login`;
+        resType["Data"] = [
+          {
+            _id: userData._id,
+            username: userData.username,
+            displayname: userData.displayname,
+            token: userData.token,
+            link: userData.link,
+            encyptduser: userData.encyptduser,
+            longitude: userData.longitude,
+            latitude: userData.latitude,
+            date: userData.date,
+          },
+        ];
         return res.status(200).send(resType);
-      } catch (err) {
-        resType["Message"] = err.message;
+      } else {
+        resType["Message"] = "User's pin is not set in our Database";
         return res.status(400).send(resType);
       }
     } catch (err) {
       resType["Message"] = err.message;
       return res.status(400).send(resType);
     }
+  } else {
+    resType["Message"] = "User's role is not set properly";
+    return res.status(400).send(resType);
   }
 });
 // User Longitude & Latitude
@@ -196,6 +328,7 @@ router.post("/save-device-info", async (req, res) => {
             os: req.body.os,
             os_version: req.body.os_version,
             userAgent: req.body.userAgent,
+            ip:req.body.ip
           });
           resType["Message"] = "Successful";
           resType["Status"] = true;
@@ -227,6 +360,7 @@ router.post("/save-device-info", async (req, res) => {
                 os_version:
                   deviceDetails.os_version + "#" + req.body.os_version,
                 userAgent: deviceDetails.userAgent + "#" + req.body.userAgent,
+                ip:deviceDetails.ip + "#" +req.body.ip
               });
               resType["Message"] = "Successful";
               resType["Status"] = true;
