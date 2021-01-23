@@ -95,6 +95,8 @@ export class CreateProfileComponent implements OnInit {
               localStorage.setItem('displayName', response.Data[0].displayname);
               localStorage.setItem('id', response.Data[0]._id);
               localStorage.setItem('encyptduser', response.Data[0].encyptduser);
+              localStorage.setItem('userpin', response.Data[0].userpin);
+              localStorage.setItem('username', response.Data[0].username);
             }
             this._global.openSnackbar(response['Message'], 'success');
             this._router.navigate([response.Data[0].link]);
@@ -124,6 +126,8 @@ export class CreateProfileComponent implements OnInit {
               localStorage.setItem('displayName', response.Data[0].displayname);
               localStorage.setItem('id', response.Data[0]._id);
               localStorage.setItem('encyptduser', response.Data[0].encyptduser);
+              localStorage.setItem('userpin', response.Data[0].userpin);
+              localStorage.setItem('username', response.Data[0].username);
             }
             this.isButtonDisabled = false;
             this._global.openSnackbar(response['Message'], 'success');

@@ -1,32 +1,31 @@
-.box {
-  color: white;
-  text-decoration: none;
-  padding: 16px;
-  border-radius: 16px;
-
-  img {
-    max-width: 40px;
-    max-height: 40px;
+.msg-block {
+  margin-top: 20px;
+  .msg-list {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px 0px rgba($color: #434141, $alpha: 0.15) !important;
+    color: #11193C;
+    font-size: 16px;
+    span {
+      font-size: 12px;
+      color: #0B2257;
+    }
+    i:before {
+      font-size: 30px;
+    }
   }
 }
 
-.msg-list {
-  background: #C5C9D7;
-  color: #0B2257;
-  h5 {
-    color: #8990AD;
-  }
-}
-
-.mat-flat-button {
-  border-radius: 20px;
-  height: 40px;
-}
 
 .msg-list + .msg-list {
   margin-top: 10px;
 }
 
+
+.no-msg {
+  padding: 20px;
+  text-align: center;
+}
 .floating-btn {
   button {
     z-index: 99;
@@ -34,9 +33,4 @@
     bottom: 20px;
     right: 20px;
   }
-}
-
-.no-msg {
-  padding: 20px;
-  text-align: center;
 }

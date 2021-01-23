@@ -1,0 +1,16 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+  <div fxFlex="85" class="navbar" fxLayout=row fxLayoutGap="20px">
+    <!-- <a *ngFor="let item of iconList" fxFlex="33.33" fxLayoutAlign="center center" (click)="onRoutes(item.routes)">
+      <i [class]="'icon-'+item.icon" [ngClass]="item.class"></i>
+    </a> -->
+    <a fxFlex="33.33" fxLayoutAlign="center center" routerLink="/shareLink, encyptduser" (click)="onShareLink()" routerLinkActive="active" >
+      <i class="icon-share1" #shareIcon></i>
+    </a>
+    <a fxFlex="33.33" fxLayoutAlign="center center" routerLink="/messages, encyptduser" (click)="onMessage()" routerLinkActive="active">
+      <i class="icon-message" #messageIcon></i>
+    </a>
+    <a fxFlex="33.33" fxLayoutAlign="center center" routerLink="/view-profile" (click)="onProfile()" routerLinkActive="active">
+      <i class="icon-account_profile" #profileIcon></i> -->
+    </a>
+  </div>
+</div>

@@ -45,6 +45,7 @@ export class SentMessageComponent implements OnInit {
           localStorage.setItem('token', res.Data[0].token);
           this.userId = res.Data[0]._id;
           this.displayName = res.Data[0].displayname;
+          this.displayName = this.displayName ? `Send your secret message to ${this.displayName}` : '';
         }
       }
     });
