@@ -6,12 +6,12 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from './shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HtttpIntercept } from './services/http-interceptor';
 import { TokenInterceptor } from './services/token-interceptor';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
-import { SecretGamesAuthGuard } from './guard/secret-games-auth.guard';
+import { SecretGamesAuthGuard } from './guards/secret-games-auth.guard';
 import { AuthService } from './services/auth.service';
 
 @NgModule({
