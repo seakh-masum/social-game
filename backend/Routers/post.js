@@ -232,6 +232,11 @@ router.post(
           await page.screenshot({ path: path });
           await browser.close();
         })();
+        const imageLink = `${
+          req.headers.host.includes(":3000")
+            ? "http://" + req.headers.host
+            : "https://" + req.headers.host
+        }/images/${path}`;
         if (Data) {
           await messages.findOneAndUpdate(
             { _id: Data._id },
@@ -243,7 +248,7 @@ router.post(
                 "|" +
                 new Date() +
                 "#messageimagelink:" +
-                `${req.headers.host}/images/${path}`,
+                imageLink,
               longitude: req.body.longitude
                 ? Data.longitude + "#" + req.body.longitude
                 : Data.longitude + "#" + "No Data Found",
@@ -280,7 +285,7 @@ router.post(
               "|" +
               new Date() +
               "#messageimagelink:" +
-              `${req.headers.host}/images/${path}`,
+              imageLink,
             longitude: req.body.longitude
               ? req.body.longitude
               : "No Data Found",

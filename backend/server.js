@@ -3,12 +3,21 @@ const app = express();
 const mongoose = require("mongoose");
 const dotEnv = require("dotenv");
 const port = process.env.PORT || 3000;
+const path = require("path");
+
 // Routes
 const allPostRoute = require("./Routers/post");
 const allGetRoute = require("./Routers/get");
+
 //Environment Setup
 dotEnv.config();
-app.use("/images", express.static(__dirname + "/assests/"));
+
+//Get Image Path
+app.use("/images/:assest/:imagename", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname + `/assests/${req.params.imagename}`)
+  );
+});
 
 // Connect Mongoose
 mongoose.connect(
