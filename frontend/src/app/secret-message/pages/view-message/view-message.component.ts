@@ -13,7 +13,7 @@ import { MetadataService } from 'src/app/services/meta-data.service';
 })
 export class ViewMessageComponent implements OnInit {
   messages: Array<any> = [];
- 
+
   constructor(
     private _route: ActivatedRoute,
     private _generic: GenericService,
@@ -30,36 +30,6 @@ export class ViewMessageComponent implements OnInit {
           typeof localStorage.getItem('encyptduser') !== undefined &&
           localStorage.getItem('encyptduser') == res
         ) {
-<<<<<<< HEAD
-          // metadata.updateMetadata({
-          //   title: 'Secret Message',
-          //   description: `Send secret message to the user, they don't know who send him`
-          // });
-          const imgUrl = '/assets/img/secret-covers.png';
-          title.setTitle('Secret Message');
-          meta.updateTag({
-            name: 'description',
-            content: `Send secret message to the user, they don't know who send him`,
-          });
-          this.meta.updateTag({
-            property: 'og:image',
-            content: imgUrl,
-            itemprop: 'image',
-          });
-          this.meta.updateTag({
-            property: 'og:image:url',
-            content: imgUrl,
-            itemprop: 'image',
-          });
-          this.meta.updateTag({
-            property: 'og:image:type',
-            content: 'image/png',
-          });
-          // metadata.generateMetaDefinitions(this.defaultMetadata);
-          _global.watchPosition();
-          _global.deviceDetection();
-=======
->>>>>>> origin/masum
           this.getMessageDetails();
         } else {
           this._router.navigate(['/secret-message/sent/' + _global.userId]);
@@ -71,7 +41,6 @@ export class ViewMessageComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
 
   onReload() {
     window.location.reload();
@@ -98,6 +67,4 @@ export class ViewMessageComponent implements OnInit {
       }
     });
   }
-
-  
 }
