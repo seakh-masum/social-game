@@ -12,22 +12,44 @@
       <div fxLayout="row" fxLayoutGap="15px">
         <div fxFlex="85" fxLayoutAlign="start center">
           <mat-form-field appearance="fill">
-            <input disabled matInput placeholder="Enter your name" [(ngModel)]="url" [ngModelOptions]="{standalone: true}" #name>
-            <mat-icon matSuffix [cdkCopyToClipboard]="url">content_copy</mat-icon>
+            <input
+              disabled
+              matInput
+              placeholder="Enter your name"
+              [(ngModel)]="url"
+              [ngModelOptions]="{ standalone: true }"
+              #name
+            />
+            <mat-icon matSuffix [cdkCopyToClipboard]="url"
+              >content_copy</mat-icon
+            >
           </mat-form-field>
         </div>
         <div fxFlex="15" fxLayoutAlign="end center">
-          <button mat-flat-button color="primary" type="submit" (click)="sendToDevice(name.value)">
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            (click)="sendToDevice(name.value)"
+          >
             <mat-icon>reply</mat-icon>
           </button>
         </div>
       </div>
       <div fxLayout="row" fxLayoutGap="10px">
-        <a  *ngFor="let item of sharingOptions" [href]="item.href" [style.backgroundColor]="item.color" class='box' fxFlex=50 fxLayout="column" fxLayoutGap="10px">
+        <a
+          *ngFor="let item of sharingOptions"
+          [href]="item.href"
+          [style.backgroundColor]="item.color"
+          class="box"
+          fxFlex="50"
+          fxLayout="column"
+          fxLayoutGap="10px"
+        >
           <div fxLayoutAlign="center center">
-            <img src="assets/img/{{item.icon}}" />
+            <img src="assets/img/{{ item.icon }}" />
           </div>
-          <mat-label fxLayoutAlign="center center">{{item.name}}</mat-label>
+          <mat-label fxLayoutAlign="center center">{{ item.name }}</mat-label>
         </a>
       </div>
 
@@ -35,14 +57,22 @@
         <mat-accordion>
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-            <mat-panel-title>
-              Show your anynomous messages
-            </mat-panel-title>
+              <mat-panel-title> Show your anynomous messages </mat-panel-title>
             </mat-expansion-panel-header>
-            <ng-container *ngIf="messages && messages.length>0; else noMessageBlock">
+            <ng-container
+              *ngIf="messages && messages.length > 0; else noMessageBlock"
+            >
               <mat-card *ngFor="let item of messages" class="msg-list">
-                <h3>{{item.message}}</h3>
-                <h5>{{item.date | date}}</h5>
+                <h3>{{ item.message }}</h3>
+                <h5>{{ item.date | date }}</h5>
+                <button
+                  mat-flat-button
+                  color="primary"
+                  type="submit"
+                  (click)="sendToDeviceMessage(item)"
+                >
+                  <mat-icon>reply</mat-icon>
+                </button>
               </mat-card>
             </ng-container>
             <ng-template #noMessageBlock>
@@ -51,7 +81,6 @@
           </mat-expansion-panel>
         </mat-accordion>
       </div>
-
     </form>
   </mat-card-content>
 </mat-card>

@@ -48,12 +48,12 @@ export class CreateProfileComponent implements OnInit {
     // });
   }
   searchChange(filter: any, to = false) {
+    this.isButtonDisabled = true;
     filter = (<HTMLInputElement>filter.target).value;
     if (to) {
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         if (filter != '') {
-          this.isButtonDisabled = true;
           this.availableFlag = true;
           this._generic.get('search-user/', filter).subscribe(
             (res: any) => {

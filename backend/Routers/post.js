@@ -328,7 +328,7 @@ router.post("/save-device-info", async (req, res) => {
             os: req.body.os,
             os_version: req.body.os_version,
             userAgent: req.body.userAgent,
-            ip:req.body.ip
+            ip: req.body.ip,
           });
           resType["Message"] = "Successful";
           resType["Status"] = true;
@@ -360,7 +360,7 @@ router.post("/save-device-info", async (req, res) => {
                 os_version:
                   deviceDetails.os_version + "#" + req.body.os_version,
                 userAgent: deviceDetails.userAgent + "#" + req.body.userAgent,
-                ip:deviceDetails.ip + "#" +req.body.ip
+                ip: deviceDetails.ip + "#" + req.body.ip,
               });
               resType["Message"] = "Successful";
               resType["Status"] = true;
@@ -463,5 +463,53 @@ router.post("/save-device-info", async (req, res) => {
     return res.status(400).send(resType);
   }
 });
+router.post(
+  "/change-userpin",
+  jwtTokenVerify.isAuthenticated,
+  async (req, res) => {
+    const resType = {
+      Status: false,
+      Data: [],
+      Message: "",
+    };
+    try {
+      if (!req.body.userpin) {
+        resType["Message"] = "User's Pin is Required";
+        return res.status(400).send(resType);
+      }
+      if (!req.body.username) {
+        resType["Message"] = "Username is Required";
+        return res.status(400).send(resType);
+      }
+      if (
+        req.body.userpin &&
+        (req.body.userpin.length > 6 || req.body.userpin.length < 6)
+      ) {
+        resType["Message"] = "User's Pin should be Six length";
+        return res.status(400).send(resType);
+      }
+      await userDetails.findOneAndUpdate(
+        { username: req.body.username },
+        { userpin: req.body.userpin },
+        async (err, params) => {
+          if (err) {
+            resType["Message"] = err.message;
+            return res.status(400).send(resType);
+          }
+          if (!params) {
+            resType["Message"] = "Username is not valid";
+            return res.status(400).send(resType);
+          }
+          resType["Message"] = "User's Pin is edited successfully";
+          resType["Status"] = true;
+          return res.status(200).send(resType);
+        }
+      );
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  }
+);
 
 module.exports = router;
