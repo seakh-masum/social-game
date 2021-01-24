@@ -30,7 +30,9 @@ export class GlobalService {
   openSnackbar(msg: string, type: string) {
     this._snackbar.open(msg, 'X', {
       panelClass: [type],
-      duration: 3000,
+      duration: 1500,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
     });
   }
   watchPosition() {

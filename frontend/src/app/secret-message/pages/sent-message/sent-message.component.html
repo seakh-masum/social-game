@@ -1,23 +1,21 @@
-<app-container [title]="displayName">
-  <form fxLayout="column" fxLayoutGap="25px">
-    <mat-form-field appearance="outline">
-      <textarea
-        matInput
-        placeholder="Type your messages"
-        [(ngModel)]="msg"
-        [ngModelOptions]="{ standalone: true }"
-        #name
-      ></textarea>
-      <mat-hint>your username is anynomous to him/her</mat-hint>
-    </mat-form-field>
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      (click)="sentMessage(name.value)"
-    >
-      Send Message
-    </button>
-  </form>
-  <p>Let's make this games for you <a>here</a></p>
-</app-container>
+<form fxLayout="column" fxLayoutGap="25px">
+  <mat-form-field appearance="outline">
+    <textarea
+      matInput
+      placeholder="Type your messages"
+      [(ngModel)]="msg"
+      [ngModelOptions]="{ standalone: true }"
+      #name
+    ></textarea>
+    <mat-hint>your username is anynomous to him/her</mat-hint>
+  </mat-form-field>
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    (click)="sentMessage(name.value)"
+  >
+    Submit
+  </button>
+</form>
+<!-- <p>Let's make this games for you <a>here</a></p> -->

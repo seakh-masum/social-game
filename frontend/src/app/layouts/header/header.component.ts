@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  @Input() isLogoutVisible: boolean = true;
+
+  constructor(
+    private _router: Router,
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  onLogout() {
+    localStorage.clear();
+    this._router.navigate(['/secret-message/create']);
   }
 
 }
