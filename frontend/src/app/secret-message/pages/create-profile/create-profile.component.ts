@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PrivacyPolicyComponent } from 'src/app/components/privacy-policy/privacy-policy.component';
 import { GenericService } from 'src/app/services/generic.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { environment } from 'src/environments/environment';
@@ -22,11 +24,13 @@ export class CreateProfileComponent implements OnInit {
 
   keyupSubs: Subscription = new Subscription();
   isButtonDisabled: boolean = true;
+  privacyPolicy: boolean = false;
 
   constructor(
     private _generic: GenericService,
     private _router: Router,
-    private _global: GlobalService
+    private _global: GlobalService,
+    private _dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -77,71 +81,70 @@ export class CreateProfileComponent implements OnInit {
       }, 700);
     }
   }
+
+  setData(data: any) {
+    localStorage.setItem('link', data.link);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('displayName', data.displayname);
+    localStorage.setItem('id', data._id);
+    localStorage.setItem('encyptduser', data.encyptduser);
+    localStorage.setItem('userpin', data.userpin);
+    localStorage.setItem('username', data.username);
+  }
+
+  postData(url: string, data: any) {
+    this._generic.post(url , data).subscribe(
+      (response: any) => {
+        console.log(response);
+        if (response['Status']) {
+          if (response['Data']) {
+            this.isButtonDisabled = false;
+            this.setData(response.Data[0]);
+          }
+          this._global.openSnackbar(response['Message'], 'success');
+          this._router.navigate([response.Data[0].link]);
+        } else {
+          this.isButtonDisabled = false;
+          this._global.openSnackbar(response['Message'], 'error');
+        }
+      },
+      (err) => {
+        this.isButtonDisabled = false;
+        this._global.openSnackbar(err.Message, 'error');
+      }
+    );
+  }
+
   createAccount(type: boolean) {
-    if (type) {
-      let data = {
+    if(this.privacyPolicy) {
+      let data: any = {
         username: this.userName,
-        role: 'user',
-      };
-      this.isButtonDisabled = true;
-      this._generic.post('savedetails', data).subscribe(
-        (response: any) => {
-          console.log(response);
-          if (response['Status']) {
-            if (response['Data']) {
-              this.isButtonDisabled = false;
-              localStorage.setItem('link', response.Data[0].link);
-              localStorage.setItem('token', response.Data[0].token);
-              localStorage.setItem('displayName', response.Data[0].displayname);
-              localStorage.setItem('id', response.Data[0]._id);
-              localStorage.setItem('encyptduser', response.Data[0].encyptduser);
-              localStorage.setItem('userpin', response.Data[0].userpin);
-              localStorage.setItem('username', response.Data[0].username);
-            }
-            this._global.openSnackbar(response['Message'], 'success');
-            this._router.navigate([response.Data[0].link]);
-          } else {
-            this.isButtonDisabled = false;
-            this._global.openSnackbar(response['Message'], 'error');
-          }
-        },
-        (err) => {
-          this.isButtonDisabled = false;
-          this._global.openSnackbar(err.Message, 'error');
-        }
-      );
+        role: 'user'
+      }
+      if (type) {
+        this.isButtonDisabled = true;
+        this.postData('savedetails', data);
+      } else {
+        data.userpin = this.pin
+        this.postData('user-login', data);
+      }
     } else {
-      let params = {
-        username: this.userName,
-        userpin: this.pin,
-        role: 'user',
-      };
-      this._generic.post('user-login', params).subscribe(
-        (response: any) => {
-          console.log(response);
-          if (response['Status']) {
-            if (response['Data']) {
-              localStorage.setItem('link', response.Data[0].link);
-              localStorage.setItem('token', response.Data[0].token);
-              localStorage.setItem('displayName', response.Data[0].displayname);
-              localStorage.setItem('id', response.Data[0]._id);
-              localStorage.setItem('encyptduser', response.Data[0].encyptduser);
-              localStorage.setItem('userpin', response.Data[0].userpin);
-              localStorage.setItem('username', response.Data[0].username);
-            }
-            this.isButtonDisabled = false;
-            this._global.openSnackbar(response['Message'], 'success');
-            this._router.navigate([response.Data[0].link]);
-          } else {
-            this.isButtonDisabled = false;
-            this._global.openSnackbar(response['Message'], 'error');
-          }
-        },
-        (err) => {
-          this.isButtonDisabled = false;
-          this._global.openSnackbar(err.Message, 'error');
-        }
-      );
+      this._global.openSnackbar('Please accept the privacy policy', 'error');
+    }
+      
+  }
+
+  openPrivacyPolicy(event: any) {
+    console.log(event);
+    if(event.checked) {
+      this._dialog.open(PrivacyPolicyComponent).afterClosed().subscribe(res=> {
+        this.privacyPolicy = res.data;
+        // this.isButtonDisabled = res.data;
+      });
+    } else {
+      this._global.openSnackbar('Please accept the privacy policy', 'error');
     }
   }
+
+  
 }

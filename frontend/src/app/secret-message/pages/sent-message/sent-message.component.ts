@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 import { GenericService } from 'src/app/services/generic.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { environment } from 'src/environments/environment';
@@ -19,7 +21,8 @@ export class SentMessageComponent implements OnInit {
     private _generic: GenericService,
     private _global: GlobalService,
     private _route: ActivatedRoute,
-    private _router: Router
+    private _router: Router,
+    private _dialog: MatDialog,
   ) {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
@@ -81,6 +84,7 @@ export class SentMessageComponent implements OnInit {
           if (res['Status']) {
             this.msg = '';
             this._global.openSnackbar(res.Message, 'success');
+            this._dialog.open(DialogComponent);
           } else {
             this._global.openSnackbar(res.Message, 'error');
           }

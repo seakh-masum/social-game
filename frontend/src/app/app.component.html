@@ -1,20 +1,13 @@
-<!-- <div class="background">
-  <div fxLayout="row" class="header">
-    <div fxFlex="90" fxLayoutAlign="start center">
-      <h2>Secret Messages</h2>
+<app-header [isLogoutVisible]="isLogoutVisible"></app-header>
+<main>
+  <div class="container" fxLayout="column" fxLayoutGap="20px">
+    <div class="heading">
+      <h1>{{title}}</h1>
     </div>
-    <div fxFlex="10" fxLayoutAlign="start center">
-      <mat-icon>account_circle</mat-icon>
+    <div>
+      <router-outlet></router-outlet>
+      <!-- <ng-content></ng-content> -->
     </div>
   </div>
-  <mat-card class="rounded-box">
-    <router-outlet></router-outlet>
-  </mat-card>
-</div> -->
-
-
-<app-header></app-header>
-<main>
-  <router-outlet></router-outlet>
 </main>
-<app-bottom-bar></app-bottom-bar>
+<app-bottom-bar *ngIf="isBottombarVisible" [activeIcon]="activeIcon"></app-bottom-bar>

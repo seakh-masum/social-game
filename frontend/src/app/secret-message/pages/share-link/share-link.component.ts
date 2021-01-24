@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, Meta, SafeUrl, Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgNavigatorShareService } from 'ng-navigator-share';
+import { map } from 'rxjs/operators';
 import { GlobalService } from 'src/app/services/global.service';
 import { PageMetadata } from 'src/app/services/meta-data.service';
 import { environment } from 'src/environments/environment';
@@ -22,46 +24,39 @@ export class ShareLinkComponent implements OnInit {
     type: 'website',
   };
   iconList: Array<any> = [];
-  encrUser: string | null;
 
   sharingOptions: { name: string; icon: string; color: string; href: SafeUrl; }[] = [];
   constructor(
+    private _route: ActivatedRoute,
+    private _router: Router,
     private _nativeShare: NgNavigatorShareService,
     private sanitizer: DomSanitizer,
     private _global: GlobalService,
     private meta: Meta,
     private title: Title
   ) {
-    this.encrUser  = localStorage.getItem('encyptduser');
-    this.iconList = [
-      { icon: 'share1', routes: ['/secret-message/share-link/', this.encrUser], class: 'active'},
-      { icon: 'message', routes: ['secret-message/messages/', this.encrUser], class: ''},
-      { icon: 'account_profile', routes: ['/secret-message/view-profile'], class: ''},
-    ];
 
-    const imgUrl = 'assets/img/secret-covers.png';
-          title.setTitle('Secret Message');
-          meta.updateTag({
-            name: 'description',
-            content: `Send secret message to the user, they don't know who send him`,
-          });
-          this.meta.updateTag({
-            property: 'og:image',
-            content: imgUrl,
-            itemprop: 'image',
-          });
-          this.meta.updateTag({
-            property: 'og:image:url',
-            content: imgUrl,
-            itemprop: 'image',
-          });
-          this.meta.updateTag({
-            property: 'og:image:type',
-            content: 'image/png',
-          });
-          // metadata.generateMetaDefinitions(this.defaultMetadata);
+    _route.params.pipe(map((p) => p.id)).subscribe((res) => {
+      if (res) {
+        _global.userId = res;
+        if (
+          typeof localStorage.getItem('encyptduser') !== undefined &&
+          localStorage.getItem('encyptduser') == res
+        ) {
+          // this.getMessageDetails();
           _global.watchPosition();
           _global.deviceDetection();
+          this.updateMetaTag();
+        } else {
+          this._router.navigate(['/secret-message/sent/' + _global.userId]);
+        }
+      } else {
+        this._router.navigate(['/secret-message/create']);
+      }
+    });
+    
+
+          // metadata.generateMetaDefinitions(this.defaultMetadata);
    }
 
   ngOnInit(): void {
@@ -83,6 +78,29 @@ export class ShareLinkComponent implements OnInit {
         href: this.fbUrl,
       },
     ];
+  }
+
+  updateMetaTag() {
+    const imgUrl = 'assets/img/secret-covers.png';
+          this.meta.updateTag({
+            name: 'description',
+            content: `Send secret message to the user, they don't know who send him`,
+          });
+          this.meta.updateTag({
+            property: 'og:image',
+            content: imgUrl,
+            itemprop: 'image',
+          });
+          this.meta.updateTag({
+            property: 'og:image:url',
+            content: imgUrl,
+            itemprop: 'image',
+          });
+          this.meta.updateTag({
+            property: 'og:image:type',
+            content: 'image/png',
+          });
+
   }
 
   sanitizeUrl(url: string): SafeUrl {

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class BottomBarComponent implements OnInit {
 
   @Input() iconList: Array<any> = []; 
+  @Input() activeIcon: string = '';
   @ViewChild('shareIcon') shareIcon: ElementRef;
   @ViewChild('messageIcon') messageIcon: ElementRef;
   @ViewChild('profileIcon') profileIcon: ElementRef;
@@ -25,9 +26,9 @@ export class BottomBarComponent implements OnInit {
   ngOnInit(): void {
     this.user = localStorage.getItem('encyptduser');
     this.iconList = [
-      { icon: 'share1', routes: '/secret-message/create', class: 'active'},
-      { icon: 'message', routes: '/share-message', class: 'active'},
-      { icon: 'account_profile', routes: '/share-message', class: 'active'},
+      { icon: 'share1', routes: ['/secret-message/share-link', this.user], class: 'share'},
+      { icon: 'message', routes: ['secret-message/messages', this.user], class: 'message'},
+      { icon: 'account_profile', routes: ['secret-message/view-profile'], class: 'profile'},
     ];
   }
 
