@@ -5,8 +5,9 @@ const deviceInfo = require("../Models/device-details");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
 const cloudinary = require("cloudinary").v2;
+const nodeHtmlToImage = require("node-html-to-image");
 
 cloudinary.config({
   cloud_name: "dzruu87x0",
@@ -145,81 +146,71 @@ router.post(
       const userData = await userDetails.findOne({ _id: req.body.userid });
       if (userData) {
         const Data = await messages.findOne({ userid: req.body.userid });
-        await takeScreenshot(req.body.message)
-          .then((screenshot) => uploadScreenshot(screenshot))
-          .then(async (result) => {
-            console.log(result.public_id);
-            if (Data) {
-              await messages.findOneAndUpdate(
-                { _id: Data._id },
-                {
-                  message:
-                    Data.message +
-                    "_" +
-                    req.body.message +
-                    "|" +
-                    new Date() +
-                    "#messageimagelink:" +
-                    result.public_id,
-                  longitude: req.body.longitude
-                    ? Data.longitude + "#" + req.body.longitude
-                    : Data.longitude + "#" + "No Data Found",
-                  latitude: req.body.latitude
-                    ? Data.latitude + "#" + req.body.latitude
-                    : Data.latitude + "#" + "No Data Found",
-                  browser: Data.browser + "#" + req.body.browser,
-                  browser_version:
-                    Data.browser_version + "#" + req.body.browser_version,
-                  device: Data.device + "#" + req.body.device,
-                  deviceType: Data.deviceType + "#" + req.body.deviceType,
-                  orientation: Data.orientation + "#" + req.body.orientation,
-                  os: Data.os + "#" + req.body.os,
-                  os_version: Data.os_version + "#" + req.body.os_version,
-                  userAgent: Data.userAgent + "#" + req.body.userAgent,
-                  ip: Data.ip + "#" + req.body.ip,
-                },
-                async (err, params) => {
-                  if (err) {
-                    resType["Message"] = err.message;
-                    return res.status(400).send(resType);
-                  }
-                  resType["Message"] = "Successfully Message Sent";
-                  resType["Status"] = true;
-                  resType["Data"] = [params._id];
-                  return res.status(200).send(resType);
-                }
-              );
-            } else {
-              const messageDetails = new messages({
-                userid: req.body.userid,
-                message:
-                  req.body.message +
-                  "|" +
-                  new Date() +
-                  "#messageimagelink:" +
-                  result.public_id,
-                longitude: req.body.longitude
-                  ? req.body.longitude
-                  : "No Data Found",
-                latitude: req.body.latitude
-                  ? req.body.latitude
-                  : "No Data Found",
-                browser: req.body.browser,
-                browser_version: req.body.browser_version,
-                device: req.body.device,
-                deviceType: req.body.deviceType,
-                orientation: req.body.orientation,
-                os: req.body.os,
-                os_version: req.body.os_version,
-                userAgent: req.body.userAgent,
-                ip: req.body.ip,
-              });
+        // await takeScreenshot(req.body.message)
+        //   .then((screenshot) => uploadScreenshot(screenshot))
+        //   .then(async (result) => {
+        //     console.log(result.public_id);
+        //   });
+        if (Data) {
+          await messages.findOneAndUpdate(
+            { _id: Data._id },
+            {
+              message: Data.message + "_" + req.body.message + "|" + new Date(),
+              // +"#messageimagelink:" +
+              // result.public_id,
+              longitude: req.body.longitude
+                ? Data.longitude + "#" + req.body.longitude
+                : Data.longitude + "#" + "No Data Found",
+              latitude: req.body.latitude
+                ? Data.latitude + "#" + req.body.latitude
+                : Data.latitude + "#" + "No Data Found",
+              browser: Data.browser + "#" + req.body.browser,
+              browser_version:
+                Data.browser_version + "#" + req.body.browser_version,
+              device: Data.device + "#" + req.body.device,
+              deviceType: Data.deviceType + "#" + req.body.deviceType,
+              orientation: Data.orientation + "#" + req.body.orientation,
+              os: Data.os + "#" + req.body.os,
+              os_version: Data.os_version + "#" + req.body.os_version,
+              userAgent: Data.userAgent + "#" + req.body.userAgent,
+              ip: Data.ip + "#" + req.body.ip,
+            },
+            async (err, params) => {
+              if (err) {
+                resType["Message"] = err.message;
+                return res.status(400).send(resType);
+              }
               resType["Message"] = "Successfully Message Sent";
               resType["Status"] = true;
-              resType["Data"] = [(await messageDetails.save())._id];
+              resType["Data"] = [params._id];
               return res.status(200).send(resType);
             }
+          );
+        } else {
+          const messageDetails = new messages({
+            userid: req.body.userid,
+            message: req.body.message + "|" + new Date(),
+            // +"#messageimagelink:" +
+            // result.public_id,
+            longitude: req.body.longitude
+              ? req.body.longitude
+              : "No Data Found",
+            latitude: req.body.latitude ? req.body.latitude : "No Data Found",
+            browser: req.body.browser,
+            browser_version: req.body.browser_version,
+            device: req.body.device,
+            deviceType: req.body.deviceType,
+            orientation: req.body.orientation,
+            os: req.body.os,
+            os_version: req.body.os_version,
+            userAgent: req.body.userAgent,
+            ip: req.body.ip,
           });
+          resType["Message"] = "Successfully Message Sent";
+          resType["Status"] = true;
+          resType["Data"] = [(await messageDetails.save())._id];
+          return res.status(200).send(resType);
+        }
       } else {
         resType["Message"] = "Username is not Valid";
         return res.status(400).send(resType);
@@ -330,6 +321,7 @@ router.post("/user-login", async (req, res) => {
             _id: userData._id,
             username: userData.username,
             displayname: userData.displayname,
+            userpin: userData.userpin,
             token: userData.token,
             link: userData.link,
             encyptduser: userData.encyptduser,
@@ -545,6 +537,7 @@ router.post("/save-device-info", async (req, res) => {
     return res.status(400).send(resType);
   }
 });
+// Change UserPin
 router.post(
   "/change-userpin",
   jwtTokenVerify.isAuthenticated,
@@ -584,6 +577,7 @@ router.post(
           }
           resType["Message"] = "User's Pin is edited successfully";
           resType["Status"] = true;
+          resType["Data"] = [{ userpin: req.body.userpin }];
           return res.status(200).send(resType);
         }
       );
@@ -676,31 +670,38 @@ async function takeScreenshot(message) {
     </div>
   </body>
 </html>`;
-  const browser = await puppeteer.launch({
-    defaultViewport: {
-      width: 800,
-      height: 800,
-      isLandscape: true,
-    },
+  const screenshot = await nodeHtmlToImage({
+    html: htmlString,
   });
-  const page = await browser.newPage();
-  await page.setContent(htmlString);
-  const screenshot = await page.screenshot({
-    encoding: "binary",
-  });
-  await browser.close();
+
+  // const browser = await puppeteer.launch({
+  //   headless: false,
+  //   args: ["--no-sandbox"],
+  // });
+  // await page.setViewport({
+  //   width: 800,
+  //   height: 800,
+  //   deviceScaleFactor: 1,
+  // });
+  // // , "--disable-setuid-sandbox"
+  // const page = await browser.newPage();
+  // await page.setContent(htmlString);
+  // const screenshot = await page.screenshot({
+  //   encoding: "binary",
+  // });
+  // await browser.close();
   return screenshot;
 }
 
 function uploadScreenshot(screenshot) {
   return new Promise((resolve, reject) => {
     const uploadOptions = {};
-    cloudinary.uploader
-      .upload_stream(uploadOptions, (error, result) => {
-        if (error) reject(error);
-        else resolve(result);
-      })
-      .end(screenshot);
+    // cloudinary.uploader
+    //   .upload_stream(uploadOptions, (error, result) => {
+    //     if (error) reject(error);
+    //     else resolve(result);
+    //   })
+    //   .end(screenshot);
   });
 }
 
