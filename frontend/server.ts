@@ -12,7 +12,7 @@ import { enableProdMode } from '@angular/core';
 const domino = require('domino');
 const fs = require('fs');
 const template = fs
-  .readFileSync('dist/anonymous-frontend/browser/index.html')
+  .readFileSync('dist/social-game/browser/index.html')
   .toString();
 const win = domino.createWindow(template);
 

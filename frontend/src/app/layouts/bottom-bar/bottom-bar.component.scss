@@ -1,3 +1,10 @@
+@mixin activeIcon($className) {
+  // #{$className} {
+    i#{$className}:before {
+      color: #812FF7 !important;
+    }
+  // }
+}
 .navbar {
   box-shadow: 0px 4px 17px 0px rgba($color: #625959, $alpha: 0.25) !important;
   background:#fff;
@@ -15,4 +22,14 @@
       font-size: 30px;
     }
   }
+
+  // .icon-share1 {
+  //   @include activeIcon('icon-share1');
+  // }
+  // .icon-message {
+  //   @include activeIcon('icon-message');
+  // }
+  // .icon-account_profile {
+  //   @include activeIcon('icon-account_profile');
+  // }
 }
