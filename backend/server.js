@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotEnv = require("dotenv");
 const port = process.env.PORT || 3000;
 const path = require("path");
+const fileUpload = require("express-fileupload");
 
 // Routes
 const allPostRoute = require("./Routers/post");
@@ -27,6 +28,11 @@ mongoose.connect(
 );
 
 // Middleware
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
 app.use(express.json());
 app.use(function (req, res, next) {
   //Enabling CORS
