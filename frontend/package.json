@@ -38,6 +38,7 @@
     "localstorage-polyfill": "^1.0.1",
     "nativescript-social-share": "^1.6.0",
     "ng-navigator-share": "^1.0.4",
+    "ng-web-share": "^1.0.3",
     "ngx-device-detector": "^2.0.5",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

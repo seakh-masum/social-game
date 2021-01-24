@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { GenericService } from 'src/app/services/generic.service';
 import { GlobalService } from 'src/app/services/global.service';
 import { MetadataService } from 'src/app/services/meta-data.service';
+import * as htmlToImage from 'html-to-image';
 
 @Component({
   selector: 'app-view-message',
@@ -13,6 +14,7 @@ import { MetadataService } from 'src/app/services/meta-data.service';
 })
 export class ViewMessageComponent implements OnInit {
   messages: Array<any> = [];
+  messageData: any = '';
 
   constructor(
     private _route: ActivatedRoute,
@@ -45,18 +47,31 @@ export class ViewMessageComponent implements OnInit {
   onReload() {
     window.location.reload();
   }
-  async sendToDeviceMessage(messageData: any) {
-    // Social Message Share
-    if (await navigator.share) {
-      console.log('Web Share APIs are supported');
-      navigator.share({
-        title: 'Bits and pieces: Web Share API article',
-        text: 'Web Share API feature is awesome. You must check it',
-        url: window.location.href,
+  async sendToDeviceMessage(message: any, index: any) {
+    this.messageData = message;
+    let node = document.getElementById(index) as HTMLElement;
+
+    await htmlToImage
+      .toPng(node)
+      .then(async function (dataUrl) {
+        // var img = new Image();
+        console.log(dataUrl);
+        // document.body.appendChild(img);
+        // Social Message Share
+        if (await navigator.share) {
+          console.log('Web Share APIs are supported');
+          navigator.share({
+            title: 'Bits and pieces: Web Share API article',
+            text: 'Web Share API feature is awesome. You must check it',
+            url: dataUrl,
+          });
+        } else {
+          console.log('Web Share APIs are not supported');
+        }
+      })
+      .catch(function (error) {
+        console.error('oops, something went wrong!', error);
       });
-    } else {
-      console.log('Web Share APIs are not supported');
-    }
   }
   getMessageDetails() {
     const url = 'message-details/' + localStorage.getItem('id');
