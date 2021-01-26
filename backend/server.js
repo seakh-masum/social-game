@@ -3,11 +3,23 @@ const app = express();
 const mongoose = require("mongoose");
 const dotEnv = require("dotenv");
 const port = process.env.PORT || 3000;
+const path = require("path");
+const fileUpload = require("express-fileupload");
+var cors = require("cors");
+
 // Routes
 const allPostRoute = require("./Routers/post");
 const allGetRoute = require("./Routers/get");
+
 //Environment Setup
 dotEnv.config();
+
+//Get Image Path
+app.use("/images/:assest/:imagename", (req, res) => {
+  return res.sendFile(
+    path.join(__dirname + `/assests/${req.params.imagename}`)
+  );
+});
 
 // Connect Mongoose
 mongoose.connect(
@@ -17,6 +29,12 @@ mongoose.connect(
 );
 
 // Middleware
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
+app.use(cors());
 app.use(express.json());
 app.use(function (req, res, next) {
   //Enabling CORS

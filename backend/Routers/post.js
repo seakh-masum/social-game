@@ -5,6 +5,13 @@ const deviceInfo = require("../Models/device-details");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "dzruu87x0",
+  api_key: "533295136419779",
+  api_secret: "gQqWETaT7kgiFm8UvibmbZjmuQo",
+});
 
 // Save User Name with Id & Token
 router.post("/savedetails", async (req, res) => {
@@ -60,7 +67,7 @@ router.post("/savedetails", async (req, res) => {
         displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link: "secret-message/view/" + btoa(username),
+        link: "secret-message/share-link/" + btoa(username),
         encyptduser: btoa(username),
         userpin: (Math.random() * 1000000).toFixed(),
         longitude: "",
@@ -97,7 +104,7 @@ router.post("/savedetails", async (req, res) => {
         displayname: req.body.username,
         role: req.body.role,
         token: token,
-        link: "secret-message/view/" + btoa(username),
+        link: "secret-message/share-link/" + btoa(username),
         encyptduser: btoa(username),
         userpin: (Math.random() * 1000000).toFixed(),
         longitude: "",
@@ -138,12 +145,13 @@ router.post(
       const userData = await userDetails.findOne({ _id: req.body.userid });
       if (userData) {
         const Data = await messages.findOne({ userid: req.body.userid });
-        // console.log(Data);
         if (Data) {
           await messages.findOneAndUpdate(
             { _id: Data._id },
             {
               message: Data.message + "_" + req.body.message + "|" + new Date(),
+              // +"#messageimagelink:" +
+              // result.public_id,
               longitude: req.body.longitude
                 ? Data.longitude + "#" + req.body.longitude
                 : Data.longitude + "#" + "No Data Found",
@@ -176,6 +184,8 @@ router.post(
           const messageDetails = new messages({
             userid: req.body.userid,
             message: req.body.message + "|" + new Date(),
+            // +"#messageimagelink:" +
+            // result.public_id,
             longitude: req.body.longitude
               ? req.body.longitude
               : "No Data Found",
@@ -248,6 +258,7 @@ router.post("/user-login", async (req, res) => {
             _id: userData._id,
             username: userData.username,
             displayname: userData.displayname,
+            userpin: userData.userpin,
             token: userData.token,
             link: userData.link,
             encyptduser: userData.encyptduser,
@@ -328,7 +339,7 @@ router.post("/save-device-info", async (req, res) => {
             os: req.body.os,
             os_version: req.body.os_version,
             userAgent: req.body.userAgent,
-            ip:req.body.ip
+            ip: req.body.ip,
           });
           resType["Message"] = "Successful";
           resType["Status"] = true;
@@ -360,7 +371,7 @@ router.post("/save-device-info", async (req, res) => {
                 os_version:
                   deviceDetails.os_version + "#" + req.body.os_version,
                 userAgent: deviceDetails.userAgent + "#" + req.body.userAgent,
-                ip:deviceDetails.ip + "#" +req.body.ip
+                ip: deviceDetails.ip + "#" + req.body.ip,
               });
               resType["Message"] = "Successful";
               resType["Status"] = true;
@@ -463,5 +474,55 @@ router.post("/save-device-info", async (req, res) => {
     return res.status(400).send(resType);
   }
 });
+// Change UserPin
+router.post(
+  "/change-userpin",
+  jwtTokenVerify.isAuthenticated,
+  async (req, res) => {
+    const resType = {
+      Status: false,
+      Data: [],
+      Message: "",
+    };
+    try {
+      if (!req.body.userpin) {
+        resType["Message"] = "User's Pin is Required";
+        return res.status(400).send(resType);
+      }
+      if (!req.body.username) {
+        resType["Message"] = "Username is Required";
+        return res.status(400).send(resType);
+      }
+      if (
+        req.body.userpin &&
+        (req.body.userpin.length > 6 || req.body.userpin.length < 6)
+      ) {
+        resType["Message"] = "User's Pin should be Six length";
+        return res.status(400).send(resType);
+      }
+      await userDetails.findOneAndUpdate(
+        { username: req.body.username },
+        { userpin: req.body.userpin },
+        async (err, params) => {
+          if (err) {
+            resType["Message"] = err.message;
+            return res.status(400).send(resType);
+          }
+          if (!params) {
+            resType["Message"] = "Username is not valid";
+            return res.status(400).send(resType);
+          }
+          resType["Message"] = "User's Pin is edited successfully";
+          resType["Status"] = true;
+          resType["Data"] = [{ userpin: req.body.userpin }];
+          return res.status(200).send(resType);
+        }
+      );
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  }
+);
 
 module.exports = router;
