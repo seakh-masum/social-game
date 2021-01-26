@@ -15,15 +15,15 @@ import { SecretGamesAuthGuard } from './guards/secret-games-auth.guard';
 import { AuthService } from './services/auth.service';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     BrowserAnimationsModule,
     SharedModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+    }),
   ],
   providers: [
     SecretGamesAuthGuard,
@@ -35,8 +35,8 @@ import { AuthService } from './services/auth.service';
       useClass: TokenInterceptor,
       multi: true,
     },
-    AuthService
+    AuthService,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

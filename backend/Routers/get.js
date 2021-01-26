@@ -2,7 +2,7 @@ const router = require("express").Router();
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const messages = require("../Models/messages");
 const userDetails = require("../Models/user-details");
-
+// Message Details By Username
 router.get(
   "/message-details/:_id",
   jwtTokenVerify.isAuthenticated,
