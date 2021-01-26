@@ -55,7 +55,7 @@ body {
   top: 2%;
 }
 .border {
-  border: 8px solid #666;
+  // border: 8px solid #666;
 }
 .round {
   border-radius: 30px;
@@ -72,7 +72,7 @@ body {
   top: auto;
   bottom: -40px;
   border: 32px solid;
-  border-color: transparent transparent transparent #666;
+  // border-color: transparent transparent transparent rgb(5, 5, 5);
 }
 .tri-right.btm-left:after {
   content: " ";
@@ -92,8 +92,6 @@ body {
   text-align: left;
   line-height: 1.5em;
   text-align: center;
-  font-size: xx-large;
-  font-weight: bold;
 }
 .talktext p {
   /* remove webkit p margins */
