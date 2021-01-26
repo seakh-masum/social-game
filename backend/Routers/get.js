@@ -23,7 +23,11 @@ router.get(
       for (let i = 0; i < messageSplit.length; i++) {
         messageDetails.push({
           message: messageSplit[i].split("|")[0],
-          date: messageSplit[i].split("|")[1],
+          date: messageSplit[i].split("|")[1].split("#messageimagelink:")[0],
+          messageimagelink:
+            "https://res.cloudinary.com/dzruu87x0/image/upload/v1611487875/" +
+            messageSplit[i].split("#messageimagelink:")[1] +
+            ".png",
           // ip: userMessages["ip"].split("#")[i],
           // longitude: userMessages["longitude"].split("#")[i],
           // latitude: userMessages["latitude"].split("#")[i],
