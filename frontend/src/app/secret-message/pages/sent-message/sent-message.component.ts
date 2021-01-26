@@ -16,13 +16,14 @@ export class SentMessageComponent implements OnInit {
   public msg: string = '';
   userId: any = '';
   public displayName: any = '';
+  public msgSendFlag: boolean = false;
 
   constructor(
     private _generic: GenericService,
     private _global: GlobalService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _dialog: MatDialog,
+    private _dialog: MatDialog
   ) {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
@@ -48,7 +49,9 @@ export class SentMessageComponent implements OnInit {
           localStorage.setItem('token', res.Data[0].token);
           this.userId = res.Data[0]._id;
           this.displayName = res.Data[0].displayname;
-          this.displayName = this.displayName ? `Send your secret message to ${this.displayName}` : '';
+          this.displayName = this.displayName
+            ? `Send your secret message to ${this.displayName}`
+            : '';
         }
       }
     });
@@ -83,8 +86,9 @@ export class SentMessageComponent implements OnInit {
           console.log(res);
           if (res['Status']) {
             this.msg = '';
+            this.msgSendFlag = true;
             this._global.openSnackbar(res.Message, 'success');
-            this._dialog.open(DialogComponent);
+            // this._dialog.open(DialogComponent);
           } else {
             this._global.openSnackbar(res.Message, 'error');
           }

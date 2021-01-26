@@ -5,15 +5,14 @@ const deviceInfo = require("../Models/device-details");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
-// const puppeteer = require("puppeteer");
 const cloudinary = require("cloudinary").v2;
-const nodeHtmlToImage = require("node-html-to-image");
 
 cloudinary.config({
   cloud_name: "dzruu87x0",
   api_key: "533295136419779",
   api_secret: "gQqWETaT7kgiFm8UvibmbZjmuQo",
 });
+
 // Save User Name with Id & Token
 router.post("/savedetails", async (req, res) => {
   const resType = {
@@ -146,11 +145,6 @@ router.post(
       const userData = await userDetails.findOne({ _id: req.body.userid });
       if (userData) {
         const Data = await messages.findOne({ userid: req.body.userid });
-        // await takeScreenshot(req.body.message)
-        //   .then((screenshot) => uploadScreenshot(screenshot))
-        //   .then(async (result) => {
-        //     console.log(result.public_id);
-        //   });
         if (Data) {
           await messages.findOneAndUpdate(
             { _id: Data._id },
@@ -215,63 +209,6 @@ router.post(
         resType["Message"] = "Username is not Valid";
         return res.status(400).send(resType);
       }
-    } catch (err) {
-      resType["Message"] = err.message;
-      return res.status(400).send(resType);
-    }
-  }
-);
-// Save Message Image
-router.post(
-  "/image-message-detail",
-  jwtTokenVerify.isAuthenticated,
-  async (req, res) => {
-    const resType = {
-      Status: false,
-      Data: [],
-      Message: "",
-    };
-    try {
-      if (!req.body.userid) {
-        resType["Message"] = "Userid is required";
-        return res.status(400).send(resType);
-      }
-      if (!req.body.message) {
-        resType["Message"] = "User's message is required";
-        return res.status(400).send(resType);
-      }
-      await messages.findOne(
-        { userid: req.body.userid },
-        async (error, params) => {
-          if (error) {
-            resType["Message"] = err.message;
-            return res.status(400).send(resType);
-          }
-          if (
-            params &&
-            params["message"] &&
-            params["message"].includes(`_${req.body.message}|`)
-          ) {
-            await takeScreenshot(req.body.message)
-              .then((screenshot) => uploadScreenshot(screenshot))
-              .then((result) => {
-                resType["Status"] = true;
-                resType["Message"] = "Successful";
-                resType["Data"] = [
-                  {
-                    public_id: result.public_id,
-                    url: result.url,
-                  },
-                ];
-                return res.status(200).send(resType);
-              });
-          } else {
-            resType["Message"] =
-              "User's id or message is not present in our Database";
-            return res.status(400).send(resType);
-          }
-        }
-      );
     } catch (err) {
       resType["Message"] = err.message;
       return res.status(400).send(resType);
@@ -587,122 +524,5 @@ router.post(
     }
   }
 );
-
-async function takeScreenshot(message) {
-  const htmlString = `<html>
-  <head>
-    <title></title>
-    <style>
-      /* General CSS Setup */
-      body {
-        background-color: lightblue;
-        font-family: "Ubuntu-Italic", "Lucida Sans", helvetica, sans;
-      }
-
-      /* container */
-      .container {
-        padding: 5% 5%;
-      }
-
-      /* CSS talk bubble */
-      .talk-bubble {
-        display: inline-block;
-        position: relative;
-        width: 95%;
-        height: 95%;
-        background-color: lightyellow;
-        left: 2%;
-        top: 2%;
-      }
-      .border {
-        border: 8px solid #666;
-      }
-      .round {
-        border-radius: 30px;
-        -webkit-border-radius: 30px;
-        -moz-border-radius: 30px;
-      }
-      .tri-right.border.btm-left:before {
-        content: " ";
-        position: absolute;
-        width: 0;
-        height: 0;
-        left: -8px;
-        right: auto;
-        top: auto;
-        bottom: -40px;
-        border: 32px solid;
-        border-color: transparent transparent transparent #666;
-      }
-      .tri-right.btm-left:after {
-        content: " ";
-        position: absolute;
-        width: 0;
-        height: 0;
-        left: 0px;
-        right: auto;
-        top: auto;
-        bottom: -20px;
-        border: 22px solid;
-        border-color: transparent transparent transparent lightyellow;
-      }
-      /* talk bubble contents */
-      .talktext {
-        padding: 1em;
-        text-align: left;
-        line-height: 1.5em;
-        text-align: center;
-        font-size: xx-large;
-        font-weight: bold;
-      }
-      .talktext p {
-        /* remove webkit p margins */
-        -webkit-margin-before: 0em;
-        -webkit-margin-after: 0em;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="talk-bubble tri-right border round btm-left-in">
-      <div class="talktext">
-        <p>${message}</p>
-      </div>
-    </div>
-  </body>
-</html>`;
-  const screenshot = await nodeHtmlToImage({
-    html: htmlString,
-  });
-
-  // const browser = await puppeteer.launch({
-  //   headless: false,
-  //   args: ["--no-sandbox"],
-  // });
-  // await page.setViewport({
-  //   width: 800,
-  //   height: 800,
-  //   deviceScaleFactor: 1,
-  // });
-  // // , "--disable-setuid-sandbox"
-  // const page = await browser.newPage();
-  // await page.setContent(htmlString);
-  // const screenshot = await page.screenshot({
-  //   encoding: "binary",
-  // });
-  // await browser.close();
-  return screenshot;
-}
-
-function uploadScreenshot(screenshot) {
-  return new Promise((resolve, reject) => {
-    const uploadOptions = {};
-    // cloudinary.uploader
-    //   .upload_stream(uploadOptions, (error, result) => {
-    //     if (error) reject(error);
-    //     else resolve(result);
-    //   })
-    //   .end(screenshot);
-  });
-}
 
 module.exports = router;
