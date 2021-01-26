@@ -30,10 +30,9 @@ export class ViewMessageComponent implements OnInit {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
         _global.userId = res;
-        if (
-          typeof localStorage.getItem('encyptduser') !== undefined &&
-          localStorage.getItem('encyptduser') == res
-        ) {
+        let encrptedUser = localStorage.getItem('encyptduser');
+        console.log(atob(String(encrptedUser)), atob(res));
+        if (encrptedUser && atob(String(encrptedUser)) == atob(res)) {
           this.getMessageDetails();
         } else {
           this._router.navigate(['/secret-message/sent/' + _global.userId]);
@@ -75,7 +74,7 @@ export class ViewMessageComponent implements OnInit {
         that.checkFile(list);
       })
       .catch((err: any) => {
-        this._global.openSnackbar(err.message, 'error');
+        console.log(err);
       });
   }
   async checkFile(event: any) {
@@ -95,7 +94,6 @@ export class ViewMessageComponent implements OnInit {
       })
       .catch((error: any) => {
         console.log(error);
-        this._global.openSnackbar(error.message, 'error');
       });
   }
   urltoFile(url: any, filename: any, mimeType: any) {

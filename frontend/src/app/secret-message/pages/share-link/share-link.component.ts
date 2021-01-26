@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-share-link',
   templateUrl: './share-link.component.html',
-  styleUrls: ['./share-link.component.scss']
+  styleUrls: ['./share-link.component.scss'],
 })
 export class ShareLinkComponent implements OnInit {
   url: string = '';
@@ -25,7 +25,12 @@ export class ShareLinkComponent implements OnInit {
   };
   iconList: Array<any> = [];
 
-  sharingOptions: { name: string; icon: string; color: string; href: SafeUrl; }[] = [];
+  sharingOptions: {
+    name: string;
+    icon: string;
+    color: string;
+    href: SafeUrl;
+  }[] = [];
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -35,13 +40,14 @@ export class ShareLinkComponent implements OnInit {
     private meta: Meta,
     private title: Title
   ) {
-
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
         _global.userId = res;
+        let encrptedUser = localStorage.getItem('encyptduser');
+        console.log(atob(String(encrptedUser)), atob(res));
         if (
-          typeof localStorage.getItem('encyptduser') !== undefined &&
-          localStorage.getItem('encyptduser') == res
+          encrptedUser !== undefined &&
+          atob(String(encrptedUser)) == atob(res)
         ) {
           // this.getMessageDetails();
           _global.watchPosition();
@@ -54,10 +60,9 @@ export class ShareLinkComponent implements OnInit {
         this._router.navigate(['/secret-message/create']);
       }
     });
-    
 
-          // metadata.generateMetaDefinitions(this.defaultMetadata);
-   }
+    // metadata.generateMetaDefinitions(this.defaultMetadata);
+  }
 
   ngOnInit(): void {
     this.url = environment.hostingurl + localStorage.getItem('link');
@@ -82,25 +87,24 @@ export class ShareLinkComponent implements OnInit {
 
   updateMetaTag() {
     const imgUrl = 'assets/img/secret-covers.png';
-          this.meta.updateTag({
-            name: 'description',
-            content: `Send secret message to the user, they don't know who send him`,
-          });
-          this.meta.updateTag({
-            property: 'og:image',
-            content: imgUrl,
-            itemprop: 'image',
-          });
-          this.meta.updateTag({
-            property: 'og:image:url',
-            content: imgUrl,
-            itemprop: 'image',
-          });
-          this.meta.updateTag({
-            property: 'og:image:type',
-            content: 'image/png',
-          });
-
+    this.meta.updateTag({
+      name: 'description',
+      content: `Send secret message to the user, they don't know who send him`,
+    });
+    this.meta.updateTag({
+      property: 'og:image',
+      content: imgUrl,
+      itemprop: 'image',
+    });
+    this.meta.updateTag({
+      property: 'og:image:url',
+      content: imgUrl,
+      itemprop: 'image',
+    });
+    this.meta.updateTag({
+      property: 'og:image:type',
+      content: 'image/png',
+    });
   }
 
   sanitizeUrl(url: string): SafeUrl {
@@ -119,5 +123,4 @@ export class ShareLinkComponent implements OnInit {
       console.log('You app is not shared, reason: ', error);
     }
   }
-
 }
