@@ -70,6 +70,9 @@ export class CreateProfileComponent implements OnInit {
     this.userName = '';
     this.pin = '';
     this.loginFlag = !this.loginFlag;
+    if (!this.availableFlag) {
+      this.privacyPolicy = false;
+    }
   }
   setData(data: any) {
     localStorage.setItem('link', data.link);
