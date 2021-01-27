@@ -20,9 +20,9 @@ export class MessagingService {
         console.log(token);
         let params = {
           userid: localStorage.getItem('id'),
-          'firebase-token': token,
+          endpoints: token,
         };
-        this._generic.post('save-firebase-token', params).subscribe();
+        this._generic.post('save-firebase-endpoints', params).subscribe();
       },
       (err) => {
         console.error('Unable to get permission to notify.', err);

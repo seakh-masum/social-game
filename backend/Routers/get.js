@@ -12,39 +12,50 @@ router.get(
       Data: [],
       Message: "",
     };
-    const userMessages = await messages.findOne({ userid: req.params._id });
-    if (!userMessages) {
-      resType["Message"] = "You have no messages yet";
-      return res.status(200).send(resType);
-    }
     try {
-      const messageSplit = userMessages["message"].split("_");
-      const messageDetails = [];
-      for (let i = 0; i < messageSplit.length; i++) {
-        messageDetails.push({
-          message: messageSplit[i].split("|")[0],
-          date: messageSplit[i].split("|")[1].split("#messageimagelink:")[0],
-          // , messageimagelink:
-          //    "https://res.cloudinary.com/dzruu87x0/image/upload/v1611487875/" +
-          //    messageSplit[i].split("#messageimagelink:")[1] +
-          //    ".png",
-          // ip: userMessages["ip"].split("#")[i],
-          // longitude: userMessages["longitude"].split("#")[i],
-          // latitude: userMessages["latitude"].split("#")[i],
-          // browser: userMessages["browser"].split("#")[i],
-          // browser_version: userMessages["browser_version"].split("#")[i],
-          // device: userMessages["device"].split("#")[i],
-          // deviceType: userMessages["deviceType"].split("#")[i],
-          // orientation: userMessages["orientation"].split("#")[i],
-          // os: userMessages["os"].split("#")[i],
-          // os_version: userMessages["os_version"].split("#")[i],
-          // userAgent: userMessages["userAgent"].split("#")[i],
-        });
-      }
-      resType["Message"] = "Successful";
-      resType["Status"] = true;
-      resType["Data"] = messageDetails;
-      return res.status(200).send(resType);
+      await messages.findOne(
+        { userid: req.params._id },
+        async (err, params) => {
+          if (err) {
+            resType["Message"] = err.message;
+            return res.status(400).send(resType);
+          }
+          if (params === null) {
+            resType["Status"] = true;
+            resType["Message"] = "You have no message yet";
+            return res.status(200).send(resType);
+          }
+          if (params.messagedetails.findIndex((x) => x.seen == false) > -1) {
+            var arrayData = [];
+            arrayData = params.messagedetails;
+            params.messagedetails = [];
+            arrayData.forEach(async (element) => {
+              await params.messagedetails.push({
+                message: element.message,
+                date: element.date,
+                seen: true,
+                base64image: element.base64image,
+                longitude: element.longitude,
+                latitude: element.latitude,
+                browser: element.browser,
+                browser_version: element.browser_version,
+                device: element.device,
+                deviceType: element.deviceType,
+                orientation: element.orientation,
+                os: element.os,
+                os_version: element.os_version,
+                userAgent: element.userAgent,
+                ip: element.ip,
+              });
+            });
+            await params.save();
+          }
+          resType["Status"] = true;
+          resType["Message"] = "Successful";
+          resType["Data"] = [params];
+          return res.status(200).send(resType);
+        }
+      );
     } catch (err) {
       resType["Message"] = err.message;
       return res.status(400).send(resType);

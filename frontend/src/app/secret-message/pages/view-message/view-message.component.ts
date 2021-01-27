@@ -18,8 +18,6 @@ import { MessagingService } from 'src/app/services/messaging.service';
 export class ViewMessageComponent implements OnInit {
   messages: Array<any> = [];
   messageData: any = '';
-  readonly Vapid_Public_Key =
-    'BKsmi3A_AYaHoSgl6ON43u6c1HCgD31-qF8NxJ88smuYpT7TN8JdaPNYtbS6r7C67d0CZlawQ645OkCGQbZyLf4';
 
   constructor(
     private _route: ActivatedRoute,
