@@ -7,6 +7,8 @@ import { GlobalService } from 'src/app/services/global.service';
 import { MetadataService } from 'src/app/services/meta-data.service';
 import * as htmlToImage from 'html-to-image';
 import { WebShareService } from 'ng-web-share';
+import { SwPush, SwUpdate } from '@angular/service-worker';
+import { MessagingService } from 'src/app/services/messaging.service';
 
 @Component({
   selector: 'app-view-message',
@@ -16,6 +18,8 @@ import { WebShareService } from 'ng-web-share';
 export class ViewMessageComponent implements OnInit {
   messages: Array<any> = [];
   messageData: any = '';
+  readonly Vapid_Public_Key =
+    'BKsmi3A_AYaHoSgl6ON43u6c1HCgD31-qF8NxJ88smuYpT7TN8JdaPNYtbS6r7C67d0CZlawQ645OkCGQbZyLf4';
 
   constructor(
     private _route: ActivatedRoute,
@@ -25,7 +29,8 @@ export class ViewMessageComponent implements OnInit {
     @Optional() private metadataService: MetadataService,
     private meta: Meta,
     private title: Title,
-    private webshareService: WebShareService
+    private webshareService: WebShareService,
+    private messagingService: MessagingService
   ) {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
@@ -43,8 +48,10 @@ export class ViewMessageComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
-
+  ngOnInit(): void {
+    this.messagingService.requestPermission();
+    this.messagingService.receiveMessage();
+  }
   onReload() {
     window.location.reload();
   }

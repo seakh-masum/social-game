@@ -13,6 +13,10 @@ import { TokenInterceptor } from './services/token-interceptor';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { SecretGamesAuthGuard } from './guards/secret-games-auth.guard';
 import { AuthService } from './services/auth.service';
+import { MessagingService } from './services/messaging.service';
+import { AsyncPipe } from '@angular/common';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,10 +28,14 @@ import { AuthService } from './services/auth.service';
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),
+    AngularFireMessagingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
   ],
   providers: [
     SecretGamesAuthGuard,
     JwtHelperService,
+    MessagingService,
+    AsyncPipe,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     { provide: HTTP_INTERCEPTORS, useClass: HtttpIntercept, multi: true },
     {
