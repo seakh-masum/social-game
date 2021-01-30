@@ -18,6 +18,7 @@ export class SentMessageComponent implements OnInit {
   userId: any = '';
   public displayName: any = '';
   public msgSendFlag: boolean = false;
+  public endPoints: any = '';
 
   constructor(
     private _generic: GenericService,
@@ -53,6 +54,7 @@ export class SentMessageComponent implements OnInit {
           this.displayName = this.displayName
             ? `Send your secret message to ${this.displayName}`
             : '';
+          this.endPoints = res.Data[1].endpoints;
         }
       }
     });
@@ -80,6 +82,7 @@ export class SentMessageComponent implements OnInit {
         os_version: this._global.deviceInfo['os_version'],
         userAgent: this._global.deviceInfo['userAgent'],
         ip: ipAdd,
+        endpoints: this.endPoints,
       };
 
       // this._generic.post(url, data).subscribe(
@@ -98,13 +101,16 @@ export class SentMessageComponent implements OnInit {
       //     this._global.openSnackbar(err.Message, 'success');
       //   }
       // );
-      this._dialog.open(MessageReviewComponent, {
-        data: {
-          params: data,
-        }
-      }).afterClosed().subscribe((res)=> {
-        this.msgSendFlag = res;
-      })
+      this._dialog
+        .open(MessageReviewComponent, {
+          data: {
+            params: data,
+          },
+        })
+        .afterClosed()
+        .subscribe((res) => {
+          this.msgSendFlag = res;
+        });
     } else {
       this._global.openSnackbar(
         `Write Something to ${

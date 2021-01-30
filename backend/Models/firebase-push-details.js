@@ -6,7 +6,7 @@ const pushSchema = new mongoose.Schema({
     required: true,
   },
   endpoints: {
-    type: Array,
+    type: String,
     required: true,
   },
   date: {

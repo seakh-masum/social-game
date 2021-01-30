@@ -21,41 +21,41 @@ const task = cron.schedule(
                 if (err) {
                   return;
                 }
-                if (fcm !== null) {
-                  await axios
-                    .post(
-                      process.env.FIREBASE_CLOUD_MESSAGE_URL,
-                      {
-                        notification: {
-                          title: "Social Message",
-                          body:
-                            "check anonymously someone messaged you something",
-                          icon:
-                            "https://res.cloudinary.com/dzruu87x0/image/upload/v1612033640/secret-message_lgicit.png",
-                          click_action:
-                            "https://socail-game.web.app/secret-message/create",
-                        },
-                        registration_ids: fcm.endpoints,
-                      },
-                      {
-                        headers: {
-                          "Access-Control-Allow-Origin": "*",
-                          "Content-type": "application/json",
-                          Authorization: `key=${process.env.FIREBASE_SERVER_KEY}`,
-                        },
-                      }
-                    )
-                    .then(
-                      (response) => {
-                        var response = response.data;
-                        console.log(response);
-                      },
-                      (error) => {
-                        var status = error.response.status;
-                        console.log(status);
-                      }
-                    );
-                }
+                // if (fcm !== null) {
+                //   await axios
+                //     .post(
+                //       process.env.FIREBASE_CLOUD_MESSAGE_URL,
+                //       {
+                //         notification: {
+                //           title: "Social Message",
+                //           body:
+                //             "check anonymously someone messaged you something",
+                //           icon:
+                //             "https://res.cloudinary.com/dzruu87x0/image/upload/v1612033640/secret-message_lgicit.png",
+                //           click_action:
+                //             "https://socail-game.web.app/secret-message/create",
+                //         },
+                //         registration_ids: fcm.endpoints,
+                //       },
+                //       {
+                //         headers: {
+                //           "Access-Control-Allow-Origin": "*",
+                //           "Content-type": "application/json",
+                //           Authorization: `key=${process.env.FIREBASE_SERVER_KEY}`,
+                //         },
+                //       }
+                //     )
+                //     .then(
+                //       (response) => {
+                //         var response = response.data;
+                //         console.log(response);
+                //       },
+                //       (error) => {
+                //         var status = error.response.status;
+                //         console.log(status);
+                //       }
+                //     );
+                // }
               }
             );
           }
@@ -68,5 +68,5 @@ const task = cron.schedule(
   }
 );
 
-task.start();
+// task.start();
 module.exports = router;
