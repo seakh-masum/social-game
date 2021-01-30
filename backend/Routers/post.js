@@ -545,7 +545,7 @@ router.post("/save-firebase-endpoints", async (req, res) => {
           } else {
             if (params.endpoints.indexOf(req.body.endpoints) === -1) {
               params.endpoints.push(req.body.endpoints);
-              params.save();
+              await params.save();
             }
           }
         }
