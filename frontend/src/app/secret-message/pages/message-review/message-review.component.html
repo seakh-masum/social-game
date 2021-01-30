@@ -1,0 +1,8 @@
+<mat-dialog-content>
+  <div id="msg" class="msg">
+    <h1>{{data.params.message}}</h1>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-button (click)="sendMessage()" [disabled]="isButtonDisabled">Ok</button>
+</mat-dialog-actions>

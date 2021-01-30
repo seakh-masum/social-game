@@ -10,14 +10,18 @@ import { ViewProfileComponent } from './pages/view-profile/view-profile.componen
 import { ShareLinkComponent } from './pages/share-link/share-link.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
+import { MessageReviewComponent } from './pages/message-review/message-review.component';
 
 
 @NgModule({
-  declarations: [CreateProfileComponent, SentMessageComponent, ViewMessageComponent, ViewProfileComponent, ShareLinkComponent, LoginComponent, RegistrationComponent],
+  declarations: [CreateProfileComponent, SentMessageComponent, ViewMessageComponent, ViewProfileComponent, ShareLinkComponent, LoginComponent, RegistrationComponent, MessageReviewComponent],
   imports: [
     CommonModule,
     SharedModule,
     SecretMessageRoutingModule
+  ],
+  entryComponents: [
+    MessageReviewComponent
   ]
 })
 export class SecretMessageModule { }

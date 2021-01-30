@@ -20,13 +20,13 @@
         <div fxFlex="90" fxLayout="column">
           <p fxLayoutAlign="start center">{{ item.message }}</p>
           <span fxLayoutAlign="start center">{{ item.date | date }}</span>
-          <div [id]="i" class="talk-bubble tri-right border round btm-left-in">
+          <!-- <div [id]="i" class="talk-bubble tri-right border round btm-left-in">
             <div class="talktext">
               <p>{{ item.message }}</p>
             </div>
-          </div>
+          </div> -->
         </div>
-        <div fxLayoutAlign="center center" fxFlex="10" (click)="shareData(i)">
+        <div fxLayoutAlign="center center" fxFlex="10" (click)="shareData(item.base64image)">
           <!-- <i class="icon-share"></i> -->
           <img src="assets/icons/share.svg">
         </div>

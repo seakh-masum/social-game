@@ -49,23 +49,23 @@ export class ViewMessageComponent implements OnInit {
   onReload() {
     window.location.reload();
   }
-  async shareData(index: any) {
-    let node = document.getElementById(index) as HTMLElement;
-    let base64Image: any;
-    await htmlToImage
-      .toPng(node)
-      .then(async function (dataUrl) {
-        console.log(dataUrl);
-        base64Image = dataUrl;
-      })
-      .catch(function (error) {
-        console.error('oops, something went wrong!', error);
-      });
+  async shareData(image: any) {
+    // let node = document.getElementById(index) as HTMLElement;
+    // let base64Image: any;
+    // await htmlToImage
+    //   .toPng(node)
+    //   .then(async function (dataUrl) {
+    //     console.log(dataUrl);
+    //     base64Image = dataUrl;
+    //   })
+    //   .catch(function (error) {
+    //     console.error('oops, something went wrong!', error);
+    //   });
     let that = this;
     let list = new DataTransfer();
     that
       .urltoFile(
-        base64Image,
+        image,
         `${new Date().getMilliseconds()}.png`,
         'image/png'
       )
@@ -107,7 +107,7 @@ export class ViewMessageComponent implements OnInit {
     this._generic.get(url).subscribe((res: any) => {
       console.log(res);
       if (res['Status']) {
-        this.messages = res.Data;
+        this.messages = res.Data[0].messagedetails;
       }
     });
   }
