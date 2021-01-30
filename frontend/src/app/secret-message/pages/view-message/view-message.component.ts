@@ -66,15 +66,11 @@ export class ViewMessageComponent implements OnInit {
     //     console.error('oops, something went wrong!', error);
     //   });
     console.log(image);
-    
+
     let that = this;
     let list = new DataTransfer();
     that
-      .urltoFile(
-        image,
-        `${new Date().getMilliseconds()}.png`,
-        'image/png'
-      )
+      .urltoFile(image, `${new Date().getMilliseconds()}.png`, 'image/png')
       .then(function (file) {
         console.log(file);
         list.items.add(file);
@@ -119,6 +115,6 @@ export class ViewMessageComponent implements OnInit {
       if (res['Status']) {
         this.messages = res.Data[0].messagedetails;
       }
-    );
+    });
   }
 }
