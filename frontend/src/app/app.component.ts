@@ -22,23 +22,22 @@ export class AppComponent {
     private _activatedRoute: ActivatedRoute,
     private _title: Title
   ) {
-    if (environment.production) {
-      console.log = console.debug = console.error = () => {};
-    }
-    _router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(params => {
-        const routing_data: any = _activatedRoute.root.firstChild?.children[0].snapshot.data,
-              current_url = _router.url.split('?')[0];
-        
+    // if (environment.production) {
+    //   console.log = console.debug = console.error = () => {};
+    // }
+    _router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((params) => {
+        const routing_data: any =
+            _activatedRoute.root.firstChild?.children[0].snapshot.data,
+          current_url = _router.url.split('?')[0];
+
         this.setPageConfig(current_url, routing_data);
-      
-    })
+      });
   }
 
-
   setPageConfig(current_url: string, routing_data: any) {
-    if(routing_data.title) {
+    if (routing_data.title) {
       this._title.setTitle(routing_data.title);
     }
     console.log(routing_data);

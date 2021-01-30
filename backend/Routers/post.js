@@ -2,6 +2,7 @@ const router = require("express").Router();
 const userDetails = require("../Models/user-details");
 const messages = require("../Models/messages");
 const deviceInfo = require("../Models/device-details");
+const firebasePush = require("../Models/firebase-push-details");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
@@ -144,67 +145,69 @@ router.post(
     try {
       const userData = await userDetails.findOne({ _id: req.body.userid });
       if (userData) {
-        const Data = await messages.findOne({ userid: req.body.userid });
-        if (Data) {
-          await messages.findOneAndUpdate(
-            { _id: Data._id },
-            {
-              message: Data.message + "_" + req.body.message + "|" + new Date(),
-              // +"#messageimagelink:" +
-              // result.public_id,
-              longitude: req.body.longitude
-                ? Data.longitude + "#" + req.body.longitude
-                : Data.longitude + "#" + "No Data Found",
-              latitude: req.body.latitude
-                ? Data.latitude + "#" + req.body.latitude
-                : Data.latitude + "#" + "No Data Found",
-              browser: Data.browser + "#" + req.body.browser,
-              browser_version:
-                Data.browser_version + "#" + req.body.browser_version,
-              device: Data.device + "#" + req.body.device,
-              deviceType: Data.deviceType + "#" + req.body.deviceType,
-              orientation: Data.orientation + "#" + req.body.orientation,
-              os: Data.os + "#" + req.body.os,
-              os_version: Data.os_version + "#" + req.body.os_version,
-              userAgent: Data.userAgent + "#" + req.body.userAgent,
-              ip: Data.ip + "#" + req.body.ip,
-            },
-            async (err, params) => {
-              if (err) {
-                resType["Message"] = err.message;
-                return res.status(400).send(resType);
-              }
-              resType["Message"] = "Successfully Message Sent";
-              resType["Status"] = true;
-              resType["Data"] = [params._id];
-              return res.status(200).send(resType);
+        await messages.findOne(
+          { userid: req.body.userid },
+          async (err, params) => {
+            if (err) {
+              resType["Message"] = err.message;
+              return res.status(400).send(resType);
             }
-          );
-        } else {
-          const messageDetails = new messages({
-            userid: req.body.userid,
-            message: req.body.message + "|" + new Date(),
-            // +"#messageimagelink:" +
-            // result.public_id,
-            longitude: req.body.longitude
-              ? req.body.longitude
-              : "No Data Found",
-            latitude: req.body.latitude ? req.body.latitude : "No Data Found",
-            browser: req.body.browser,
-            browser_version: req.body.browser_version,
-            device: req.body.device,
-            deviceType: req.body.deviceType,
-            orientation: req.body.orientation,
-            os: req.body.os,
-            os_version: req.body.os_version,
-            userAgent: req.body.userAgent,
-            ip: req.body.ip,
-          });
-          resType["Message"] = "Successfully Message Sent";
-          resType["Status"] = true;
-          resType["Data"] = [(await messageDetails.save())._id];
-          return res.status(200).send(resType);
-        }
+            if (params === null) {
+              messages.create({
+                userid: req.body.userid,
+                messagedetails: [
+                  {
+                    message: req.body.message,
+                    seen: false,
+                    base64image: req.body.base64image,
+                    date: new Date(),
+                    longitude: req.body.longitude
+                      ? req.body.longitude
+                      : "No Data Found",
+                    latitude: req.body.latitude
+                      ? req.body.latitude
+                      : "No Data Found",
+                    browser: req.body.browser,
+                    browser_version: req.body.browser_version,
+                    device: req.body.device,
+                    deviceType: req.body.deviceType,
+                    orientation: req.body.orientation,
+                    os: req.body.os,
+                    os_version: req.body.os_version,
+                    userAgent: req.body.userAgent,
+                    ip: req.body.ip,
+                  },
+                ],
+              });
+            } else {
+              params.messagedetails.push({
+                message: req.body.message,
+                date: new Date(),
+                seen: false,
+                base64image: req.body.base64image,
+                longitude: req.body.longitude
+                  ? req.body.longitude
+                  : "No Data Found",
+                latitude: req.body.latitude
+                  ? req.body.latitude
+                  : "No Data Found",
+                browser: req.body.browser,
+                browser_version: req.body.browser_version,
+                device: req.body.device,
+                deviceType: req.body.deviceType,
+                orientation: req.body.orientation,
+                os: req.body.os,
+                os_version: req.body.os_version,
+                userAgent: req.body.userAgent,
+                ip: req.body.ip,
+              });
+              params.save();
+            }
+          }
+        );
+        resType["Status"] = true;
+        resType["Message"] = "Successful";
+        return res.status(200).send(resType);
       } else {
         resType["Message"] = "Username is not Valid";
         return res.status(400).send(resType);
@@ -524,5 +527,33 @@ router.post(
     }
   }
 );
-
+// Save Firebase Push Endpoints
+router.post("/save-firebase-endpoints", async (req, res) => {
+  try {
+    await firebasePush.findOne(
+      { userid: req.body.userid },
+      async (err, params) => {
+        if (err) {
+          return res.status(400).json({ Message: err.message });
+        }
+        if (req.body.endpoints != "" && req.body.userid != "") {
+          if (params === null) {
+            firebasePush.create({
+              userid: req.body.userid,
+              endpoints: req.body.endpoints,
+            });
+          } else {
+            if (params.endpoints.indexOf(req.body.endpoints) === -1) {
+              params.endpoints.push(req.body.endpoints);
+              await params.save();
+            }
+          }
+        }
+      }
+    );
+    return res.status(200).json({ Message: "Successful" });
+  } catch (err) {
+    return res.status(404).json({ Message: err.message });
+  }
+});
 module.exports = router;

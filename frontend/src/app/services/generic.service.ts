@@ -7,7 +7,9 @@ import { environment } from 'src/environments/environment';
 })
 export class GenericService {
   public apiURL = environment.secretbaseurl;
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient) {
+    console.log(environment.production);
+  }
 
   get(url: string, params = '') {
     if (params) {

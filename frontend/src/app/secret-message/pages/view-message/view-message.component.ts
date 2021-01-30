@@ -7,6 +7,8 @@ import { GlobalService } from 'src/app/services/global.service';
 import { MetadataService } from 'src/app/services/meta-data.service';
 import * as htmlToImage from 'html-to-image';
 import { WebShareService } from 'ng-web-share';
+import { SwPush, SwUpdate } from '@angular/service-worker';
+import { MessagingService } from 'src/app/services/messaging.service';
 
 @Component({
   selector: 'app-view-message',
@@ -25,15 +27,15 @@ export class ViewMessageComponent implements OnInit {
     @Optional() private metadataService: MetadataService,
     private meta: Meta,
     private title: Title,
-    private webshareService: WebShareService
+    private webshareService: WebShareService,
+    private messagingService: MessagingService
   ) {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
         _global.userId = res;
-        if (
-          typeof localStorage.getItem('encyptduser') !== undefined &&
-          localStorage.getItem('encyptduser') == res
-        ) {
+        let encrptedUser = localStorage.getItem('encyptduser');
+        console.log(atob(String(encrptedUser)), atob(res));
+        if (encrptedUser && atob(String(encrptedUser)) == atob(res)) {
           this.getMessageDetails();
         } else {
           this._router.navigate(['/secret-message/sent/' + _global.userId]);
@@ -44,8 +46,10 @@ export class ViewMessageComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
-
+  ngOnInit(): void {
+    this.messagingService.requestPermission();
+    this.messagingService.receiveMessage();
+  }
   onReload() {
     window.location.reload();
   }
@@ -62,18 +66,18 @@ export class ViewMessageComponent implements OnInit {
     //     console.error('oops, something went wrong!', error);
     //   });
     console.log(image);
-    
+
     let that = this;
     let list = new DataTransfer();
     that
-      .urltoFile(
-        image,
-        `${new Date().getMilliseconds()}.png`,
-        'image/png'
-      )
+      .urltoFile(image, `${new Date().getMilliseconds()}.png`, 'image/png')
       .then(function (file) {
+        console.log(file);
         list.items.add(file);
         that.checkFile(list);
+      })
+      .catch((err: any) => {
+        console.log(err);
       });
   }
   async checkFile(event: any) {
