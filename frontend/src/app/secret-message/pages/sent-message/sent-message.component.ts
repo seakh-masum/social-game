@@ -48,7 +48,15 @@ export class SentMessageComponent implements OnInit {
       console.log(res);
       if (res['Status']) {
         if (res['Data']) {
-          localStorage.setItem('token', res.Data[0].token);
+          if (localStorage.getItem('token')) {
+            localStorage.setItem(
+              'token-previous',
+              String(localStorage.getItem('token'))
+            );
+            localStorage.setItem('token', res.Data[0].token);
+          } else {
+            localStorage.setItem('token', res.Data[0].token);
+          }
           this.userId = res.Data[0]._id;
           this.displayName = res.Data[0].displayname;
           this.displayName = this.displayName
@@ -110,6 +118,13 @@ export class SentMessageComponent implements OnInit {
         .afterClosed()
         .subscribe((res) => {
           this.msgSendFlag = res;
+          if (localStorage.getItem('token-previous')) {
+            localStorage.setItem(
+              'token',
+              String(localStorage.getItem('token-previous'))
+            );
+            localStorage.removeItem('token-previous');
+          }
         });
     } else {
       this._global.openSnackbar(
