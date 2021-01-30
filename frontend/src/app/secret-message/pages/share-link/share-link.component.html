@@ -1,23 +1,36 @@
 <form fxLayout="column" fxLayoutGap="20px">
-  <div fxLayout="row" fxLayoutGap="20px">
-    <div fxFlex="85" fxLayoutAlign="start center">
-      <mat-form-field appearance="fill">
-        <input disabled matInput placeholder="Enter your name" [(ngModel)]="url" [ngModelOptions]="{standalone: true}" #name>
-        <mat-icon matSuffix [cdkCopyToClipboard]="url">content_copy</mat-icon>
-      </mat-form-field>
-    </div>
-    <div fxFlex="15" fxLayoutAlign="end center">
-      <button mat-flat-button color="primary" type="submit" (click)="sendToDevice(name.value)">
-        <mat-icon>reply</mat-icon>
-      </button>
-    </div>
+  <div class="heading">
+    <h2>Share your link</h2>
   </div>
-  <div fxLayout="column" fxLayoutGap="20px">
-    <a *ngFor="let item of sharingOptions" [href]="item.href" [style.backgroundColor]="item.color" class='box' fxFlex=50 fxLayout="column" fxLayoutGap="10px">
+  <div>
+    <app-avatar></app-avatar>
+  </div>
+  <div fxLayoutAlign="center center">
+    <mat-form-field appearance="fill">
+      <input disabled matInput placeholder="Enter your name" [(ngModel)]="url" [ngModelOptions]="{standalone: true}" #name>
+      <img matSuffix [cdkCopyToClipboard]="url" src="assets/icons/copy_to_clipboard.svg">
+    </mat-form-field>
+  </div>
+  <div  gdAreas="device device | wap fb"
+  gdGap="16px"
+  gdRows="auto auto">
+    <a (click)="sendToDevice(name.value)" class='box' id="device" gdArea="device" fxLayout="column" fxLayoutGap="10px">
       <div fxLayoutAlign="center center">
-        <img src="assets/img/{{item.icon}}" />
+        <img src="assets/icons/device.svg" />
       </div>
-      <mat-label fxLayoutAlign="center center">{{item.name}}</mat-label>
+      <mat-label fxLayoutAlign="center center">To Device</mat-label>
+    </a>
+    <a class='box' id="whatsapp" gdArea="wap" fxLayout="column" fxLayoutGap="10px" [href]="wapUrl">
+      <div fxLayoutAlign="center center">
+        <img src="assets/img/whatsapp.svg" />
+      </div>
+      <mat-label fxLayoutAlign="center center">Whatsapp</mat-label>
+    </a>
+    <a class='box' id="facebook" gdArea="fb" fxLayout="column" fxLayoutGap="10px" [href]="fbUrl">
+      <div fxLayoutAlign="center center">
+        <img src="assets/img/facebook.svg" />
+      </div>
+      <mat-label fxLayoutAlign="center center">Facebook</mat-label>
     </a>
   </div>
 </form>

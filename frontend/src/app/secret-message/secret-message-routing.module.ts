@@ -15,26 +15,26 @@ const routes: Routes = [
   {
     path: 'messages/:id',
     component: ViewMessageComponent,
-    data: { title: 'Your Messages', isLogoutVisible: true, isBottombarVisible: true, activeIcon: 'message'}
+    data: { title: 'Your Messages', isLoggedIn: true, activeIcon: 'message'}
   },
   { path: 'sent/:id', 
     component: SentMessageComponent,
-    data: {title: 'Send Message', isLogoutVisible: false, isBottombarVisible: false}
+    data: {title: 'Send Message', isLoggedIn: false}
   },
   {
     path: 'create',
     component: CreateProfileComponent,
-    data: {title: 'Create Profile', isLogoutVisible: false, isBottombarVisible: false}
+    data: {title: 'Create Profile', isLoggedIn: false, userType: 'registration'}
   },
   {
     path: 'share-link/:id',
     component: ShareLinkComponent,
-    data: { title: 'Share your link', isLogoutVisible: true, isBottombarVisible: true, activeIcon: 'share'}
+    data: { title: 'Share your link', isLoggedIn: true,  activeIcon: 'share'}
   },
   {
     path: 'view-profile',
     component: ViewProfileComponent,
-    data: { title: 'View Profile', isLogoutVisible: true, isBottombarVisible: true, activeIcon: 'profile'}
+    data: { title: 'View Profile', isLoggedIn: true, activeIcon: 'profile'}
   }
 ];
 

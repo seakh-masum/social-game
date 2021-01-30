@@ -1,13 +1,15 @@
-<app-header [isLogoutVisible]="isLogoutVisible"></app-header>
+<app-header [isLogoutVisible]="isLoggedIn"></app-header>
 <main>
   <div class="container" fxLayout="column" fxLayoutGap="20px">
-    <div class="heading">
+    <!-- <div class="heading">
       <h1>{{title}}</h1>
-    </div>
+    </div> -->
+    <!-- <app-user-type [isLoggedIn]="isLoggedIn" [selectedValue]=""></app-user-type> -->
     <div>
+
       <router-outlet></router-outlet>
       <!-- <ng-content></ng-content> -->
     </div>
   </div>
 </main>
-<app-bottom-bar *ngIf="isBottombarVisible" [activeIcon]="activeIcon"></app-bottom-bar>
+<app-bottom-bar *ngIf="isLoggedIn" [activeIcon]="activeIcon"></app-bottom-bar>

@@ -53,23 +53,25 @@ export class ViewMessageComponent implements OnInit {
   onReload() {
     window.location.reload();
   }
-  async shareData(index: any) {
-    let node = document.getElementById(index) as HTMLElement;
-    let base64Image: any;
-    await htmlToImage
-      .toPng(node)
-      .then(async function (dataUrl) {
-        console.log(dataUrl);
-        base64Image = dataUrl;
-      })
-      .catch(function (error) {
-        console.error('oops, something went wrong!', error);
-      });
+  async shareData(image: any) {
+    // let node = document.getElementById(index) as HTMLElement;
+    // let base64Image: any;
+    // await htmlToImage
+    //   .toPng(node)
+    //   .then(async function (dataUrl) {
+    //     console.log(dataUrl);
+    //     base64Image = dataUrl;
+    //   })
+    //   .catch(function (error) {
+    //     console.error('oops, something went wrong!', error);
+    //   });
+    console.log(image);
+    
     let that = this;
     let list = new DataTransfer();
     that
       .urltoFile(
-        base64Image,
+        image,
         `${new Date().getMilliseconds()}.png`,
         'image/png'
       )
@@ -112,17 +114,10 @@ export class ViewMessageComponent implements OnInit {
   }
   getMessageDetails() {
     const url = 'message-details/' + localStorage.getItem('id');
-    this._generic.get(url).subscribe(
-      (res: any) => {
-        console.log(res);
-        if (res['Status']) {
-          this.messages = res.Data;
-        } else {
-          this._global.openSnackbar(res.Message, 'error');
-        }
-      },
-      (err) => {
-        this._global.openSnackbar(err.Message, 'error');
+    this._generic.get(url).subscribe((res: any) => {
+      console.log(res);
+      if (res['Status']) {
+        this.messages = res.Data[0].messagedetails;
       }
     );
   }

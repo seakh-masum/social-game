@@ -13,6 +13,7 @@ export class AppComponent {
   title = 'social-game';
   isLogoutVisible: boolean = true;
   isBottombarVisible: boolean = true;
+  isLoggedIn: boolean = true;
   activeIcon: string = '';
   // iconList = [];
 
@@ -41,16 +42,8 @@ export class AppComponent {
     }
     console.log(routing_data);
     this.title = routing_data.title;
-    this.isBottombarVisible =
-      routing_data.isBottombarVisible !== undefined &&
-      routing_data.isBottombarVisible
-        ? true
-        : false;
-    this.isLogoutVisible =
-      routing_data.isLogoutVisible !== undefined && routing_data.isLogoutVisible
-        ? true
-        : false;
-    this.activeIcon =
-      routing_data.activeIcon !== undefined ? routing_data.activeIcon : '';
+    // this.isBottombarVisible = routing_data.isBottombarVisible !== undefined && routing_data.isBottombarVisible ? true : false;
+    this.isLoggedIn = routing_data.isLoggedIn !== undefined && routing_data.isLoggedIn ? true : false;
+    this.activeIcon = routing_data.activeIcon !== undefined ? routing_data.activeIcon : '';
   }
 }

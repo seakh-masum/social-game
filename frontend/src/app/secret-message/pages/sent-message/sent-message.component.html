@@ -1,5 +1,8 @@
 <form *ngIf="!msgSendFlag" fxLayout="column" fxLayoutGap="25px">
-  <mat-form-field appearance="outline">
+  <div class="heading">
+    <h2>Sent Messages</h2>
+  </div>
+  <mat-form-field appearance="fill" class="fill">
     <textarea
       matInput
       placeholder="Type your messages"

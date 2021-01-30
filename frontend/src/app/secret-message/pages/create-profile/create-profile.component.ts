@@ -27,6 +27,9 @@ export class CreateProfileComponent implements OnInit {
   loginFlag: boolean = false;
   privacyPolicy: boolean = false;
 
+  title: string=  'Signup';
+  selectedToggle: string = 'signup';
+
   constructor(
     private _generic: GenericService,
     private _router: Router,
@@ -72,6 +75,18 @@ export class CreateProfileComponent implements OnInit {
     this.loginFlag = !this.loginFlag;
     if (!this.availableFlag) {
       this.privacyPolicy = false;
+    }
+  }
+  toogleChange1(value: any) {
+    this.userName = '';
+    this.pin = ''; 
+    if(value=='login') {
+      this.privacyPolicy = false;
+      this.selectedToggle = 'login';
+      this.availableFlag = false;
+    } else {
+      this.selectedToggle = 'signup';
+      this.availableFlag = true;
     }
   }
   setData(data: any) {

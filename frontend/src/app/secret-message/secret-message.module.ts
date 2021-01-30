@@ -8,14 +8,20 @@ import { ViewMessageComponent } from './pages/view-message/view-message.componen
 import { SharedModule } from '../shared/shared.module';
 import { ViewProfileComponent } from './pages/view-profile/view-profile.component';
 import { ShareLinkComponent } from './pages/share-link/share-link.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegistrationComponent } from './pages/registration/registration.component';
+import { MessageReviewComponent } from './pages/message-review/message-review.component';
 
 
 @NgModule({
-  declarations: [CreateProfileComponent, SentMessageComponent, ViewMessageComponent, ViewProfileComponent, ShareLinkComponent],
+  declarations: [CreateProfileComponent, SentMessageComponent, ViewMessageComponent, ViewProfileComponent, ShareLinkComponent, LoginComponent, RegistrationComponent, MessageReviewComponent],
   imports: [
     CommonModule,
     SharedModule,
     SecretMessageRoutingModule
+  ],
+  entryComponents: [
+    MessageReviewComponent
   ]
 })
 export class SecretMessageModule { }
