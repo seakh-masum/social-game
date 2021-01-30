@@ -29,7 +29,7 @@ export class MessageReviewComponent implements OnInit {
     let base64Image: any;
     let btnDisabled: boolean;
     await htmlToImage
-      .toPng(node)
+      .toPng(node, { height: 500, width: 500})
       .then(async function (dataUrl) {
         console.log(dataUrl);
         base64Image = dataUrl;

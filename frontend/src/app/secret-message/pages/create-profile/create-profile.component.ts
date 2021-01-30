@@ -83,8 +83,10 @@ export class CreateProfileComponent implements OnInit {
     if(value=='login') {
       this.privacyPolicy = false;
       this.selectedToggle = 'login';
+      this.availableFlag = false;
     } else {
       this.selectedToggle = 'signup';
+      this.availableFlag = true;
     }
   }
   setData(data: any) {

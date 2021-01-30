@@ -61,6 +61,8 @@ export class ViewMessageComponent implements OnInit {
     //   .catch(function (error) {
     //     console.error('oops, something went wrong!', error);
     //   });
+    console.log(image);
+    
     let that = this;
     let list = new DataTransfer();
     that
