@@ -1,44 +1,70 @@
 const router = require("express").Router();
 const cron = require("node-cron");
 const axios = require("axios");
-
+const messages = require("../Models/messages");
+const firebase = require("../Models/firebase-push-details");
+// 0 */1 * * * * --> Stands for 1 min
 const task = cron.schedule(
-  "0 */1 * * * *",
+  "0 */10 * * * *",
   async () => {
     console.log("running a task every minute");
-    const url = "https://fcm.googleapis.com/fcm/send";
-    // axios
-    //   .post(
-    //     url,
-    //     {
-    //       notification: {
-    //         title: "Test Kor6i ekhon",
-    //         body: "Testing Purpouse",
-    //       },
-    //       to:
-    //         "fWzFmbd5i6uRlMiF_rHm7I:APA91bGMcbyThov0KQMDM_DfZtxiTQ2sDJtH3rU4MytYBV8Gbx82P0TekS9SHflg_3XlZ92-yriCZstMfzi5_C6qSoZEpS6blO2gxFcQiIGnZeXm9gxS8AXkzPVfbcTGa45fLbLUcAzT",
-    //     },
-    //     {
-    //       headers: {
-    //         "Access-Control-Allow-Origin": "*",
-    //         "Content-type": "application/json",
-    //         Authorization: `key=AAAAf2Imejg:APA91bF5voPnobIAugEgkiFAgIJR2Ld4JsmeBmAhKB0Fc_-4ytvJrAumE3_YlPTfHCyGR7J5tWeIDQg5uUaXbDNizRFvaZs-gH7QZeBsHpY-eJ1fAYmFwsXHcTFgMiLbYjOYl8OJM1nG`,
-    //       },
-    //     }
-    //   )
-    //   .then(
-    //     (response) => {
-    //       var response = response.data;
-    //       console.log(response);
-    //     },
-    //     (error) => {
-    //       var status = error.response.status;
-    //       console.log(status);
-    //     }
-    //   );
+    await messages.find({}, async (err, params) => {
+      if (err) {
+        return;
+      }
+      if (params !== null) {
+        params.forEach(async (element, index) => {
+          if (element.messagedetails.findIndex((x) => x.seen === false) > -1) {
+            await firebase.findOne(
+              { userid: element.userid },
+              async (err, fcm) => {
+                if (err) {
+                  return;
+                }
+                if (fcm !== null) {
+                  await axios
+                    .post(
+                      process.env.FIREBASE_CLOUD_MESSAGE_URL,
+                      {
+                        notification: {
+                          title: "Social Message",
+                          body:
+                            "check anonymously someone messaged you something",
+                          icon:
+                            "https://res.cloudinary.com/dzruu87x0/image/upload/v1612033640/secret-message_lgicit.png",
+                          click_action:
+                            "https://socail-game.web.app/secret-message/create",
+                        },
+                        registration_ids: fcm.endpoints,
+                      },
+                      {
+                        headers: {
+                          "Access-Control-Allow-Origin": "*",
+                          "Content-type": "application/json",
+                          Authorization: `key=${process.env.FIREBASE_SERVER_KEY}`,
+                        },
+                      }
+                    )
+                    .then(
+                      (response) => {
+                        var response = response.data;
+                        console.log(response);
+                      },
+                      (error) => {
+                        var status = error.response.status;
+                        console.log(status);
+                      }
+                    );
+                }
+              }
+            );
+          }
+        });
+      }
+    });
   },
   {
-    scheduled: true,
+    scheduled: false,
   }
 );
 
