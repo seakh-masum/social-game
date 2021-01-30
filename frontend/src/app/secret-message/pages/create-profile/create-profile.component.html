@@ -1,61 +1,69 @@
 <form fxLayout="column" fxLayoutGap="20px">
-  <mat-slide-toggle (click)="toogleChange()"
-    >Toggle to Signup or Login</mat-slide-toggle
-  >
-  <h2>{{ availableFlag ? "Signup" : "Login" }}</h2>
-  <div *ngIf="availableFlag">
-    <mat-form-field appearance="fill">
-      <!-- <mat-label>User Name</mat-label> (keyup)="keyUp.next($event)"-->
-      <input
-        matInput
-        placeholder="Enter your name"
-        [(ngModel)]="userName"
+  <div class="heading">
+    <h2>{{ selectedToggle | titlecase }}</h2>
+  </div>
+  <div id="tab">
+    <div class="tab" #group>
+      <a class="tabText" [class.active]="selectedToggle=='login'" (click)="toogleChange1('login')">Login</a>
+      <a class="tabText" [class.active]="selectedToggle=='signup'" (click)="toogleChange1('signup')">Signup</a>
+    </div>
+  </div>
+  <div fxLayout="column" fxLayoutGap="25px" class="form">
+    <div *ngIf="selectedToggle=='signup'" fxLayout="column" fxLayoutGap="30px">
+      <div>
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            placeholder="Enter your name"
+            [(ngModel)]="userName"
+            [ngModelOptions]="{ standalone: true }"
+            #name
+          />
+          <mat-hint>Create an account by Username</mat-hint>
+        </mat-form-field>
+      </div>
+      <!-- <br /><br /> -->
+      <mat-checkbox
+        class="example-margin"
+        [(ngModel)]="privacyPolicy"
         [ngModelOptions]="{ standalone: true }"
-        #name
-      />
-      <mat-hint>Create an account by Username</mat-hint>
-    </mat-form-field>
-    <br /><br />
-    <mat-checkbox
-      class="example-margin"
-      [(ngModel)]="privacyPolicy"
-      [ngModelOptions]="{ standalone: true }"
-      (change)="openPrivacyPolicy($event)"
-      >Accept our privacy & policy</mat-checkbox
+        (change)="openPrivacyPolicy($event)"
+        >Accept our privacy & policy</mat-checkbox
+      >
+    </div>
+    <div *ngIf="selectedToggle=='login'" fxLayout="column" fxLayoutGap="30px">
+      <mat-form-field appearance="fill">
+        <!-- <mat-label>User Name</mat-label> (keyup)="keyUp.next($event)"-->
+        <input
+          matInput
+          placeholder="Enter your name"
+          [(ngModel)]="userName"
+          [ngModelOptions]="{ standalone: true }"
+          #name
+        />
+        <mat-hint>You have already an user</mat-hint>
+      </mat-form-field>
+      <!-- <br /><br /> -->
+      <mat-form-field appearance="fill">
+        <!-- <mat-label>User Name</mat-label> -->
+        <input
+          matInput
+          placeholder="Pin"
+          [(ngModel)]="pin"
+          [ngModelOptions]="{ standalone: true }"
+          #name
+        />
+        <mat-hint> Enter Your pin to login</mat-hint>
+      </mat-form-field>
+    </div>
+    <button
+      mat-raised-button
+      [disabled]="userName == '' || (selectedToggle=='login' && pin == '') || isButtonDisabled"
+      color="primary"
+      type="submit"
+      (click)="createAccount(availableFlag)"
     >
+      {{ !availableFlag ? "Login" : "Signup" }}
+    </button>
   </div>
-  <div *ngIf="!availableFlag">
-    <mat-form-field appearance="fill">
-      <!-- <mat-label>User Name</mat-label> (keyup)="keyUp.next($event)"-->
-      <input
-        matInput
-        placeholder="Enter your name"
-        [(ngModel)]="userName"
-        [ngModelOptions]="{ standalone: true }"
-        #name
-      />
-      <mat-hint>You have already an user</mat-hint>
-    </mat-form-field>
-    <br /><br />
-    <mat-form-field appearance="fill">
-      <!-- <mat-label>User Name</mat-label> -->
-      <input
-        matInput
-        placeholder="Pin"
-        [(ngModel)]="pin"
-        [ngModelOptions]="{ standalone: true }"
-        #name
-      />
-      <mat-hint> Enter Your pin to login</mat-hint>
-    </mat-form-field>
-  </div>
-  <button
-    mat-raised-button
-    [disabled]="userName == '' || (loginFlag && pin == '') || isButtonDisabled"
-    color="primary"
-    type="submit"
-    (click)="createAccount(availableFlag)"
-  >
-    {{ !availableFlag ? "Login" : "Signup" }}
-  </button>
 </form>

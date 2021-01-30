@@ -1,6 +1,18 @@
 @import './themes.scss';
 @import './material.scss';
 @import './icon.scss';
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
 
 html, body { height: 100%; }
 body, h1, h2, h3, h4, h5, h6, label, p, span { margin: 0; font-family: 'Poppins', sans-serif; }
+
+h2 {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.heading {
+  text-align: center;
+  padding: 20px;
+  font-family: 'Raleway', sans-serif;
+}

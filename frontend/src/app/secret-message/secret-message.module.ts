@@ -8,10 +8,12 @@ import { ViewMessageComponent } from './pages/view-message/view-message.componen
 import { SharedModule } from '../shared/shared.module';
 import { ViewProfileComponent } from './pages/view-profile/view-profile.component';
 import { ShareLinkComponent } from './pages/share-link/share-link.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegistrationComponent } from './pages/registration/registration.component';
 
 
 @NgModule({
-  declarations: [CreateProfileComponent, SentMessageComponent, ViewMessageComponent, ViewProfileComponent, ShareLinkComponent],
+  declarations: [CreateProfileComponent, SentMessageComponent, ViewMessageComponent, ViewProfileComponent, ShareLinkComponent, LoginComponent, RegistrationComponent],
   imports: [
     CommonModule,
     SharedModule,

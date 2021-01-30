@@ -66,6 +66,12 @@ export class ShareLinkComponent implements OnInit {
 
     this.sharingOptions = [
       {
+        name: 'Share to Device',
+        icon: 'facebook.svg',
+        color: '#gt6789',
+        href: this.fbUrl,
+      },
+      {
         name: 'Whatsapp Status',
         icon: 'whatsapp.svg',
         color: '#25D366',
@@ -109,12 +115,11 @@ export class ShareLinkComponent implements OnInit {
 
   async sendToDevice(url: string) {
     try {
-      const sharedResponse = await this._nativeShare.share({
+      await this._nativeShare.share({
         title: 'Sharing to Whatsapp',
         text: 'Share anynomous message to Friend',
         url: url,
       });
-      console.log(sharedResponse);
     } catch (error) {
       console.log('You app is not shared, reason: ', error);
     }
