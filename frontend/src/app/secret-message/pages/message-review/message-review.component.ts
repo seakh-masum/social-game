@@ -76,7 +76,7 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
     let base64Image: any;
     this.isButtonDisabled = true;
     await htmlToImage
-      .toPng(node)
+      .toPng(node, {width: 720, height: 1080, pixelRatio: 1, style: {display: 'flex', alignItems: 'center', placeContent: 'center', color: '#fff'}})
       .then(async function (dataUrl) {
         console.log(dataUrl);
         base64Image = dataUrl;
