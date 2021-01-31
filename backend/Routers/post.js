@@ -6,6 +6,7 @@ const firebasePush = require("../Models/firebase-push-details");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
+const axios = require("axios");
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
@@ -129,95 +130,133 @@ router.post("/savedetails", async (req, res) => {
   }
 });
 // Save User Messages
-router.post(
-  "/savemessages",
-  jwtTokenVerify.isAuthenticated,
-  async (req, res) => {
-    const resType = {
-      Status: false,
-      Data: [],
-      Message: "",
-    };
-    if (!req.body.userid) {
-      resType["Message"] = "User's Id is Required";
-      return res.status(400).send(resType);
-    }
-    try {
-      const userData = await userDetails.findOne({ _id: req.body.userid });
-      if (userData) {
-        await messages.findOne(
-          { userid: req.body.userid },
-          async (err, params) => {
-            if (err) {
-              resType["Message"] = err.message;
+// jwtTokenVerify.isAuthenticated,
+router.post("/savemessages", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body.userid) {
+    resType["Message"] = "User's Id is Required";
+    return res.status(400).send(resType);
+  }
+  try {
+    const userData = await userDetails.findOne({ _id: req.body.userid });
+    if (userData) {
+      await messages.findOne(
+        { userid: req.body.userid },
+        async (err, params) => {
+          if (err) {
+            resType["Message"] = err.message;
+            return res.status(400).send(resType);
+          }
+          if (params === null) {
+            messages.create({
+              userid: req.body.userid,
+              messagedetails: [
+                {
+                  message: req.body.message,
+                  seen: false,
+                  base64image: req.body.base64image,
+                  date: new Date(),
+                  longitude: req.body.longitude
+                    ? req.body.longitude
+                    : "No Data Found",
+                  latitude: req.body.latitude
+                    ? req.body.latitude
+                    : "No Data Found",
+                  browser: req.body.browser,
+                  browser_version: req.body.browser_version,
+                  device: req.body.device,
+                  deviceType: req.body.deviceType,
+                  orientation: req.body.orientation,
+                  os: req.body.os,
+                  os_version: req.body.os_version,
+                  userAgent: req.body.userAgent,
+                  ip: req.body.ip,
+                },
+              ],
+            });
+          } else {
+            params.messagedetails.push({
+              message: req.body.message,
+              date: new Date(),
+              seen: false,
+              base64image: req.body.base64image,
+              longitude: req.body.longitude
+                ? req.body.longitude
+                : "No Data Found",
+              latitude: req.body.latitude ? req.body.latitude : "No Data Found",
+              browser: req.body.browser,
+              browser_version: req.body.browser_version,
+              device: req.body.device,
+              deviceType: req.body.deviceType,
+              orientation: req.body.orientation,
+              os: req.body.os,
+              os_version: req.body.os_version,
+              userAgent: req.body.userAgent,
+              ip: req.body.ip,
+            });
+            params.save();
+          }
+        }
+      );
+      if (
+        req.body.endpoints &&
+        (req.body.endpoints !== "" || req.body.endpoints !== null)
+      ) {
+        await axios
+          .post(
+            process.env.FIREBASE_CLOUD_MESSAGE_URL,
+            {
+              notification: {
+                title: "Social Message",
+                body: `Check anonymously someone messaged you that ${
+                  req.body.message && req.body.message.length > 10
+                    ? req.body.message.slice(0, 10) + "..."
+                    : req.body.message
+                }`,
+                icon:
+                  "https://res.cloudinary.com/dzruu87x0/image/upload/v1612033640/secret-message_lgicit.png",
+                click_action:
+                  "https://socail-game.web.app/secret-message/create",
+              },
+              to: req.body.endpoints,
+            },
+            {
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Content-type": "application/json",
+                Authorization: `key=${process.env.FIREBASE_SERVER_KEY}`,
+              },
+            }
+          )
+          .then(
+            (response) => {
+              var response = response.data;
+              console.log(response);
+              resType["Status"] = true;
+              resType["Message"] = "Successful";
+              return res.status(200).send(resType);
+            },
+            (error) => {
+              var status = error.response.status;
+              console.log(status);
+              resType["Message"] = error.message;
               return res.status(400).send(resType);
             }
-            if (params === null) {
-              messages.create({
-                userid: req.body.userid,
-                messagedetails: [
-                  {
-                    message: req.body.message,
-                    seen: false,
-                    base64image: req.body.base64image,
-                    date: new Date(),
-                    longitude: req.body.longitude
-                      ? req.body.longitude
-                      : "No Data Found",
-                    latitude: req.body.latitude
-                      ? req.body.latitude
-                      : "No Data Found",
-                    browser: req.body.browser,
-                    browser_version: req.body.browser_version,
-                    device: req.body.device,
-                    deviceType: req.body.deviceType,
-                    orientation: req.body.orientation,
-                    os: req.body.os,
-                    os_version: req.body.os_version,
-                    userAgent: req.body.userAgent,
-                    ip: req.body.ip,
-                  },
-                ],
-              });
-            } else {
-              params.messagedetails.push({
-                message: req.body.message,
-                date: new Date(),
-                seen: false,
-                base64image: req.body.base64image,
-                longitude: req.body.longitude
-                  ? req.body.longitude
-                  : "No Data Found",
-                latitude: req.body.latitude
-                  ? req.body.latitude
-                  : "No Data Found",
-                browser: req.body.browser,
-                browser_version: req.body.browser_version,
-                device: req.body.device,
-                deviceType: req.body.deviceType,
-                orientation: req.body.orientation,
-                os: req.body.os,
-                os_version: req.body.os_version,
-                userAgent: req.body.userAgent,
-                ip: req.body.ip,
-              });
-              params.save();
-            }
-          }
-        );
-        resType["Status"] = true;
-        resType["Message"] = "Successful";
-        return res.status(200).send(resType);
-      } else {
-        resType["Message"] = "Username is not Valid";
-        return res.status(400).send(resType);
+          );
       }
-    } catch (err) {
-      resType["Message"] = err.message;
+    } else {
+      resType["Message"] = "Username is not Valid";
       return res.status(400).send(resType);
     }
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
   }
-);
+});
 // User Login
 router.post("/user-login", async (req, res) => {
   const resType = {
@@ -478,55 +517,52 @@ router.post("/save-device-info", async (req, res) => {
   }
 });
 // Change UserPin
-router.post(
-  "/change-userpin",
-  jwtTokenVerify.isAuthenticated,
-  async (req, res) => {
-    const resType = {
-      Status: false,
-      Data: [],
-      Message: "",
-    };
-    try {
-      if (!req.body.userpin) {
-        resType["Message"] = "User's Pin is Required";
-        return res.status(400).send(resType);
-      }
-      if (!req.body.username) {
-        resType["Message"] = "Username is Required";
-        return res.status(400).send(resType);
-      }
-      if (
-        req.body.userpin &&
-        (req.body.userpin.length > 6 || req.body.userpin.length < 6)
-      ) {
-        resType["Message"] = "User's Pin should be Six length";
-        return res.status(400).send(resType);
-      }
-      await userDetails.findOneAndUpdate(
-        { username: req.body.username },
-        { userpin: req.body.userpin },
-        async (err, params) => {
-          if (err) {
-            resType["Message"] = err.message;
-            return res.status(400).send(resType);
-          }
-          if (!params) {
-            resType["Message"] = "Username is not valid";
-            return res.status(400).send(resType);
-          }
-          resType["Message"] = "User's Pin is edited successfully";
-          resType["Status"] = true;
-          resType["Data"] = [{ userpin: req.body.userpin }];
-          return res.status(200).send(resType);
-        }
-      );
-    } catch (err) {
-      resType["Message"] = err.message;
+// jwtTokenVerify.isAuthenticated,
+router.post("/change-userpin", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  try {
+    if (!req.body.userpin) {
+      resType["Message"] = "User's Pin is Required";
       return res.status(400).send(resType);
     }
+    if (!req.body.username) {
+      resType["Message"] = "Username is Required";
+      return res.status(400).send(resType);
+    }
+    if (
+      req.body.userpin &&
+      (req.body.userpin.length > 6 || req.body.userpin.length < 6)
+    ) {
+      resType["Message"] = "User's Pin should be Six length";
+      return res.status(400).send(resType);
+    }
+    await userDetails.findOneAndUpdate(
+      { username: req.body.username },
+      { userpin: req.body.userpin },
+      async (err, params) => {
+        if (err) {
+          resType["Message"] = err.message;
+          return res.status(400).send(resType);
+        }
+        if (!params) {
+          resType["Message"] = "Username is not valid";
+          return res.status(400).send(resType);
+        }
+        resType["Message"] = "User's Pin is edited successfully";
+        resType["Status"] = true;
+        resType["Data"] = [{ userpin: req.body.userpin }];
+        return res.status(200).send(resType);
+      }
+    );
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
   }
-);
+});
 // Save Firebase Push Endpoints
 router.post("/save-firebase-endpoints", async (req, res) => {
   try {
@@ -543,8 +579,8 @@ router.post("/save-firebase-endpoints", async (req, res) => {
               endpoints: req.body.endpoints,
             });
           } else {
-            if (params.endpoints.indexOf(req.body.endpoints) === -1) {
-              params.endpoints.push(req.body.endpoints);
+            if (params.endpoints != req.body.endpoints) {
+              params.endpoints = req.body.endpoints;
               await params.save();
             }
           }
