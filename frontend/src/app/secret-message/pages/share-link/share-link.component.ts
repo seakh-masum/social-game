@@ -18,7 +18,7 @@ export class ShareLinkComponent implements OnInit {
   wapUrl: SafeUrl = '';
   fbUrl: string = '';
   shareImgUrl: any =
-    'https://res.cloudinary.com/dzruu87x0/image/upload/v1612084127/Secret_eyvwfx.webp';
+    'https://res.cloudinary.com/dzruu87x0/image/upload/v1612097153/secret-message_buzlnc.gif';
   fileList = new DataTransfer();
   defaultMetadata: PageMetadata = {
     title: 'Secret Message',
@@ -74,8 +74,20 @@ export class ShareLinkComponent implements OnInit {
     this.fbUrl = 'http://www.facebook.com/sharer.php?u=' + this.url;
     this.wapUrl = this.sanitizeUrl('whatsapp://send?text=' + this.url);
     this.fileList = new DataTransfer();
-    this.fileList.items.add(this.shareImgUrl);
-
+    let that = this;
+    that
+      .urltoFile(
+        this.shareImgUrl,
+        `${new Date().getMilliseconds()}.gif`,
+        'image/gif'
+      )
+      .then(function (file) {
+        console.log(file);
+        that.fileList.items.add(file);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
     this.sharingOptions = [
       {
         name: 'Share to Device',
@@ -97,7 +109,15 @@ export class ShareLinkComponent implements OnInit {
       },
     ];
   }
-
+  async urltoFile(url: any, filename: any, mimeType: any) {
+    return fetch(url)
+      .then(function (res) {
+        return res.arrayBuffer();
+      })
+      .then(function (buf) {
+        return new File([buf], filename, { type: mimeType });
+      });
+  }
   updateMetaTag() {
     const imgUrl = 'assets/img/secret-covers.png';
     this.meta.updateTag({
@@ -127,16 +147,7 @@ export class ShareLinkComponent implements OnInit {
     this._global.openSnackbar('Copied', 'Success');
   }
   async sendToDevice(url: string) {
-    // try {
-    //   await this._nativeShare.share({
-    //     title: 'Sharing to Whatsapp',
-    //     text: 'Share anynomous message to Friend',
-    //     url: url,
-    //   });
-    // } catch (error) {
-    //   console.log('You app is not shared, reason: ', error);
-    // }
-    let list: any = this.fileList;
+    let list: any = this.fileList.files;
     if (!this.webshareService.canShareFile(list)) {
       alert(`This service/api is not supported in your Browser`);
       return;
@@ -144,11 +155,11 @@ export class ShareLinkComponent implements OnInit {
     await this.webshareService
       .share({
         title: 'Secret Message',
-        text: `Hey message to ${localStorage.getItem(
+        text: `#❤️Hey 🙈 message to 🤟${localStorage.getItem(
           'displayName'
-        )},don't worry ${localStorage.getItem(
+        )}🤟,😬😬 don't worry ${localStorage.getItem(
           'displayName'
-        )} will not know your name`,
+        )} will not know your name😉❤️#`,
         url: url,
         files: list,
       })
