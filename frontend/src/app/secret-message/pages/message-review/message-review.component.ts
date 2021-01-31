@@ -19,15 +19,21 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
     'red',
     'green',
     'yellow',
-    'blue'
+    'blue',
+    'purple'
   ];
 
   private fontStyles = [
     'Hachi Maru Pop', 'Dancing Script', 'Pacifico', 'Permanent Marker', 'Shadows Into Light'
   ];
 
-  customFontSize = 30;
   base64Image: any = '';
+  customFontSize = 30;
+  customBackgroundColor: string = 'purple';
+  changeDetected: boolean = false;  
+  isGenarateImage: boolean = false;
+  isStyleSelected: boolean = true;
+  
   
   constructor(
     private _generic: GenericService,
@@ -37,44 +43,36 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-    if(this.data.msg.length>30) {
-      this.customFontSize = 20;
+    if(this.data.msg.length>50) {
+      this.customFontSize = 25;
     }
   }
   
   ngAfterViewInit() {
     // this.shareImage('msg');
-    this.genarateImage();
+    // this.genarateImage();
   }
 
   swipe(action = this.SWIPE_ACTION.RIGHT) {
-    // out of range
-    // if (currentIndex > this.avatars.length || currentIndex < 0) return;
-
-    // let nextIndex = 0;
-
     // swipe right, next avatar
     if (action === this.SWIPE_ACTION.RIGHT) {
-        // const isLast = currentIndex === this.colors.length - 1;
-        // nextIndex = isLast ? 0 : currentIndex + 1;
         this.changeBackgroundColor();
     }
 
     // swipe left, previous avatar
     if (action === this.SWIPE_ACTION.LEFT) {
-        // const isFirst = currentIndex === 0;
-        // nextIndex = isFirst ? this.fontStyles.length - 1 : currentIndex - 1;
-        this.changeFontStyle();
+      this.changeFontStyle();
     }
-
-    // toggle avatar visibility
-    // this.avatars.forEach((x, i) => x.visible = (i === nextIndex));
   }
 
   async genarateImage() {
+    this.isStyleSelected = false;
+    this.isGenarateImage = true;
+    // this.changeDetected = true;
     let node = document.getElementById('msg') as HTMLElement;
     let base64Image: any;
     this.isButtonDisabled = true;
+    // this.isGenarateImage = false;
     await htmlToImage
       .toPng(node, {width: 720, height: 1080, pixelRatio: 1, style: {display: 'flex', alignItems: 'center', placeContent: 'center', color: '#fff'}})
       .then(async function (dataUrl) {
@@ -84,10 +82,11 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
       .catch(function (error) {
         console.error('oops, something went wrong!', error);
       });
-    this.isButtonDisabled = false;
+    this.isGenarateImage = false;
+    // this.changeDetected = false;
     this.base64Image = base64Image;
   }
-  async shareImage(id: any) {
+  shareImage() {
     this.genarateImage();
     let that = this;
     let list = new DataTransfer();
@@ -136,7 +135,12 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
     const randomIndex = Math.floor(Math.random() * Math.floor(this.colors.length));
     let elem: any;
     elem = document.getElementById('msg') as HTMLElement;
-    elem.style.backgroundColor = this.colors[randomIndex];
+    // elem.style.backgroundColor = this.colors[randomIndex];
+    this.customBackgroundColor = this.colors[randomIndex];
+    setTimeout(() => {
+      this.changeDetected = true;
+      this.genarateImage();
+    }, 1500);
   }
 
   changeFontStyle() {
@@ -146,26 +150,9 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
     let textElem: any;
     textElem = document.getElementById('text') as HTMLElement;
     textElem.style.fontFamily = this.fontStyles[randomIndex];
-  }
-
-  // sendMessage() {
-  //    this._generic.post('savemessages', this.data.params).subscribe(
-  //       (res: any) => {
-  //         console.log(res);
-  //         if (res['Status']) {
-  //           // this.msg = '';
-  //           this.msgSendFlag = true;
-  //           this._dialogRef.close({msgSendFlag: this.msgSendFlag});
-  //           // this._global.openSnackbar(res.Message, 'success');
-  //           // this._dialog.open(DialogComponent);
-  //         } else {
-  //           // this._global.openSnackbar(res.Message, 'error');
-  //         }
-  //       },
-  //       (err) => {
-  //         // this._global.openSnackbar(err.Message, 'success');
-  //       }
-  //     );
-  // }
-  
+    setTimeout(() => {
+      this.changeDetected = true;
+      this.genarateImage();
+    }, 1500);
+  }  
 }

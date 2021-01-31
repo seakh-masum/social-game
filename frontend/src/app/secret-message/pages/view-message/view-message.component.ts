@@ -66,43 +66,17 @@ export class ViewMessageComponent implements OnInit, AfterViewInit {
     window.location.reload();
   }
   async shareData(message: any) {
-    // let node = document.getElementById(index) as HTMLElement;
-    // let base64Image: any;
-    // await htmlToImage
-    //   .toPng(node)
-    //   .then(async function (dataUrl) {
-    //     console.log(dataUrl);
-    //     base64Image = dataUrl;
-    //   })
-    //   .catch(function (error) {
-    //     console.error('oops, something went wrong!', error);
-    //   });
-
     this._dialog
       .open(MessageReviewComponent, {
         data: {
           msg: message,
         },
+        panelClass: ['preview-msg']
       })
       .afterClosed()
       .subscribe((res) => {
         console.log(res);
       });
-
-    // console.log(image);
-
-    // let that = this;
-    // let list = new DataTransfer();
-    // that
-    //   .urltoFile(image, `${new Date().getMilliseconds()}.png`, 'image/png')
-    //   .then(function (file) {
-    //     console.log(file);
-    //     list.items.add(file);
-    //     that.checkFile(list);
-    //   })
-    //   .catch((err: any) => {
-    //     console.log(err);
-    //   });
   }
   async checkFile(event: any) {
     if (!this.webshareService.canShareFile(event.files)) {
