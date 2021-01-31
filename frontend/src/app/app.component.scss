@@ -30,6 +30,17 @@
 //   }
 // }
 
+.background {
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+
+.hide-bar {
+  display: none;
+  transition: 0.4s ease-in-out;
+}
+
 main {
   background: #fff;
   box-shadow: 0px 4px 10px 0px rgba($color: #000000, $alpha: 0.25) !important;

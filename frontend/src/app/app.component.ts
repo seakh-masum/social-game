@@ -15,6 +15,8 @@ export class AppComponent {
   isBottombarVisible: boolean = true;
   isLoggedIn: boolean = true;
   activeIcon: string = '';
+  scrollTop: number = 0;
+  hideBar:boolean = false;
   // iconList = [];
 
   constructor(
@@ -45,5 +47,10 @@ export class AppComponent {
     // this.isBottombarVisible = routing_data.isBottombarVisible !== undefined && routing_data.isBottombarVisible ? true : false;
     this.isLoggedIn = routing_data.isLoggedIn !== undefined && routing_data.isLoggedIn ? true : false;
     this.activeIcon = routing_data.activeIcon !== undefined ? routing_data.activeIcon : '';
+  }
+
+  onScroll(event: any) {
+    this.hideBar = this.scrollTop < event.target.scrollTop;
+    this.scrollTop = event.target.scrollTop;
   }
 }

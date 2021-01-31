@@ -1,16 +1,45 @@
 <!-- <h2 mat-dialog-title>Share your Message</h2> -->
+<!-- <mat-dialog-container></mat-dialog-container> -->
+<!-- <div class="action">
+  <a>
+    <img src="assets/icons/cross.svg">
+  </a>
+  <a>
+    <img src="assets/icons/done.svg">
+  </a>
+</div> -->
 <mat-dialog-content>
-  <div id="msg" class="msg" (click)="changeBackgroundColor()" (swipeleft)="swipe($event.type)" (swiperight)="swipe($event.type)">
+  <div id="msg" class="msg" [style.backgroundColor]="customBackgroundColor" (click)="changeBackgroundColor()" (swipeleft)="swipe($event.type)" (swiperight)="swipe($event.type)">
     <p id="text" (click)="changeFontStyle()" [style.fontSize.px]="customFontSize">{{data.msg}}</p>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions align="center">
-  <button mat-flat-button color="primary" (click)="shareImage('msg')" [disabled]="isButtonDisabled">
-    <div id="wave" *ngIf="isButtonDisabled else showButtonBlock">
+<mat-dialog-actions align="center" [style.backgroundColor]="customBackgroundColor">
+  <!-- <button mat-flat-button color="primary" (click)="shareImage('msg')" [disabled]="isButtonDisabled">
+    
+    <ng-template #showButtonBlock>Share Your Message</ng-template>
+  </button>
+  <button>Apply This Style</button> -->
+  <div *ngIf="isStyleSelected"  fxLayout="row" fxLayoutGap="10px">
+    <a mat-dialog-close>
+      <img src="assets/icons/cross.svg">
+    </a>
+    <a (click)="genarateImage()">
+      <img src="assets/icons/done.svg">
+    </a>
+  </div>
+  <div *ngIf="!isGenarateImage && !isStyleSelected"  fxLayout="row" fxLayoutGap="10px">
+    <a mat-dialog-close>
+      <img src="assets/icons/cross.svg">
+    </a>
+    <a (click)="shareImage()">
+      <img src="assets/icons/share3.svg">
+    </a>
+  </div>
+  <!-- <ng-template #showProccesingBlock> -->
+    <div id="wave" *ngIf="isGenarateImage">
       <span class="dot"></span>
       <span class="dot"></span>
       <span class="dot"></span>
     </div>
-    <ng-template #showButtonBlock>Share Your Message</ng-template>
-  </button>
+  <!-- </ng-template> -->
 </mat-dialog-actions>
