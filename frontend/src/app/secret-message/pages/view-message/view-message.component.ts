@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, Optional } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
@@ -9,16 +9,20 @@ import * as htmlToImage from 'html-to-image';
 import { WebShareService } from 'ng-web-share';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { MessagingService } from 'src/app/services/messaging.service';
+import * as d3 from 'd3';
+import { svg } from 'd3';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageReviewComponent } from '../message-review/message-review.component';
 
 @Component({
   selector: 'app-view-message',
   templateUrl: './view-message.component.html',
   styleUrls: ['./view-message.component.scss'],
 })
-export class ViewMessageComponent implements OnInit {
+export class ViewMessageComponent implements OnInit, AfterViewInit {
   messages: Array<any> = [];
   messageData: any = '';
-
+  
   constructor(
     private _route: ActivatedRoute,
     private _generic: GenericService,
@@ -28,7 +32,8 @@ export class ViewMessageComponent implements OnInit {
     private meta: Meta,
     private title: Title,
     private webshareService: WebShareService,
-    private messagingService: MessagingService
+    private messagingService: MessagingService,
+    private _dialog: MatDialog,
   ) {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
@@ -44,16 +49,24 @@ export class ViewMessageComponent implements OnInit {
         this._router.navigate(['/secret-message/create']);
       }
     });
+
   }
 
   ngOnInit(): void {
     this.messagingService.requestPermission();
     this.messagingService.receiveMessage();
   }
+
+  ngAfterViewInit(): void {
+
+  }
+
+  
+  
   onReload() {
     window.location.reload();
   }
-  async shareData(image: any) {
+  async shareData(message: any) {
     // let node = document.getElementById(index) as HTMLElement;
     // let base64Image: any;
     // await htmlToImage
@@ -65,20 +78,30 @@ export class ViewMessageComponent implements OnInit {
     //   .catch(function (error) {
     //     console.error('oops, something went wrong!', error);
     //   });
-    console.log(image);
 
-    let that = this;
-    let list = new DataTransfer();
-    that
-      .urltoFile(image, `${new Date().getMilliseconds()}.png`, 'image/png')
-      .then(function (file) {
-        console.log(file);
-        list.items.add(file);
-        that.checkFile(list);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+    this._dialog.open(MessageReviewComponent, {
+      data: {
+        msg: message
+      }
+    }).afterClosed().subscribe((res)=> {
+      console.log(res);
+    })
+
+
+    // console.log(image);
+
+    // let that = this;
+    // let list = new DataTransfer();
+    // that
+    //   .urltoFile(image, `${new Date().getMilliseconds()}.png`, 'image/png')
+    //   .then(function (file) {
+    //     console.log(file);
+    //     list.items.add(file);
+    //     that.checkFile(list);
+    //   })
+    //   .catch((err: any) => {
+    //     console.log(err);
+    //   });
   }
   async checkFile(event: any) {
     if (!this.webshareService.canShareFile(event.files)) {
@@ -117,4 +140,11 @@ export class ViewMessageComponent implements OnInit {
       }
     });
   }
+  // createCanvas(i: any) {
+  //   let c = document.getElementById(i) as HTMLCanvasElement;
+  //   let ctx: any;
+  //   ctx = c.getContext('2d');
+  //   ctx.font = "30px Arial";
+  //   ctx.fillText('Hello World');
+  // }
 }

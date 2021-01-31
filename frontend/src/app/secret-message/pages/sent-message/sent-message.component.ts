@@ -61,7 +61,7 @@ export class SentMessageComponent implements OnInit {
   sentMessage(msg: string) {
     console.log(msg);
     if (msg != '') {
-      // const url = 'savemessages';
+      const url = 'savemessages';
       let ipAdd: any = '';
       this._global.ipAddress.subscribe((res) => {
         ipAdd = res;
@@ -82,29 +82,29 @@ export class SentMessageComponent implements OnInit {
         ip: ipAdd,
       };
 
-      // this._generic.post(url, data).subscribe(
-      //   (res: any) => {
-      //     console.log(res);
-      //     if (res['Status']) {
-      //       this.msg = '';
-      //       this.msgSendFlag = true;
-      //       this._global.openSnackbar(res.Message, 'success');
-      //       // this._dialog.open(DialogComponent);
-      //     } else {
-      //       this._global.openSnackbar(res.Message, 'error');
-      //     }
-      //   },
-      //   (err) => {
-      //     this._global.openSnackbar(err.Message, 'success');
-      //   }
-      // );
-      this._dialog.open(MessageReviewComponent, {
-        data: {
-          params: data,
+      this._generic.post(url, data).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res['Status']) {
+            this.msg = '';
+            this.msgSendFlag = true;
+            this._global.openSnackbar(res.Message, 'success');
+            // this._dialog.open(DialogComponent);
+          } else {
+            this._global.openSnackbar(res.Message, 'error');
+          }
+        },
+        (err) => {
+          this._global.openSnackbar(err.Message, 'success');
         }
-      }).afterClosed().subscribe((res)=> {
-        this.msgSendFlag = res;
-      })
+      );
+      // this._dialog.open(MessageReviewComponent, {
+      //   data: {
+      //     params: data,
+      //   }
+      // }).afterClosed().subscribe((res)=> {
+      //   this.msgSendFlag = res;
+      // })
     } else {
       this._global.openSnackbar(
         `Write Something to ${

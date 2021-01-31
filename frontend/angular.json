@@ -41,7 +41,9 @@
                 "src/styles"
               ]
             },
-            "scripts": []
+            "scripts": [
+              "./node_modules/d3/dist/d3.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -61,8 +63,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -107,7 +109,9 @@
             "styles": [
               "src/styles/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/d3/dist/d3.min.js"
+            ]
           }
         },
         "lint": {
