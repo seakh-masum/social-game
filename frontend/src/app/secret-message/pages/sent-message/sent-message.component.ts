@@ -48,15 +48,7 @@ export class SentMessageComponent implements OnInit {
       console.log(res);
       if (res['Status']) {
         if (res['Data']) {
-          if (localStorage.getItem('token')) {
-            localStorage.setItem(
-              'token-previous',
-              String(localStorage.getItem('token'))
-            );
-            localStorage.setItem('token', res.Data[0].token);
-          } else {
-            localStorage.setItem('token', res.Data[0].token);
-          }
+          localStorage.setItem('token', res.Data[0].token);
           this.userId = res.Data[0]._id;
           this.displayName = res.Data[0].displayname;
           this.displayName = this.displayName

@@ -236,16 +236,18 @@ router.post("/savemessages", async (req, res) => {
             (response) => {
               var response = response.data;
               console.log(response);
+              resType["Status"] = true;
+              resType["Message"] = "Successful";
+              return res.status(200).send(resType);
             },
             (error) => {
               var status = error.response.status;
               console.log(status);
+              resType["Message"] = error.message;
+              return res.status(400).send(resType);
             }
           );
       }
-      resType["Status"] = true;
-      resType["Message"] = "Successful";
-      return res.status(200).send(resType);
     } else {
       resType["Message"] = "Username is not Valid";
       return res.status(400).send(resType);
