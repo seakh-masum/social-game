@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Optional } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  Optional,
+} from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
@@ -9,8 +15,6 @@ import * as htmlToImage from 'html-to-image';
 import { WebShareService } from 'ng-web-share';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 import { MessagingService } from 'src/app/services/messaging.service';
-import * as d3 from 'd3';
-import { svg } from 'd3';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageReviewComponent } from '../message-review/message-review.component';
 
@@ -22,7 +26,7 @@ import { MessageReviewComponent } from '../message-review/message-review.compone
 export class ViewMessageComponent implements OnInit, AfterViewInit {
   messages: Array<any> = [];
   messageData: any = '';
-  
+
   constructor(
     private _route: ActivatedRoute,
     private _generic: GenericService,
@@ -33,7 +37,7 @@ export class ViewMessageComponent implements OnInit, AfterViewInit {
     private title: Title,
     private webshareService: WebShareService,
     private messagingService: MessagingService,
-    private _dialog: MatDialog,
+    private _dialog: MatDialog
   ) {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
@@ -49,7 +53,6 @@ export class ViewMessageComponent implements OnInit, AfterViewInit {
         this._router.navigate(['/secret-message/create']);
       }
     });
-
   }
 
   ngOnInit(): void {
@@ -57,12 +60,8 @@ export class ViewMessageComponent implements OnInit, AfterViewInit {
     this.messagingService.receiveMessage();
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void {}
 
-  }
-
-  
-  
   onReload() {
     window.location.reload();
   }
@@ -79,14 +78,16 @@ export class ViewMessageComponent implements OnInit, AfterViewInit {
     //     console.error('oops, something went wrong!', error);
     //   });
 
-    this._dialog.open(MessageReviewComponent, {
-      data: {
-        msg: message
-      }
-    }).afterClosed().subscribe((res)=> {
-      console.log(res);
-    })
-
+    this._dialog
+      .open(MessageReviewComponent, {
+        data: {
+          msg: message,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        console.log(res);
+      });
 
     // console.log(image);
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, Meta, SafeUrl, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgNavigatorShareService } from 'ng-navigator-share';
+import { WebShareService } from 'ng-web-share';
 import { map } from 'rxjs/operators';
 import { GlobalService } from 'src/app/services/global.service';
 import { PageMetadata } from 'src/app/services/meta-data.service';
@@ -16,6 +17,9 @@ export class ShareLinkComponent implements OnInit {
   url: string = '';
   wapUrl: SafeUrl = '';
   fbUrl: string = '';
+  shareImgUrl: any =
+    'https://res.cloudinary.com/dzruu87x0/image/upload/v1612084127/Secret_eyvwfx.webp';
+  fileList = new DataTransfer();
   defaultMetadata: PageMetadata = {
     title: 'Secret Message',
     description: `Send secret message to the user, they don't know who send him`,
@@ -35,6 +39,7 @@ export class ShareLinkComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _nativeShare: NgNavigatorShareService,
+    private webshareService: WebShareService,
     private sanitizer: DomSanitizer,
     private _global: GlobalService,
     private meta: Meta,
@@ -68,6 +73,8 @@ export class ShareLinkComponent implements OnInit {
     this.url = environment.hostingurl + localStorage.getItem('link');
     this.fbUrl = 'http://www.facebook.com/sharer.php?u=' + this.url;
     this.wapUrl = this.sanitizeUrl('whatsapp://send?text=' + this.url);
+    this.fileList = new DataTransfer();
+    this.fileList.items.add(this.shareImgUrl);
 
     this.sharingOptions = [
       {
@@ -116,16 +123,40 @@ export class ShareLinkComponent implements OnInit {
   sanitizeUrl(url: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(url);
   }
-
+  urlCopied() {
+    this._global.openSnackbar('Copied', 'Success');
+  }
   async sendToDevice(url: string) {
-    try {
-      await this._nativeShare.share({
-        title: 'Sharing to Whatsapp',
-        text: 'Share anynomous message to Friend',
-        url: url,
-      });
-    } catch (error) {
-      console.log('You app is not shared, reason: ', error);
+    // try {
+    //   await this._nativeShare.share({
+    //     title: 'Sharing to Whatsapp',
+    //     text: 'Share anynomous message to Friend',
+    //     url: url,
+    //   });
+    // } catch (error) {
+    //   console.log('You app is not shared, reason: ', error);
+    // }
+    let list: any = this.fileList;
+    if (!this.webshareService.canShareFile(list)) {
+      alert(`This service/api is not supported in your Browser`);
+      return;
     }
+    await this.webshareService
+      .share({
+        title: 'Secret Message',
+        text: `Hey message to ${localStorage.getItem(
+          'displayName'
+        )},don't worry ${localStorage.getItem(
+          'displayName'
+        )} will not know your name`,
+        url: url,
+        files: list,
+      })
+      .then((response: any) => {
+        console.log(response);
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
   }
 }
