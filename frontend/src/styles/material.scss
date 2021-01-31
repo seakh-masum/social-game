@@ -65,10 +65,14 @@
   }
 }
 
-.mat-raised-button, button:disabled {
+.mat-raised-button, .mat-flat-button, button:disabled {
   height: 45px;
   border-radius: 30px !important;
   font-size: 16px;
   letter-spacing: 1.6px;
   text-transform: uppercase;
+}
+
+.mat-dialog-container {
+  border-radius: 30px !important;
 }

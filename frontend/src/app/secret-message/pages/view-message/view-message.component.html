@@ -25,8 +25,11 @@
               <p>{{ item.message }}</p>
             </div>
           </div> -->
+          <!-- <canvas [id]="i"  width="200" height="100" style="border:1px solid #d3d3d3;">
+            {{item.message}}
+          </canvas> -->
         </div>
-        <div fxLayoutAlign="center center" fxFlex="10" (click)="shareData(item.base64image)">
+        <div fxLayoutAlign="center center" fxFlex="10" (click)="shareData(item.message)">
           <img src="assets/icons/share.svg">
         </div>
       </mat-card>

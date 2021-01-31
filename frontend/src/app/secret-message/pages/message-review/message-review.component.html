@@ -1,8 +1,16 @@
+<!-- <h2 mat-dialog-title>Share your Message</h2> -->
 <mat-dialog-content>
-  <div id="msg" class="msg">
-    <h1>{{data.params.message}}</h1>
+  <div id="msg" class="msg" (click)="changeBackgroundColor()" (swipeleft)="swipe($event.type)" (swiperight)="swipe($event.type)">
+    <p id="text" (click)="changeFontStyle()" [style.fontSize.px]="customFontSize">{{data.msg}}</p>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-  <button mat-button (click)="sendMessage()" [disabled]="isButtonDisabled">Ok</button>
+  <button mat-flat-button color="primary" (click)="shareImage('msg')" [disabled]="isButtonDisabled">
+    <div id="wave" *ngIf="isButtonDisabled else showButtonBlock">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+    <ng-template #showButtonBlock>Share Your Message</ng-template>
+  </button>
 </mat-dialog-actions>
