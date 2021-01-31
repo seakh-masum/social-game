@@ -119,22 +119,27 @@ export class ShareLinkComponent implements OnInit {
       });
   }
   updateMetaTag() {
-    const imgUrl = 'assets/img/secret-covers.png';
-    this.meta.updateTag({
+    const imgUrl =
+      'https://res.cloudinary.com/dzruu87x0/image/upload/v1612033640/secret-message_lgicit.png';
+    this.meta.addTag({
       name: 'description',
-      content: `Send secret message to the user, they don't know who send him`,
+      content: `#❤️Hey 🙈 message to 🤟${localStorage.getItem(
+        'displayName'
+      )}🤟,😬😬 don't worry ${localStorage.getItem(
+        'displayName'
+      )} will not know your name😉❤️#`,
     });
-    this.meta.updateTag({
+    this.meta.addTag({
       property: 'og:image',
       content: imgUrl,
       itemprop: 'image',
     });
-    this.meta.updateTag({
+    this.meta.addTag({
       property: 'og:image:url',
       content: imgUrl,
       itemprop: 'image',
     });
-    this.meta.updateTag({
+    this.meta.addTag({
       property: 'og:image:type',
       content: 'image/png',
     });

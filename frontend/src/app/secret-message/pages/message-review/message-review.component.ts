@@ -4,50 +4,45 @@ import * as htmlToImage from 'html-to-image';
 import { WebShareService } from 'ng-web-share';
 import { GenericService } from 'src/app/services/generic.service';
 
-
 @Component({
   selector: 'app-message-review',
   templateUrl: './message-review.component.html',
-  styleUrls: ['./message-review.component.scss']
+  styleUrls: ['./message-review.component.scss'],
 })
 export class MessageReviewComponent implements OnInit, AfterViewInit {
-
   SWIPE_ACTION = { LEFT: 'swipeleft', RIGHT: 'swiperight' };
-  msgSendFlag: boolean= false;
+  msgSendFlag: boolean = false;
   isButtonDisabled: boolean = false;
-  private colors = [
-    'red',
-    'green',
-    'yellow',
-    'blue',
-    'purple'
-  ];
+  private colors = ['red', 'green', 'yellow', 'blue', 'purple'];
 
   private fontStyles = [
-    'Hachi Maru Pop', 'Dancing Script', 'Pacifico', 'Permanent Marker', 'Shadows Into Light'
+    'Hachi Maru Pop',
+    'Dancing Script',
+    'Pacifico',
+    'Permanent Marker',
+    'Shadows Into Light',
   ];
 
   base64Image: any = '';
   customFontSize = 30;
   customBackgroundColor: string = 'purple';
-  changeDetected: boolean = false;  
+  changeDetected: boolean = false;
   isGenarateImage: boolean = false;
   isStyleSelected: boolean = true;
-  
-  
+
   constructor(
     private _generic: GenericService,
     private _dialogRef: MatDialogRef<MessageReviewComponent>,
     private webshareService: WebShareService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit(): void {
-    if(this.data.msg.length>50) {
+    if (this.data.msg.length > 50) {
       this.customFontSize = 25;
     }
   }
-  
+
   ngAfterViewInit() {
     // this.shareImage('msg');
     // this.genarateImage();
@@ -56,7 +51,7 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
   swipe(action = this.SWIPE_ACTION.RIGHT) {
     // swipe right, next avatar
     if (action === this.SWIPE_ACTION.RIGHT) {
-        this.changeBackgroundColor();
+      this.changeBackgroundColor();
     }
 
     // swipe left, previous avatar
@@ -74,7 +69,17 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
     this.isButtonDisabled = true;
     // this.isGenarateImage = false;
     await htmlToImage
-      .toPng(node, {width: 720, height: 1080, pixelRatio: 1, style: {display: 'flex', alignItems: 'center', placeContent: 'center', color: '#fff'}})
+      .toPng(node, {
+        width: 720,
+        height: 1080,
+        pixelRatio: 1,
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          placeContent: 'center',
+          color: '#fff',
+        },
+      })
       .then(async function (dataUrl) {
         console.log(dataUrl);
         base64Image = dataUrl;
@@ -91,7 +96,11 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
     let that = this;
     let list = new DataTransfer();
     that
-      .urltoFile(this.base64Image, `${new Date().getMilliseconds()}.png`, 'image/png')
+      .urltoFile(
+        this.base64Image,
+        `${new Date().getMilliseconds()}.png`,
+        'image/png'
+      )
       .then(function (file) {
         console.log(file);
         list.items.add(file);
@@ -105,6 +114,7 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
   async checkFile(event: any) {
     if (!this.webshareService.canShareFile(event.files)) {
       alert(`This service/api is not supported in your Browser`);
+      this._dialogRef.close();
       return;
     }
     await this.webshareService
@@ -116,6 +126,7 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
       })
       .then((response: any) => {
         console.log(response);
+        this._dialogRef.close();
       })
       .catch((error: any) => {
         console.log(error);
@@ -132,27 +143,31 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
   }
 
   changeBackgroundColor() {
-    const randomIndex = Math.floor(Math.random() * Math.floor(this.colors.length));
+    const randomIndex = Math.floor(
+      Math.random() * Math.floor(this.colors.length)
+    );
     let elem: any;
     elem = document.getElementById('msg') as HTMLElement;
     // elem.style.backgroundColor = this.colors[randomIndex];
     this.customBackgroundColor = this.colors[randomIndex];
-    setTimeout(() => {
-      this.changeDetected = true;
-      this.genarateImage();
-    }, 1500);
+    // setTimeout(() => {
+    //   this.changeDetected = true;
+    //   this.genarateImage();
+    // }, 1500);
   }
 
   changeFontStyle() {
     // let elem = document.getElementById('msg') as HTMLElement;
     // elem.style.pointerEvents = 'none';
-    const randomIndex = Math.floor(Math.random() * Math.floor(this.fontStyles.length));
+    const randomIndex = Math.floor(
+      Math.random() * Math.floor(this.fontStyles.length)
+    );
     let textElem: any;
     textElem = document.getElementById('text') as HTMLElement;
     textElem.style.fontFamily = this.fontStyles[randomIndex];
-    setTimeout(() => {
-      this.changeDetected = true;
-      this.genarateImage();
-    }, 1500);
-  }  
+    // setTimeout(() => {
+    //   this.changeDetected = true;
+    //   this.genarateImage();
+    // }, 1500);
+  }
 }
