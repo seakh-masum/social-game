@@ -17,6 +17,7 @@ export class ShareLinkComponent implements OnInit {
   url: string = '';
   wapUrl: SafeUrl = '';
   fbUrl: string = '';
+  userMeta: any = '';
   shareImgUrl: any =
     'https://res.cloudinary.com/dzruu87x0/image/upload/v1612097153/secret-message_buzlnc.gif';
   fileList = new DataTransfer();
@@ -58,6 +59,11 @@ export class ShareLinkComponent implements OnInit {
           _global.watchPosition();
           _global.deviceDetection();
           this.updateMetaTag();
+          this.userMeta = `#❤️Hey 🙈 message to 🤟${localStorage.getItem(
+            'displayName'
+          )}🤟,😬😬 don't worry ${localStorage.getItem(
+            'displayName'
+          )} will not know your name😉❤️#`;
         } else {
           this._router.navigate(['/secret-message/sent/' + _global.userId]);
         }
