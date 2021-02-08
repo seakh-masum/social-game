@@ -27,7 +27,7 @@ export class CreateProfileComponent implements OnInit {
   loginFlag: boolean = false;
   privacyPolicy: boolean = false;
 
-  title: string=  'Signup';
+  title: string = 'Signup';
   selectedToggle: string = 'signup';
 
   constructor(
@@ -79,8 +79,8 @@ export class CreateProfileComponent implements OnInit {
   }
   toogleChange1(value: any) {
     this.userName = '';
-    this.pin = ''; 
-    if(value=='login') {
+    this.pin = '';
+    if (value == 'login') {
       this.privacyPolicy = false;
       this.selectedToggle = 'login';
       this.availableFlag = false;

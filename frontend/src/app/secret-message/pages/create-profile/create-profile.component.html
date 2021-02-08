@@ -1,15 +1,30 @@
 <form fxLayout="column" fxLayoutGap="20px">
   <div class="heading">
-    <h2>{{ selectedToggle | titlecase }}</h2>
+    <h2>{{ selectedToggle }}</h2>
+    <!-- | titlecase -->
   </div>
   <div id="tab">
     <div class="tab" #group>
-      <a class="tabText" [class.active]="selectedToggle=='login'" (click)="toogleChange1('login')">Login</a>
-      <a class="tabText" [class.active]="selectedToggle=='signup'" (click)="toogleChange1('signup')">Signup</a>
+      <a
+        class="tabText"
+        [class.active]="selectedToggle == 'login'"
+        (click)="toogleChange1('login')"
+        >Login</a
+      >
+      <a
+        class="tabText"
+        [class.active]="selectedToggle == 'signup'"
+        (click)="toogleChange1('signup')"
+        >Signup</a
+      >
     </div>
   </div>
   <div fxLayout="column" fxLayoutGap="25px" class="form">
-    <div *ngIf="selectedToggle=='signup'" fxLayout="column" fxLayoutGap="30px">
+    <div
+      *ngIf="selectedToggle == 'signup'"
+      fxLayout="column"
+      fxLayoutGap="30px"
+    >
       <div>
         <mat-form-field appearance="fill">
           <input
@@ -31,7 +46,7 @@
         >Accept our privacy & policy</mat-checkbox
       >
     </div>
-    <div *ngIf="selectedToggle=='login'" fxLayout="column" fxLayoutGap="30px">
+    <div *ngIf="selectedToggle == 'login'" fxLayout="column" fxLayoutGap="30px">
       <mat-form-field appearance="fill">
         <!-- <mat-label>User Name</mat-label> (keyup)="keyUp.next($event)"-->
         <input
@@ -58,7 +73,11 @@
     </div>
     <button
       mat-raised-button
-      [disabled]="userName == '' || (selectedToggle=='login' && pin == '') || isButtonDisabled"
+      [disabled]="
+        userName == '' ||
+        (selectedToggle == 'login' && pin == '') ||
+        isButtonDisabled
+      "
       color="primary"
       type="submit"
       (click)="createAccount(availableFlag)"

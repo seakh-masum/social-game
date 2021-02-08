@@ -16,7 +16,7 @@ export class AppComponent {
   isLoggedIn: boolean = true;
   activeIcon: string = '';
   scrollTop: number = 0;
-  hideBar:boolean = false;
+  hideBar: boolean = false;
   // iconList = [];
 
   constructor(
@@ -27,6 +27,17 @@ export class AppComponent {
     // if (environment.production) {
     //   console.log = console.debug = console.error = () => {};
     // }
+    if (navigator.serviceWorker) {
+      console.log('Will the service worker register?');
+      navigator.serviceWorker
+        .register('./ngsw-worker.js')
+        .then(function (reg) {
+          console.log('Yes, it did:', reg);
+        })
+        .catch(function (err) {
+          console.log("No it didn't. This happened: ", err);
+        });
+    }
     _router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((params) => {
@@ -45,8 +56,12 @@ export class AppComponent {
     console.log(routing_data);
     this.title = routing_data.title;
     // this.isBottombarVisible = routing_data.isBottombarVisible !== undefined && routing_data.isBottombarVisible ? true : false;
-    this.isLoggedIn = routing_data.isLoggedIn !== undefined && routing_data.isLoggedIn ? true : false;
-    this.activeIcon = routing_data.activeIcon !== undefined ? routing_data.activeIcon : '';
+    this.isLoggedIn =
+      routing_data.isLoggedIn !== undefined && routing_data.isLoggedIn
+        ? true
+        : false;
+    this.activeIcon =
+      routing_data.activeIcon !== undefined ? routing_data.activeIcon : '';
   }
 
   onScroll(event: any) {
