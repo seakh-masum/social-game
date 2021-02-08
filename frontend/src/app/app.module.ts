@@ -18,6 +18,7 @@ import { AsyncPipe } from '@angular/common';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { TranslateModule } from '@ngx-translate/core';
+import { RouterResolverService } from './resolver/router.resolver';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -37,6 +38,7 @@ import { TranslateModule } from '@ngx-translate/core';
     JwtHelperService,
     MessagingService,
     AsyncPipe,
+    RouterResolverService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     { provide: HTTP_INTERCEPTORS, useClass: HtttpIntercept, multi: true },
     {

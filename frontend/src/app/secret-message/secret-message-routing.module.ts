@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { RouterResolverService } from '../resolver/router.resolver';
 import { CreateProfileComponent } from './pages/create-profile/create-profile.component';
 import { SentMessageComponent } from './pages/sent-message/sent-message.component';
 import { ShareLinkComponent } from './pages/share-link/share-link.component';
@@ -21,6 +22,7 @@ const routes: Routes = [
     path: 'sent/:id',
     component: SentMessageComponent,
     data: { title: 'Send Message', isLoggedIn: false },
+    resolve: [RouterResolverService],
   },
   {
     path: 'create',
