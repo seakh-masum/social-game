@@ -17,7 +17,7 @@ import { MessagingService } from './services/messaging.service';
 import { AsyncPipe } from '@angular/common';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
-
+import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -28,6 +28,7 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),
+    TranslateModule.forRoot(),
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
   ],

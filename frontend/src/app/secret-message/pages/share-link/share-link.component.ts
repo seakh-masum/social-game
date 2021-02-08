@@ -18,6 +18,7 @@ export class ShareLinkComponent implements OnInit {
   wapUrl: SafeUrl = '';
   fbUrl: string = '';
   userMeta: any = '';
+  location: any;
   shareImgUrl: any =
     'https://res.cloudinary.com/dzruu87x0/image/upload/v1612097153/secret-message_buzlnc.gif';
   fileList = new DataTransfer();
@@ -46,6 +47,7 @@ export class ShareLinkComponent implements OnInit {
     private meta: Meta,
     private title: Title
   ) {
+    this.location = window.location.href;
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
         _global.userId = res;
@@ -58,12 +60,10 @@ export class ShareLinkComponent implements OnInit {
           // this.getMessageDetails();
           _global.watchPosition();
           _global.deviceDetection();
-          this.updateMetaTag();
-          this.userMeta = `#❤️Hey 🙈 message to 🤟${localStorage.getItem(
-            'displayName'
-          )}🤟,😬😬 don't worry ${localStorage.getItem(
-            'displayName'
-          )} will not know your name😉❤️#`;
+          // this.updateMetaTag();
+          this.userMeta = `#❤️Hey 🙈 message to 🤟${atob(
+            res
+          )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
         } else {
           this._router.navigate(['/secret-message/sent/' + _global.userId]);
         }
@@ -127,7 +127,7 @@ export class ShareLinkComponent implements OnInit {
   updateMetaTag() {
     const imgUrl =
       'https://res.cloudinary.com/dzruu87x0/image/upload/v1612033640/secret-message_lgicit.png';
-    this.meta.addTag({
+    this.meta.updateTag({
       name: 'description',
       content: `#❤️Hey 🙈 message to 🤟${localStorage.getItem(
         'displayName'
@@ -135,17 +135,17 @@ export class ShareLinkComponent implements OnInit {
         'displayName'
       )} will not know your name😉❤️#`,
     });
-    this.meta.addTag({
+    this.meta.updateTag({
       property: 'og:image',
       content: imgUrl,
       itemprop: 'image',
     });
-    this.meta.addTag({
+    this.meta.updateTag({
       property: 'og:image:url',
       content: imgUrl,
       itemprop: 'image',
     });
-    this.meta.addTag({
+    this.meta.updateTag({
       property: 'og:image:type',
       content: 'image/png',
     });

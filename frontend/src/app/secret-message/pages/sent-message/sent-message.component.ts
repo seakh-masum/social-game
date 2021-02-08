@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { DialogComponent } from 'src/app/components/dialog/dialog.component';
@@ -25,11 +27,61 @@ export class SentMessageComponent implements OnInit {
     private _global: GlobalService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private meta: Meta,
+    private title: Title,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
-        _global.userId = res;
+        this._global.userId = res;
+        // title.setTitle('Send Message');
+        // if (isPlatformBrowser(this.platformId)) {
+        //   this.meta.addTags([
+        //     {
+        //       name: 'title',
+        //       content: `Send Message`,
+        //     },
+        //     {
+        //       property: 'og:title',
+        //       content: `Send Message`,
+        //     },
+        //     {
+        //       property: 'twitter:title',
+        //       content: `Send Message`,
+        //     },
+        //     {
+        //       name: 'description',
+        //       content: `#❤️Hey 🙈 message to 🤟${atob(
+        //         res
+        //       )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`,
+        //     },
+        //     {
+        //       name: 'author',
+        //       content: `Sayon Chakraborty / Sk Masum`,
+        //     },
+        //     {
+        //       property: 'og:description',
+        //       content: `#❤️Hey 🙈 message to 🤟${atob(
+        //         res
+        //       )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`,
+        //     },
+        //     {
+        //       property: 'og:url',
+        //       content: `https://socail-game.web.app/secret-message/sent/${res}`,
+        //     },
+        //     {
+        //       property: 'twitter:description',
+        //       content: `#❤️Hey 🙈 message to 🤟${atob(
+        //         res
+        //       )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`,
+        //     },
+        //     {
+        //       property: 'twitter:url',
+        //       content: `https://socail-game.web.app/secret-message/sent/${res}`,
+        //     },
+        //   ]);
+        // }
       } else {
         this._router.navigate(['/secret-message/create']);
       }
