@@ -21,6 +21,7 @@ export class SentMessageComponent implements OnInit {
   public displayName: any = '';
   public msgSendFlag: boolean = false;
   public endPoints: any = '';
+  public dynamicMeta: any = '';
 
   constructor(
     private _generic: GenericService,
@@ -35,6 +36,9 @@ export class SentMessageComponent implements OnInit {
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
         this._global.userId = res;
+        this.dynamicMeta = `#❤️Hey 🙈 message to 🤟${atob(
+          res
+        )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
         // title.setTitle('Send Message');
         // if (isPlatformBrowser(this.platformId)) {
         //   this.meta.addTags([

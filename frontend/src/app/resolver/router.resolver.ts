@@ -7,7 +7,7 @@ export class RouterResolverService implements Resolve<any> {
   constructor(private titleService: Title, private metaService: Meta) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot) {
-    console.log(activatedRouteSnapshot.url[1].path);
+    console.log(window.location.href);
     let params = {
       title: 'Send Secret Messages',
       metatitle: 'Send Secret Messages',
@@ -26,12 +26,13 @@ export class RouterResolverService implements Resolve<any> {
       type: 'website',
       feature_image:
         'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
+      url: window.location.href,
     };
     this.setAdMetaData(params);
   }
 
   setAdMetaData(ad_seo_data: any) {
-    //this.metaService.removeTag('description');
+    this.metaService.removeTag('description');
 
     this.titleService.setTitle(ad_seo_data.title);
     if (ad_seo_data.metatitle && ad_seo_data.metatitle != '') {
@@ -63,8 +64,11 @@ export class RouterResolverService implements Resolve<any> {
         property: 'twitter:title',
         content: ad_seo_data.title,
       });
-      // this.metaService.removeTag('name');
-      // this.metaService.updateTag({ itemprop: 'name', content: ad_seo_data.title });
+      this.metaService.removeTag('name');
+      this.metaService.updateTag({
+        itemprop: 'name',
+        content: ad_seo_data.title,
+      });
     }
 
     if (ad_seo_data.feature_image && ad_seo_data.feature_image != '') {
@@ -80,7 +84,10 @@ export class RouterResolverService implements Resolve<any> {
         name: 'twitter:image',
         content: ad_seo_data.feature_image,
       });
-      //this.metaService.updateTag({ itemprop: 'image', content: ad_seo_data.feature_image });
+      this.metaService.updateTag({
+        itemprop: 'image',
+        content: ad_seo_data.feature_image,
+      });
       this.metaService.updateTag({
         name: 'twitter:site',
         content: '@Secret Messages',
@@ -99,13 +106,24 @@ export class RouterResolverService implements Resolve<any> {
         name: 'twitter:description',
         content: ad_seo_data.description,
       });
-      //this.metaService.updateTag({ itemprop: 'description', content: ad_seo_data.description });
+      this.metaService.updateTag({
+        itemprop: 'description',
+        content: ad_seo_data.description,
+      });
     }
     this.metaService.updateTag({ name: 'geo.country', content: 'IN' });
     this.metaService.updateTag({ property: 'og:type', content: 'website' });
     // let copyrightText = "Copyright (c) 2000-"+this.copyrightYear+" Secret Messages.";
     // this.metaService.updateTag({ name: 'rights', content: copyrightText });
     // this.metaService.updateTag({ name: 'Copyright', content: copyrightText });
+    this.metaService.updateTag({
+      name: 'og:url',
+      content: ad_seo_data.url,
+    });
+    this.metaService.updateTag({
+      name: 'twitter:url',
+      content: ad_seo_data.url,
+    });
     this.metaService.updateTag({
       name: 'author',
       content: 'Sayon Chakraborty / Sk Masum',

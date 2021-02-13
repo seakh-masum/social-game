@@ -21,7 +21,7 @@ const routes: Routes = [
   {
     path: 'sent/:id',
     component: SentMessageComponent,
-    data: { title: 'Send Message', isLoggedIn: false },
+    data: { isLoggedIn: false },
     resolve: [RouterResolverService],
   },
   {
