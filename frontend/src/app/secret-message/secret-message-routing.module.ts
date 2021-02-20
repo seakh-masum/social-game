@@ -22,8 +22,7 @@ const routes: Routes = [
   {
     path: 'sent/:id',
     component: SentMessageComponent,
-    canActivate: [MetafrenzyGuard],
-    data: { isLoggedIn: false },
+    data: { title: 'Send Secret Messages', isLoggedIn: false },
     resolve: [RouterResolverService],
   },
   {

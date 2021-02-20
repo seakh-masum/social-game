@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { Buffer } from 'buffer';
 import { MetafrenzyService } from 'ngx-metafrenzy';
 
 @Injectable({ providedIn: 'root' })
@@ -16,7 +17,7 @@ export class RouterResolverService implements Resolve<any> {
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot) {
     console.log(window.location.href);
     let params = {};
-    if (isPlatformBrowser(this.platformId)) {
+    try {
       params = {
         title: 'Send Secret Messages',
         metatitle: 'Send Secret Messages',
@@ -37,7 +38,31 @@ export class RouterResolverService implements Resolve<any> {
           'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
         url: window.location.href,
       };
+    } catch (err) {
+      params = {
+        title: 'Send Secret Messages',
+        metatitle: 'Send Secret Messages',
+        description: `#❤️Hey 🙈 message to 🤟${Buffer.from(
+          activatedRouteSnapshot.url[1].path,
+          'base64'
+        ).toString('binary')}🤟,😬😬 don't worry ${Buffer.from(
+          activatedRouteSnapshot.url[1].path,
+          'base64'
+        ).toString('binary')} will not know your name😉❤️#`,
+        author: 'Sayon Chakraborty / Sk Masum',
+        keywords: [
+          'Annoymous',
+          'messages',
+          'Annoymous messages',
+          'Secret Messages',
+        ],
+        type: 'website',
+        feature_image:
+          'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
+        url: window.location.href,
+      };
     }
+    console.log(params);
     this.setAdMetaData(params);
   }
 

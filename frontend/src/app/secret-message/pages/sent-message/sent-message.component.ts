@@ -33,13 +33,14 @@ export class SentMessageComponent implements OnInit {
     private title: Title,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    _route.params.pipe(map((p) => p.id)).subscribe((res) => {
+    _route.params.pipe(map((p) => p.id)).subscribe((res: any) => {
       if (res) {
         this._global.userId = res;
-        if (isPlatformBrowser(this.platformId)) {
-          this.dynamicMeta = `#❤️Hey 🙈 message to 🤟${atob(
-            res
-          )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
+        try{
+          this.dynamicMeta = `#❤️Hey 🙈 message to 🤟${atob(res)}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
+        }
+        catch(err){
+          this.dynamicMeta = `#❤️Hey 🙈 message to 🤟${Buffer.from(res, 'base64').toString('binary')}🤟,😬😬 don't worry ${Buffer.from(res, 'base64').toString('binary')} will not know your name😉❤️#`;
         }
         // title.setTitle('Send Message');
         // if (isPlatformBrowser(this.platformId)) {
@@ -100,7 +101,12 @@ export class SentMessageComponent implements OnInit {
   }
 
   getUserDetails(): void {
-    const url = 'user-details/' + atob(this._global.userId);
+    let url: any;
+    try {
+      url = 'user-details/' + atob(this._global.userId);
+    }catch(err){
+      url = 'user-details/' + Buffer.from(this._global.userId, 'base64').toString('binary');
+    }
     console.log(url);
     this._generic.get(url).subscribe((res: any) => {
       console.log(res);
