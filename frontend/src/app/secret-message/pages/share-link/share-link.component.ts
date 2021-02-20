@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { DomSanitizer, Meta, SafeUrl, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgNavigatorShareService } from 'ng-navigator-share';
@@ -45,27 +46,30 @@ export class ShareLinkComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private _global: GlobalService,
     private meta: Meta,
-    private title: Title
+    private title: Title,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.location = window.location.href;
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
         _global.userId = res;
-        let encrptedUser = localStorage.getItem('encyptduser');
-        console.log(atob(String(encrptedUser)), atob(res));
-        if (
-          encrptedUser !== undefined &&
-          atob(String(encrptedUser)) == atob(res)
-        ) {
-          // this.getMessageDetails();
-          _global.watchPosition();
-          _global.deviceDetection();
-          // this.updateMetaTag();
-          this.userMeta = `#❤️Hey 🙈 message to 🤟${atob(
-            res
-          )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
-        } else {
-          this._router.navigate(['/secret-message/sent/' + _global.userId]);
+        if (isPlatformBrowser(this.platformId)) {
+          let encrptedUser = localStorage.getItem('encyptduser');
+          console.log(atob(String(encrptedUser)), atob(res));
+          if (
+            encrptedUser !== undefined &&
+            atob(String(encrptedUser)) == atob(res)
+          ) {
+            // this.getMessageDetails();
+            _global.watchPosition();
+            _global.deviceDetection();
+            // this.updateMetaTag();
+            this.userMeta = `#❤️Hey 🙈 message to 🤟${atob(
+              res
+            )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
+          } else {
+            this._router.navigate(['/secret-message/sent/' + _global.userId]);
+          }
         }
       } else {
         this._router.navigate(['/secret-message/create']);

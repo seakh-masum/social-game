@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -17,7 +18,8 @@ export class GlobalService {
   constructor(
     private _snackbar: MatSnackBar,
     private _generic: GenericService,
-    public deviceService: DeviceDetectorService
+    public deviceService: DeviceDetectorService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.deviceInfo = this.deviceService.getDeviceInfo();
     _generic.getip('https://jsonip.com').subscribe((res: any) => {
@@ -32,45 +34,16 @@ export class GlobalService {
       panelClass: [type],
       duration: 1500,
       horizontalPosition: 'center',
-      verticalPosition: 'top'
+      verticalPosition: 'top',
     });
   }
   watchPosition() {
     this.longitude = '';
     this.latitude = '';
-    navigator.geolocation.watchPosition(
-      async (position: any) => {
-        console.log(
-          `lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`
-        );
-        if (
-          position.coords.longitude != '' &&
-          position.coords.latitude != '' &&
-          this.longitude != position.coords.longitude &&
-          this.latitude != position.coords.latitude
-        ) {
-          this.latitude = position.coords.latitude;
-          this.longitude = position.coords.longitude;
-          if (localStorage.getItem('id') != undefined) {
-            let params = {
-              _id: localStorage.getItem('id'),
-              longitude: position.coords.longitude,
-              latitude: position.coords.latitude,
-            };
-            this._generic
-              .post('update-details', params)
-              .subscribe((res: any) => {
-                console.log(res);
-              });
-          }
-        }
-      },
-      (err) => {
-        console.log(err);
-        if (!navigator.geolocation) {
-          console.log('location is not set');
-        } else {
-          navigator.geolocation.getCurrentPosition(async (position: any) => {
+    if (isPlatformBrowser(this.platformId)) {
+      try {
+        navigator.geolocation.watchPosition(
+          async (position: any) => {
             console.log(
               `lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`
             );
@@ -95,15 +68,52 @@ export class GlobalService {
                   });
               }
             }
-          });
-        }
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 1000,
-        maximumAge: 0,
+          },
+          (err) => {
+            console.log(err);
+            if (!navigator.geolocation) {
+              console.log('location is not set');
+            } else {
+              navigator.geolocation.getCurrentPosition(
+                async (position: any) => {
+                  console.log(
+                    `lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`
+                  );
+                  if (
+                    position.coords.longitude != '' &&
+                    position.coords.latitude != '' &&
+                    this.longitude != position.coords.longitude &&
+                    this.latitude != position.coords.latitude
+                  ) {
+                    this.latitude = position.coords.latitude;
+                    this.longitude = position.coords.longitude;
+                    if (localStorage.getItem('id') != undefined) {
+                      let params = {
+                        _id: localStorage.getItem('id'),
+                        longitude: position.coords.longitude,
+                        latitude: position.coords.latitude,
+                      };
+                      this._generic
+                        .post('update-details', params)
+                        .subscribe((res: any) => {
+                          console.log(res);
+                        });
+                    }
+                  }
+                }
+              );
+            }
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 1000,
+            maximumAge: 0,
+          }
+        );
+      } catch (err) {
+        console.warn(err);
       }
-    );
+    }
   }
   deviceDetection() {
     this.deviceInfo = this.deviceService.getDeviceInfo();

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { MetafrenzyGuard } from 'ngx-metafrenzy';
 import { RouterResolverService } from '../resolver/router.resolver';
 import { CreateProfileComponent } from './pages/create-profile/create-profile.component';
 import { SentMessageComponent } from './pages/sent-message/sent-message.component';
@@ -21,6 +22,7 @@ const routes: Routes = [
   {
     path: 'sent/:id',
     component: SentMessageComponent,
+    canActivate: [MetafrenzyGuard],
     data: { isLoggedIn: false },
     resolve: [RouterResolverService],
   },

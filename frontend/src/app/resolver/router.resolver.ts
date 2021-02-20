@@ -1,33 +1,43 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
+import { MetafrenzyService } from 'ngx-metafrenzy';
 
 @Injectable({ providedIn: 'root' })
 export class RouterResolverService implements Resolve<any> {
-  constructor(private titleService: Title, private metaService: Meta) {}
+  constructor(
+    private titleService: Title,
+    private metaService: Meta,
+    private _metafrenzyservice: MetafrenzyService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot) {
     console.log(window.location.href);
-    let params = {
-      title: 'Send Secret Messages',
-      metatitle: 'Send Secret Messages',
-      description: `#❤️Hey 🙈 message to 🤟${atob(
-        activatedRouteSnapshot.url[1].path
-      )}🤟,😬😬 don't worry ${atob(
-        activatedRouteSnapshot.url[1].path
-      )} will not know your name😉❤️#`,
-      author: 'Sayon Chakraborty / Sk Masum',
-      keywords: [
-        'Annoymous',
-        'messages',
-        'Annoymous messages',
-        'Secret Messages',
-      ],
-      type: 'website',
-      feature_image:
-        'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
-      url: window.location.href,
-    };
+    let params = {};
+    if (isPlatformBrowser(this.platformId)) {
+      params = {
+        title: 'Send Secret Messages',
+        metatitle: 'Send Secret Messages',
+        description: `#❤️Hey 🙈 message to 🤟${atob(
+          activatedRouteSnapshot.url[1].path
+        )}🤟,😬😬 don't worry ${atob(
+          activatedRouteSnapshot.url[1].path
+        )} will not know your name😉❤️#`,
+        author: 'Sayon Chakraborty / Sk Masum',
+        keywords: [
+          'Annoymous',
+          'messages',
+          'Annoymous messages',
+          'Secret Messages',
+        ],
+        type: 'website',
+        feature_image:
+          'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
+        url: window.location.href,
+      };
+    }
     this.setAdMetaData(params);
   }
 
@@ -81,10 +91,6 @@ export class RouterResolverService implements Resolve<any> {
         content: ad_seo_data.feature_image,
       });
       this.metaService.updateTag({
-        name: 'twitter:image',
-        content: ad_seo_data.feature_image,
-      });
-      this.metaService.updateTag({
         itemprop: 'image',
         content: ad_seo_data.feature_image,
       });
@@ -133,7 +139,10 @@ export class RouterResolverService implements Resolve<any> {
       content: 'no-referrer-when-downgrade',
     });
     this.metaService.updateTag({ property: 'og:locale', content: 'en-us' });
-    // this.metaService.updateTag({ property: 'fb:app_id', content: GlobalVariable.FACEBOOK_APP_ID });
+    this.metaService.updateTag({
+      property: 'fb:app_id',
+      content: '455538855453181',
+    });
     this.metaService.updateTag({ property: 'og:image:width', content: '1200' });
     this.metaService.updateTag({ property: 'og:image:height', content: '630' });
     this.metaService.updateTag({
@@ -148,6 +157,16 @@ export class RouterResolverService implements Resolve<any> {
       name: 'twitter:card',
       content: 'summary_large_image',
     });
+    if (ad_seo_data.url) {
+      this._metafrenzyservice.setLinkTag({
+        rel: 'canonical',
+        href: ad_seo_data.url,
+      });
+      this.metaService.updateTag({
+        property: 'og:url',
+        content: ad_seo_data.url,
+      });
+    }
     if (!ad_seo_data['nofollow']) {
       this.metaService.updateTag({ name: 'robots', content: 'index, follow' });
     }
