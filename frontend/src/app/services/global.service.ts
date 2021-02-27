@@ -3,6 +3,8 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { isArray } from 'util';
 import { GenericService } from './generic.service';
 
 @Injectable({
@@ -142,7 +144,8 @@ export class GlobalService {
       });
     }
   }
-  getSiteMapGenerate(url:any) {
+  getSiteMapGenerate(url: any,sitemapfor:String) {
+    this.sitemapArray = [];
     this._generic.siteMap('get').subscribe((data: any) => {
       // console.log(data);
       if (
@@ -152,35 +155,97 @@ export class GlobalService {
         data['fileContent']['urlset']['url'] &&
         data['fileContent']['urlset']['url'].length > 0
       ) {
-        if(data['fileContent']['urlset']['url'].length > 1){
-        this.sitemapArray = data['fileContent']['urlset']['url'];
-        }else{
-        this.sitemapArray.push(data['fileContent']['urlset']['url']);
+        if (
+          Array.isArray(data['fileContent']['urlset']['url']) &&
+          data['fileContent']['urlset']['url'].length > 1
+        ) {
+          if (data['fileContent']['urlset']['url'].findIndex(x=>x.loc === url) === -1) {
+            data['fileContent']['urlset']['url'].forEach((x:any) => {
+              if (x == environment.hostingurl) {
+                this.sitemapArray.push({
+                  loc: x.loc,
+                  changefreq: x.changefreq,
+                  priority: x.priority,
+                });
+              } else {
+                this.sitemapArray.push({
+                  loc: x.loc,
+                  changefreq: x.changefreq,
+                  priority: x.priority,
+                });
+              }
+            });
+            this.sitemapArray.push({
+              loc: url,
+              changefreq: 'monthly',
+              priority: 0.8,
+            });
+            this.generateSiteMap(this.sitemapArray,sitemapfor);
+          } else {
+            console.log('######### Sitemap has Already Created #########');
+          }
+        } else {
+          if (data['fileContent']['urlset']['url'] != url) {
+            if(data['fileContent']['urlset']['url'] == environment.hostingurl){
+              this.sitemapArray.push({
+                loc: data['fileContent']['urlset']['url'],
+                changefreq: 'yearly',
+                priority: 1,
+              });
+            }else{
+              this.sitemapArray.push({
+                loc: data['fileContent']['urlset']['url'],
+                changefreq: 'monthly',
+                priority: 0.8,
+              });
+            }
+            this.sitemapArray.push({
+              loc: url,
+              changefreq: 'monthly',
+              priority: 0.8,
+            });
+            this.generateSiteMap(this.sitemapArray,sitemapfor);
+          } else {
+            console.log('######### Sitemap has Already Created #######');
+          }
         }
-        this.generateSiteMap(url);
-      }else{
-        this.generateSiteMap(url);
+      } else {
+        this.sitemapArray.push({
+          loc: environment.hostingurl,
+          changefreq: 'yearly',
+          priority: 1,
+        });
+        this.sitemapArray.push({
+          loc: url,
+          changefreq: 'monthly',
+          priority: 0.8,
+        });
+        this.generateSiteMap(this.sitemapArray,sitemapfor);
       }
     });
   }
-  generateSiteMap(url: any) {
-    if (
-      this.sitemapArray &&
-      this.sitemapArray.indexOf(url) === -1
-    ) {
-      this.sitemapArray.push(url);
-      let parm = {
-        xml: {
-          urlset: {
-            $: { xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' },
-            url: this.sitemapArray,
-          },
+  generateSiteMap(url: any,sitemapfor:String) {
+    let param = {
+      xml: {
+        urlset: {
+          $: { xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' },
+          url: url,
         },
-        file_name: 'sitemap.xml',
-      };
-      this._generic.siteMap('', parm).subscribe((data) => {
-        // console.log(data);
-      });
-    }
+      },
+      file_name: 'sitemap.xml',
+    };
+    this._generic.siteMap('', param).subscribe((data:any) => {
+      // console.log(data);
+      if(data['Status']){
+        let req={
+          sitemapfor:sitemapfor,
+          sitemap:param['xml']['urlset']['url'],
+          filename:param['file_name'],
+          store1:data['Path'],
+          store2:data['Path2']
+        }
+        this._generic.post('save-sitemap-details',req).subscribe(res=>{});
+      }
+    });
   }
 }

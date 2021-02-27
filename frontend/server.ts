@@ -10,9 +10,11 @@ import { APP_BASE_HREF } from '@angular/common';
 import { existsSync } from 'fs';
 import 'localstorage-polyfill';
 import { enableProdMode } from '@angular/core';
+import { environment } from 'src/environments/environment';
 const domino = require('domino');
 const fs = require('fs');
 const xml2js = require('xml2js');
+const axios = require('axios');
 const template = fs
   .readFileSync('dist/social-game/browser/index.html')
   .toString();
@@ -71,8 +73,8 @@ export function app(): express.Express {
       maxAge: '1y',
     })
   );
-  // Set Sitemap
-  server.post('/createxmlsitemap/', function (req: any, res: any) {
+  // Create Sitemap
+  server.post('/createxmlsitemap/', async function (req: any, res: any) {
     var reqdata = req.body.xml;
     var file_name = req.body.file_name;
 
@@ -81,7 +83,8 @@ export function app(): express.Express {
       fs.mkdirSync(dir);
     }
     var filenm = `${process.cwd()}/dist/social-game/browser/` + file_name;
-    var filenm2 = `${process.cwd()}/dist/social-game/browser/sitemap/` + file_name;
+    var filenm2 =
+      `${process.cwd()}/dist/social-game/browser/sitemap/` + file_name;
 
     var builder = new xml2js.Builder();
     var xml = builder.buildObject(reqdata);

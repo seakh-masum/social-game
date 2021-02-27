@@ -61,7 +61,7 @@ export class ShareLinkComponent implements OnInit {
           ) {
             // this.getMessageDetails();
             _global.watchPosition();
-            _global.getSiteMapGenerate(window.location.href);
+            _global.getSiteMapGenerate(window.location.href,'Secret-Messages');
             // this.updateMetaTag();
             this.userMeta = `#❤️Hey 🙈 message to 🤟${atob(
               res
