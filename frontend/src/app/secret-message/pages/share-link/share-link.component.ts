@@ -55,14 +55,13 @@ export class ShareLinkComponent implements OnInit {
         _global.userId = res;
         if (isPlatformBrowser(this.platformId)) {
           let encrptedUser = localStorage.getItem('encyptduser');
-          console.log(atob(String(encrptedUser)), atob(res));
           if (
             encrptedUser !== undefined &&
             atob(String(encrptedUser)) == atob(res)
           ) {
             // this.getMessageDetails();
             _global.watchPosition();
-            _global.deviceDetection();
+            _global.getSiteMapGenerate(window.location.href);
             // this.updateMetaTag();
             this.userMeta = `#❤️Hey 🙈 message to 🤟${atob(
               res

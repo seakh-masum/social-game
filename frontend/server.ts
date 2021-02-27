@@ -12,6 +12,7 @@ import 'localstorage-polyfill';
 import { enableProdMode } from '@angular/core';
 const domino = require('domino');
 const fs = require('fs');
+const xml2js = require('xml2js');
 const template = fs
   .readFileSync('dist/social-game/browser/index.html')
   .toString();
@@ -70,7 +71,81 @@ export function app(): express.Express {
       maxAge: '1y',
     })
   );
+  // Set Sitemap
+  server.post('/createxmlsitemap/', function (req: any, res: any) {
+    var reqdata = req.body.xml;
+    var file_name = req.body.file_name;
 
+    var dir = `${process.cwd()}/dist/social-game/browser/sitemap/`;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+    var filenm = `${process.cwd()}/dist/social-game/browser/` + file_name;
+    var filenm2 = `${process.cwd()}/dist/social-game/browser/sitemap/` + file_name;
+
+    var builder = new xml2js.Builder();
+    var xml = builder.buildObject(reqdata);
+    fs.writeFileSync(filenm, xml, function (err: any) {
+      if (err) throw err;
+      console.log("It's saved!");
+    });
+    fs.writeFileSync(filenm2, xml, function (err: any) {
+      if (err) throw err;
+      console.log("It's saved!");
+    });
+    var result = {
+      Status: true,
+      Path: filenm,
+      Path2: filenm2,
+      Message: 'Sitemap created successfully.',
+    };
+    return res.json(result);
+  });
+  // Get Sitemap
+  server.get('/get-sitemap/', (req, res) => {
+    var result: any = {
+      Status: false,
+      fileContent: {},
+      Message: '',
+      'fileContent-sub': {},
+    };
+    var filenm = `${process.cwd()}/dist/social-game/browser/sitemap.xml`;
+    if (fs.existsSync(filenm)) {
+      result['fileContentxml'] = fs.readFileSync(filenm, 'utf8');
+
+      xml2js.parseString(
+        fs.readFileSync(filenm, 'utf8'),
+        { explicitArray: false },
+        (err: any, resdata: any) => {
+          if (err) {
+            result['Status'] = false;
+          } else {
+            result['fileContent'] = resdata;
+            result['Status'] = true;
+          }
+        }
+      );
+
+      var subFilenm = `${process.cwd()}/dist/social-game/browser/sitemap-sub.xml`;
+      if (fs.existsSync(subFilenm)) {
+        xml2js.parseString(
+          fs.readFileSync(subFilenm, 'utf8'),
+          { explicitArray: false },
+          (err: any, resdata2: any) => {
+            if (err) {
+              result['StatusSub'] = false;
+            } else {
+              result['fileContent-sub'] = resdata2;
+              result['StatusSub'] = true;
+            }
+          }
+        );
+      }
+    } else {
+      result['Status'] = false;
+    }
+    return res.json(result);
+  });
   // All regular routes use the Universal engine
   server.get('*', (req, res) => {
     res.render(indexHtml, {

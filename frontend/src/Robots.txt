@@ -2,6 +2,7 @@ User-agent: *
 Disallow: /
 Disallow: https://social-games-sksayon.herokuapp.com/api/
 Allow: https://socail-game.web.app/
+Allow: https://socail-game.web.app/sitemap.xml
 Allow: /ads/preferences/
 Allow: /gpt/
 Allow: /pagead/show_ads.js

@@ -14,6 +14,7 @@ export class GlobalService {
   public latitude: any = '';
   public deviceInfo: any = null;
   public ipAddress: BehaviorSubject<any> = new BehaviorSubject<any>('');
+  public sitemapArray: any[] = [];
 
   constructor(
     private _snackbar: MatSnackBar,
@@ -44,9 +45,9 @@ export class GlobalService {
       try {
         navigator.geolocation.watchPosition(
           async (position: any) => {
-            console.log(
-              `lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`
-            );
+            // console.log(
+            //   `lat: ${position.coords.latitude}, lon: ${position.coords.longitude}`
+            // );
             if (
               position.coords.longitude != '' &&
               position.coords.latitude != '' &&
@@ -64,7 +65,7 @@ export class GlobalService {
                 this._generic
                   .post('update-details', params)
                   .subscribe((res: any) => {
-                    console.log(res);
+                    // console.log(res);
                   });
               }
             }
@@ -138,6 +139,47 @@ export class GlobalService {
         this._generic
           .post('save-device-info', params)
           .subscribe((res: any) => {});
+      });
+    }
+  }
+  getSiteMapGenerate(url:any) {
+    this._generic.siteMap('get').subscribe((data: any) => {
+      // console.log(data);
+      if (
+        data['Status'] &&
+        data['fileContent'] &&
+        data['fileContent']['urlset'] &&
+        data['fileContent']['urlset']['url'] &&
+        data['fileContent']['urlset']['url'].length > 0
+      ) {
+        if(data['fileContent']['urlset']['url'].length > 1){
+        this.sitemapArray = data['fileContent']['urlset']['url'];
+        }else{
+        this.sitemapArray.push(data['fileContent']['urlset']['url']);
+        }
+        this.generateSiteMap(url);
+      }else{
+        this.generateSiteMap(url);
+      }
+    });
+  }
+  generateSiteMap(url: any) {
+    if (
+      this.sitemapArray &&
+      this.sitemapArray.indexOf(url) === -1
+    ) {
+      this.sitemapArray.push(url);
+      let parm = {
+        xml: {
+          urlset: {
+            $: { xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' },
+            url: this.sitemapArray,
+          },
+        },
+        file_name: 'sitemap.xml',
+      };
+      this._generic.siteMap('', parm).subscribe((data) => {
+        // console.log(data);
       });
     }
   }
