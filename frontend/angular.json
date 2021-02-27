@@ -104,7 +104,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/Robots.txt"
             ],
             "styles": [
               "src/styles/styles.scss"

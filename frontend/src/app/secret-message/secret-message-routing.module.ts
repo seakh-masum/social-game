@@ -38,6 +38,7 @@ const routes: Routes = [
     path: 'share-link/:id',
     component: ShareLinkComponent,
     data: { title: 'Share your link', isLoggedIn: true, activeIcon: 'share' },
+    resolve: [RouterResolverService]
   },
   {
     path: 'view-profile',
