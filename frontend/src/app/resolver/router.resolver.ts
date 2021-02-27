@@ -4,6 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Buffer } from 'buffer';
 import { MetafrenzyService } from 'ngx-metafrenzy';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RouterResolverService implements Resolve<any> {
@@ -15,12 +16,15 @@ export class RouterResolverService implements Resolve<any> {
   ) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot) {
-    console.log(window.location.href);
     let params = {};
     try {
       params = {
-        title: 'Send Secret Messages',
-        metatitle: 'Send Secret Messages',
+        title: `Send Secret Messages to ${atob(
+          activatedRouteSnapshot.url[1].path
+        )}`,
+        metatitle: `Send Secret Messages to ${atob(
+          activatedRouteSnapshot.url[1].path
+        )}`,
         description: `#❤️Hey 🙈 message to 🤟${atob(
           activatedRouteSnapshot.url[1].path
         )}🤟,😬😬 don't worry ${atob(
@@ -36,12 +40,18 @@ export class RouterResolverService implements Resolve<any> {
         type: 'website',
         feature_image:
           'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
-        url: window.location.href,
+        url: `${environment.hostingurl}secret-message/sent/${activatedRouteSnapshot.url[1].path}`,
       };
     } catch (err) {
       params = {
-        title: 'Send Secret Messages',
-        metatitle: 'Send Secret Messages',
+        title: `Send Secret Messages to ${Buffer.from(
+          activatedRouteSnapshot.url[1].path,
+          'base64'
+        ).toString('binary')}`,
+        metatitle: `Send Secret Messages to ${Buffer.from(
+          activatedRouteSnapshot.url[1].path,
+          'base64'
+        ).toString('binary')}`,
         description: `#❤️Hey 🙈 message to 🤟${Buffer.from(
           activatedRouteSnapshot.url[1].path,
           'base64'
@@ -59,10 +69,9 @@ export class RouterResolverService implements Resolve<any> {
         type: 'website',
         feature_image:
           'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
-        url: window.location.href,
+        url:`${environment.hostingurl}secret-message/sent/${activatedRouteSnapshot.url[1].path}`,
       };
     }
-    console.log(params);
     this.setAdMetaData(params);
   }
 
@@ -134,10 +143,6 @@ export class RouterResolverService implements Resolve<any> {
         content: ad_seo_data.description,
       });
       this.metaService.updateTag({
-        name: 'twitter:description',
-        content: ad_seo_data.description,
-      });
-      this.metaService.updateTag({
         itemprop: 'description',
         content: ad_seo_data.description,
       });
@@ -148,19 +153,15 @@ export class RouterResolverService implements Resolve<any> {
     // this.metaService.updateTag({ name: 'rights', content: copyrightText });
     // this.metaService.updateTag({ name: 'Copyright', content: copyrightText });
     this.metaService.updateTag({
-      name: 'og:url',
+      property: 'twitter:url',
       content: ad_seo_data.url,
     });
     this.metaService.updateTag({
-      name: 'twitter:url',
-      content: ad_seo_data.url,
-    });
-    this.metaService.updateTag({
-      name: 'author',
+      property: 'author',
       content: 'Sayon Chakraborty / Sk Masum',
     });
     this.metaService.updateTag({
-      name: 'referrer',
+      property: 'referrer',
       content: 'no-referrer-when-downgrade',
     });
     this.metaService.updateTag({ property: 'og:locale', content: 'en-us' });
@@ -179,10 +180,10 @@ export class RouterResolverService implements Resolve<any> {
       content: 'summary_large_image',
     });
     this.metaService.updateTag({
-      name: 'twitter:card',
+      property: 'twitter:card',
       content: 'summary_large_image',
     });
-    if (ad_seo_data.url) {
+    // if (ad_seo_data.url) {
       this._metafrenzyservice.setLinkTag({
         rel: 'canonical',
         href: ad_seo_data.url,
@@ -191,7 +192,7 @@ export class RouterResolverService implements Resolve<any> {
         property: 'og:url',
         content: ad_seo_data.url,
       });
-    }
+    // }
     if (!ad_seo_data['nofollow']) {
       this.metaService.updateTag({ name: 'robots', content: 'index, follow' });
     }
