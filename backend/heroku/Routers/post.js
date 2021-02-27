@@ -3,6 +3,7 @@ const userDetails = require("../Models/user-details");
 const messages = require("../Models/messages");
 const deviceInfo = require("../Models/device-details");
 const firebasePush = require("../Models/firebase-push-details");
+const siteMap = require("../Models/sitemap-details");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
@@ -590,6 +591,54 @@ router.post("/save-firebase-endpoints", async (req, res) => {
     return res.status(200).json({ Message: "Successful" });
   } catch (err) {
     return res.status(404).json({ Message: err.message });
+  }
+});
+router.post("/save-sitemap-details", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body.sitemapfor) {
+    resType["Message"] = "Sitemap for which project is required!!";
+    return res.status(400).send(resType);
+  }
+  if (!req.body.sitemap) {
+    resType["Message"] = "Sitemap XML JSON is required!!";
+    return res.status(400).send(resType);
+  }
+  try {
+    await siteMap.findOne(
+      { sitemapfor: req.body.sitemapfor },
+      (err, params) => {
+        if (err) {
+          resType["Message"] = err.message;
+          return res.status(400).send(resType);
+        }
+        if (
+          params &&
+          params["sitemapfor"] &&
+          params["sitemapfor"] == req.body.sitemapfor
+        ) {
+          params["sitemap"] = req.body.sitemap;
+          params.save();
+        } else {
+          siteMap.create({
+            sitemapfor: req.body.sitemapfor,
+            sitemap: req.body.sitemap,
+            filename: req.body.filename,
+            store1: req.body.store1,
+            store2: req.body.store2,
+          });
+        }
+        resType["Status"] = true;
+        resType["Message"] = "Sitemap Details is Successfully Save";
+        return res.status(200).send(resType);
+      }
+    );
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
   }
 });
 module.exports = router;
