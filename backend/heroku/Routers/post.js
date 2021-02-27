@@ -564,6 +564,7 @@ router.post("/change-userpin", async (req, res) => {
     return res.status(400).send(resType);
   }
 });
+
 // Save Firebase Push Endpoints
 router.post("/save-firebase-endpoints", async (req, res) => {
   try {
