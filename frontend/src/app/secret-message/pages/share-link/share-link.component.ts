@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { DomSanitizer, Meta, SafeUrl, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgNavigatorShareService } from 'ng-navigator-share';
@@ -21,7 +22,8 @@ export class ShareLinkComponent implements OnInit {
   location: any;
   shareImgUrl: any =
     'https://res.cloudinary.com/dzruu87x0/image/upload/v1612097153/secret-message_buzlnc.gif';
-  fileList = new DataTransfer();
+  // fileList = new DataTransfer();
+  fileList :any;
   defaultMetadata: PageMetadata = {
     title: 'Secret Message',
     description: `Send secret message to the user, they don't know who send him`,
@@ -45,27 +47,29 @@ export class ShareLinkComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private _global: GlobalService,
     private meta: Meta,
-    private title: Title
+    private title: Title,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.location = window.location.href;
     _route.params.pipe(map((p) => p.id)).subscribe((res) => {
       if (res) {
         _global.userId = res;
-        let encrptedUser = localStorage.getItem('encyptduser');
-        console.log(atob(String(encrptedUser)), atob(res));
-        if (
-          encrptedUser !== undefined &&
-          atob(String(encrptedUser)) == atob(res)
-        ) {
-          // this.getMessageDetails();
-          _global.watchPosition();
-          _global.deviceDetection();
-          // this.updateMetaTag();
-          this.userMeta = `#❤️Hey 🙈 message to 🤟${atob(
-            res
-          )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
-        } else {
-          this._router.navigate(['/secret-message/sent/' + _global.userId]);
+        if (isPlatformBrowser(this.platformId)) {
+          let encrptedUser = localStorage.getItem('encyptduser');
+          if (
+            encrptedUser !== undefined &&
+            atob(String(encrptedUser)) == atob(res)
+          ) {
+            // this.getMessageDetails();
+            _global.watchPosition();
+            _global.getSiteMapGenerate(window.location.href,'Secret-Messages');
+            // this.updateMetaTag();
+            this.userMeta = `#❤️Hey 🙈 message to 🤟${atob(
+              res
+            )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
+          } else {
+            this._router.navigate(['/secret-message/sent/' + _global.userId]);
+          }
         }
       } else {
         this._router.navigate(['/secret-message/create']);
@@ -79,21 +83,23 @@ export class ShareLinkComponent implements OnInit {
     this.url = environment.hostingurl + localStorage.getItem('link');
     this.fbUrl = 'http://www.facebook.com/sharer.php?u=' + this.url;
     this.wapUrl = this.sanitizeUrl('whatsapp://send?text=' + this.url);
-    this.fileList = new DataTransfer();
-    let that = this;
-    that
-      .urltoFile(
-        this.shareImgUrl,
-        `${new Date().getMilliseconds()}.gif`,
-        'image/gif'
-      )
-      .then(function (file) {
-        console.log(file);
-        that.fileList.items.add(file);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+    if(isPlatformBrowser(this.platformId)){
+      this.fileList = new DataTransfer();
+      let that = this;
+      that
+        .urltoFile(
+          this.shareImgUrl,
+          `${new Date().getMilliseconds()}.gif`,
+          'image/gif'
+        )
+        .then(function (file) {
+          console.log(file);
+          that.fileList.items.add(file);
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    }
     this.sharingOptions = [
       {
         name: 'Share to Device',

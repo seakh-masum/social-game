@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Meta } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,8 @@ import { AsyncPipe } from '@angular/common';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { TranslateModule } from '@ngx-translate/core';
+import { RouterResolverService } from './resolver/router.resolver';
+import { MetafrenzyModule } from 'ngx-metafrenzy';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -28,6 +30,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),
+    MetafrenzyModule.forRoot(),
     TranslateModule.forRoot(),
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -37,6 +40,8 @@ import { TranslateModule } from '@ngx-translate/core';
     JwtHelperService,
     MessagingService,
     AsyncPipe,
+    Meta,
+    RouterResolverService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     { provide: HTTP_INTERCEPTORS, useClass: HtttpIntercept, multi: true },
     {

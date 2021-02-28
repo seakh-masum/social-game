@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { MetafrenzyGuard } from 'ngx-metafrenzy';
+import { RouterResolverService } from '../resolver/router.resolver';
 import { CreateProfileComponent } from './pages/create-profile/create-profile.component';
 import { SentMessageComponent } from './pages/sent-message/sent-message.component';
 import { ShareLinkComponent } from './pages/share-link/share-link.component';
@@ -20,7 +22,8 @@ const routes: Routes = [
   {
     path: 'sent/:id',
     component: SentMessageComponent,
-    data: { title: 'Send Message', isLoggedIn: false },
+    data: { title: 'Send Secret Messages', isLoggedIn: false },
+    resolve: [RouterResolverService],
   },
   {
     path: 'create',
@@ -35,6 +38,7 @@ const routes: Routes = [
     path: 'share-link/:id',
     component: ShareLinkComponent,
     data: { title: 'Share your link', isLoggedIn: true, activeIcon: 'share' },
+    resolve: [RouterResolverService]
   },
   {
     path: 'view-profile',

@@ -126,4 +126,34 @@ router.get("/user-details/:username", async (req, res) => {
     return res.status(400).send(resType);
   }
 });
+router.get("/all-sitemap-links", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  try {
+    await userDetails.find({}, async (err, params) => {
+      if (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+      if (params) {
+        let sitemapArray = [];
+        params.forEach((element) => {
+          if (element.link.includes("secret-message/share-link/")) {
+            sitemapArray.push({ url: element.link });
+          }
+        });
+        resType["Message"] = "Successful";
+        resType["Status"] = true;
+        resType["Data"] = sitemapArray;
+        return res.status(200).send(resType);
+      }
+    });
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
+  }
+});
 module.exports = router;

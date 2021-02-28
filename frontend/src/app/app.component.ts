@@ -41,6 +41,7 @@ export class AppComponent {
     _router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((params) => {
+        _router.navigated = false; // the Router into believing it's last link wasn't previously loaded
         const routing_data: any =
             _activatedRoute.root.firstChild?.children[0].snapshot.data,
           current_url = _router.url.split('?')[0];

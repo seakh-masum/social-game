@@ -9,11 +9,7 @@ import { UniversalDeviceDetectorService } from './services/universal-device-dete
 import { FlexLayoutServerModule } from '@angular/flex-layout/server';
 
 @NgModule({
-  imports: [
-    AppModule,
-    ServerModule,
-    FlexLayoutServerModule
-  ],
+  imports: [AppModule, ServerModule, FlexLayoutServerModule],
   providers: [
     MetadataService,
     {
