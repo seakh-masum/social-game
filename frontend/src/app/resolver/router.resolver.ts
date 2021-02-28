@@ -5,6 +5,7 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Buffer } from 'buffer';
 import { MetafrenzyService } from 'ngx-metafrenzy';
 import { environment } from 'src/environments/environment';
+import { GenericService } from '../services/generic.service';
 
 @Injectable({ providedIn: 'root' })
 export class RouterResolverService implements Resolve<any> {
@@ -12,67 +13,70 @@ export class RouterResolverService implements Resolve<any> {
     private titleService: Title,
     private metaService: Meta,
     private _metafrenzyservice: MetafrenzyService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private _generic: GenericService
   ) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot) {
     let params = {};
     try {
-      params = {
-        title: `Send Secret Messages to ${atob(
-          activatedRouteSnapshot.url[1].path
-        )}`,
-        metatitle: `Send Secret Messages to ${atob(
-          activatedRouteSnapshot.url[1].path
-        )}`,
-        description: `#❤️Hey 🙈 message to 🤟${atob(
-          activatedRouteSnapshot.url[1].path
-        )}🤟,😬😬 don't worry ${atob(
-          activatedRouteSnapshot.url[1].path
-        )} will not know your name😉❤️#`,
-        author: 'Sayon Chakraborty / Sk Masum',
-        keywords: [
-          'Annoymous',
-          'messages',
-          'Annoymous messages',
-          'Secret Messages',
-        ],
-        type: 'website',
-        feature_image:
-          'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
-        url: `${environment.hostingurl}secret-message/sent/${activatedRouteSnapshot.url[1].path}`,
-      };
+      this._generic
+        .get('user-details/', atob(activatedRouteSnapshot.url[1].path))
+        .subscribe((resData: any) => {
+          if (resData['Status']) {
+            if (resData['Data']) {
+              params = {
+                title: `Send Secret Messages to ${resData['Data'][0].displayname}`,
+                metatitle: `Send Secret Messages to ${resData['Data'][0].displayname}`,
+                description: `#❤️Hey 🙈 message to 🤟${resData['Data'][0].displayname}🤟,😬😬 don't worry ${resData['Data'][0].displayname} will not know your name😉❤️#`,
+                author: 'Sayon Chakraborty / Sk Masum',
+                keywords: [
+                  'Annoymous',
+                  'messages',
+                  'Annoymous messages',
+                  'Secret Messages',
+                ],
+                type: 'website',
+                feature_image:
+                  'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
+                url: `${environment.hostingurl}secret-message/sent/${activatedRouteSnapshot.url[1].path}`,
+              };
+              this.setAdMetaData(params);
+            }
+          }
+        });
     } catch (err) {
-      params = {
-        title: `Send Secret Messages to ${Buffer.from(
-          activatedRouteSnapshot.url[1].path,
-          'base64'
-        ).toString('binary')}`,
-        metatitle: `Send Secret Messages to ${Buffer.from(
-          activatedRouteSnapshot.url[1].path,
-          'base64'
-        ).toString('binary')}`,
-        description: `#❤️Hey 🙈 message to 🤟${Buffer.from(
-          activatedRouteSnapshot.url[1].path,
-          'base64'
-        ).toString('binary')}🤟,😬😬 don't worry ${Buffer.from(
-          activatedRouteSnapshot.url[1].path,
-          'base64'
-        ).toString('binary')} will not know your name😉❤️#`,
-        author: 'Sayon Chakraborty / Sk Masum',
-        keywords: [
-          'Annoymous',
-          'messages',
-          'Annoymous messages',
-          'Secret Messages',
-        ],
-        type: 'website',
-        feature_image:
-          'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
-        url:`${environment.hostingurl}secret-message/sent/${activatedRouteSnapshot.url[1].path}`,
-      };
+      this._generic
+        .get(
+          'user-details/',
+          Buffer.from(activatedRouteSnapshot.url[1].path, 'base64').toString(
+            'binary'
+          )
+        )
+        .subscribe((resData: any) => {
+          if (resData['Status']) {
+            if (resData['Data']) {
+              params = {
+                title: `Send Secret Messages to ${resData['Data'][0].displayname}`,
+                metatitle: `Send Secret Messages to ${resData['Data'][0].displayname}`,
+                description: `#❤️Hey 🙈 message to 🤟${resData['Data'][0].displayname}🤟,😬😬 don't worry ${resData['Data'][0].displayname} will not know your name😉❤️#`,
+                author: 'Sayon Chakraborty / Sk Masum',
+                keywords: [
+                  'Annoymous',
+                  'messages',
+                  'Annoymous messages',
+                  'Secret Messages',
+                ],
+                type: 'website',
+                feature_image:
+                  'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png',
+                url: `${environment.hostingurl}secret-message/sent/${activatedRouteSnapshot.url[1].path}`,
+              };
+              this.setAdMetaData(params);
+            }
+          }
+        });
     }
-    this.setAdMetaData(params);
   }
 
   setAdMetaData(ad_seo_data: any) {
@@ -184,14 +188,14 @@ export class RouterResolverService implements Resolve<any> {
       content: 'summary_large_image',
     });
     // if (ad_seo_data.url) {
-      this._metafrenzyservice.setLinkTag({
-        rel: 'canonical',
-        href: ad_seo_data.url,
-      });
-      this.metaService.updateTag({
-        property: 'og:url',
-        content: ad_seo_data.url,
-      });
+    this._metafrenzyservice.setLinkTag({
+      rel: 'canonical',
+      href: ad_seo_data.url,
+    });
+    this.metaService.updateTag({
+      property: 'og:url',
+      content: ad_seo_data.url,
+    });
     // }
     if (!ad_seo_data['nofollow']) {
       this.metaService.updateTag({ name: 'robots', content: 'index, follow' });

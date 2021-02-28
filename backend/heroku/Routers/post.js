@@ -138,6 +138,7 @@ router.post("/savemessages", async (req, res) => {
     Data: [],
     Message: "",
   };
+  let userName='';
   if (!req.body.userid) {
     resType["Message"] = "User's Id is Required";
     return res.status(400).send(resType);
@@ -145,6 +146,7 @@ router.post("/savemessages", async (req, res) => {
   try {
     const userData = await userDetails.findOne({ _id: req.body.userid });
     if (userData) {
+      userName=userData.username;
       await messages.findOne(
         { userid: req.body.userid },
         async (err, params) => {
@@ -221,7 +223,7 @@ router.post("/savemessages", async (req, res) => {
                 icon:
                   "https://res.cloudinary.com/dzruu87x0/image/upload/v1612033640/secret-message_lgicit.png",
                 click_action:
-                  "https://socail-game.web.app/secret-message/create",
+                  `https://socail-game.web.app/secret-message/messages/${userName}`,
               },
               to: req.body.endpoints,
             },
@@ -248,6 +250,10 @@ router.post("/savemessages", async (req, res) => {
               return res.status(400).send(resType);
             }
           );
+      } else {
+        resType["Status"] = true;
+        resType["Message"] = "Successful";
+        return res.status(200).send(resType);
       }
     } else {
       resType["Message"] = "Username is not Valid";

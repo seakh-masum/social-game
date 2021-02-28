@@ -161,7 +161,7 @@ export class GlobalService {
         ) {
           if (data['fileContent']['urlset']['url'].findIndex(x=>x.loc === url) === -1) {
             data['fileContent']['urlset']['url'].forEach((x:any) => {
-              if (x == environment.hostingurl) {
+              if (x == environment.hostingurl+'secret-message/create') {
                 this.sitemapArray.push({
                   loc: x.loc,
                   changefreq: x.changefreq,
@@ -186,7 +186,7 @@ export class GlobalService {
           }
         } else {
           if (data['fileContent']['urlset']['url'] != url) {
-            if(data['fileContent']['urlset']['url'] == environment.hostingurl){
+            if(data['fileContent']['urlset']['url'] == environment.hostingurl+'secret-message/create'){
               this.sitemapArray.push({
                 loc: data['fileContent']['urlset']['url'],
                 changefreq: 'yearly',
@@ -211,7 +211,7 @@ export class GlobalService {
         }
       } else {
         this.sitemapArray.push({
-          loc: environment.hostingurl,
+          loc: environment.hostingurl+'secret-message/create',
           changefreq: 'yearly',
           priority: 1,
         });

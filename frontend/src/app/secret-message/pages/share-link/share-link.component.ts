@@ -22,7 +22,8 @@ export class ShareLinkComponent implements OnInit {
   location: any;
   shareImgUrl: any =
     'https://res.cloudinary.com/dzruu87x0/image/upload/v1612097153/secret-message_buzlnc.gif';
-  fileList = new DataTransfer();
+  // fileList = new DataTransfer();
+  fileList :any;
   defaultMetadata: PageMetadata = {
     title: 'Secret Message',
     description: `Send secret message to the user, they don't know who send him`,
@@ -82,21 +83,23 @@ export class ShareLinkComponent implements OnInit {
     this.url = environment.hostingurl + localStorage.getItem('link');
     this.fbUrl = 'http://www.facebook.com/sharer.php?u=' + this.url;
     this.wapUrl = this.sanitizeUrl('whatsapp://send?text=' + this.url);
-    this.fileList = new DataTransfer();
-    let that = this;
-    that
-      .urltoFile(
-        this.shareImgUrl,
-        `${new Date().getMilliseconds()}.gif`,
-        'image/gif'
-      )
-      .then(function (file) {
-        console.log(file);
-        that.fileList.items.add(file);
-      })
-      .catch((err: any) => {
-        console.log(err);
-      });
+    if(isPlatformBrowser(this.platformId)){
+      this.fileList = new DataTransfer();
+      let that = this;
+      that
+        .urltoFile(
+          this.shareImgUrl,
+          `${new Date().getMilliseconds()}.gif`,
+          'image/gif'
+        )
+        .then(function (file) {
+          console.log(file);
+          that.fileList.items.add(file);
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    }
     this.sharingOptions = [
       {
         name: 'Share to Device',

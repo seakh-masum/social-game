@@ -31,7 +31,10 @@
               "src/assets",
               "src/manifest.webmanifest",
               "src/firebase-messaging-sw.js",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/robots.txt",
+              "src/sitemap.xml",
+              "src/sitemap"
             ],
             "styles": [
               "src/styles/styles.scss"
@@ -105,11 +108,7 @@
               "src/favicon.ico",
               "src/assets",
               "src/manifest.webmanifest",
-              {
-                "glob": "robots.txt",
-                "input": "src/assets",
-                "output": "./"
-              }
+              "src/robots.txt"
             ],
             "styles": [
               "src/styles/styles.scss"
