@@ -13,7 +13,7 @@
     "build:ssr": "ng build --prod && ng run social-game:server:production",
     "prerender": "ng run social-game:prerender",
     "build:functions": "npm run --prefix functions build",
-    "build:all": "npm run build:ssr && npm run build:functions"
+    "build:all": "npm run build:ssr && node cp-sitemap-to-dist && npm run build:functions"
   },
   "private": true,
   "dependencies": {

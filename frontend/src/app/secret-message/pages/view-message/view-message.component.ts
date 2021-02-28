@@ -112,6 +112,7 @@ export class ViewMessageComponent implements OnInit, AfterViewInit {
       console.log(res);
       if (res['Status']) {
         this.messages = res.Data[0].messagedetails;
+        this.messages = this.messages.reverse();
       }
     });
   }
