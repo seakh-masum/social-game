@@ -146,7 +146,7 @@ router.post("/savemessages", async (req, res) => {
   try {
     const userData = await userDetails.findOne({ _id: req.body.userid });
     if (userData) {
-      userName=userData.username;
+      userName=userData.encyptduser;
       await messages.findOne(
         { userid: req.body.userid },
         async (err, params) => {
