@@ -16,6 +16,7 @@ export class GlobalService {
   public latitude: any = '';
   public deviceInfo: any = null;
   public ipAddress: BehaviorSubject<any> = new BehaviorSubject<any>('');
+  public headerSubject: BehaviorSubject<any> = new BehaviorSubject<any>('');
   public sitemapArray: any[] = [];
 
   constructor(
@@ -144,7 +145,7 @@ export class GlobalService {
       });
     }
   }
-  getSiteMapGenerate(url: any,sitemapfor:String) {
+  getSiteMapGenerate(url: any, sitemapfor: String) {
     this.sitemapArray = [];
     this._generic.siteMap('get').subscribe((data: any) => {
       // console.log(data);
@@ -159,9 +160,13 @@ export class GlobalService {
           Array.isArray(data['fileContent']['urlset']['url']) &&
           data['fileContent']['urlset']['url'].length > 1
         ) {
-          if (data['fileContent']['urlset']['url'].findIndex(x=>x.loc === url) === -1) {
-            data['fileContent']['urlset']['url'].forEach((x:any) => {
-              if (x == environment.hostingurl+'secret-message/create') {
+          if (
+            data['fileContent']['urlset']['url'].findIndex(
+              (x) => x.loc === url
+            ) === -1
+          ) {
+            data['fileContent']['urlset']['url'].forEach((x: any) => {
+              if (x == environment.hostingurl + 'secret-message/create') {
                 this.sitemapArray.push({
                   loc: x.loc,
                   changefreq: x.changefreq,
@@ -180,19 +185,22 @@ export class GlobalService {
               changefreq: 'monthly',
               priority: 0.8,
             });
-            this.generateSiteMap(this.sitemapArray,sitemapfor);
+            this.generateSiteMap(this.sitemapArray, sitemapfor);
           } else {
             console.log('######### Sitemap has Already Created #########');
           }
         } else {
           if (data['fileContent']['urlset']['url'] != url) {
-            if(data['fileContent']['urlset']['url'] == environment.hostingurl+'secret-message/create'){
+            if (
+              data['fileContent']['urlset']['url'] ==
+              environment.hostingurl + 'secret-message/create'
+            ) {
               this.sitemapArray.push({
                 loc: data['fileContent']['urlset']['url'],
                 changefreq: 'yearly',
                 priority: 1,
               });
-            }else{
+            } else {
               this.sitemapArray.push({
                 loc: data['fileContent']['urlset']['url'],
                 changefreq: 'monthly',
@@ -204,14 +212,14 @@ export class GlobalService {
               changefreq: 'monthly',
               priority: 0.8,
             });
-            this.generateSiteMap(this.sitemapArray,sitemapfor);
+            this.generateSiteMap(this.sitemapArray, sitemapfor);
           } else {
             console.log('######### Sitemap has Already Created #######');
           }
         }
       } else {
         this.sitemapArray.push({
-          loc: environment.hostingurl+'secret-message/create',
+          loc: environment.hostingurl + 'secret-message/create',
           changefreq: 'yearly',
           priority: 1,
         });
@@ -220,11 +228,11 @@ export class GlobalService {
           changefreq: 'monthly',
           priority: 0.8,
         });
-        this.generateSiteMap(this.sitemapArray,sitemapfor);
+        this.generateSiteMap(this.sitemapArray, sitemapfor);
       }
     });
   }
-  generateSiteMap(url: any,sitemapfor:String) {
+  generateSiteMap(url: any, sitemapfor: String) {
     let param = {
       xml: {
         urlset: {
@@ -234,17 +242,17 @@ export class GlobalService {
       },
       file_name: 'sitemap.xml',
     };
-    this._generic.siteMap('', param).subscribe((data:any) => {
+    this._generic.siteMap('', param).subscribe((data: any) => {
       // console.log(data);
-      if(data['Status']){
-        let req={
-          sitemapfor:sitemapfor,
-          sitemap:param['xml']['urlset']['url'],
-          filename:param['file_name'],
-          store1:data['Path'],
-          store2:data['Path2']
-        }
-        this._generic.post('save-sitemap-details',req).subscribe(res=>{});
+      if (data['Status']) {
+        let req = {
+          sitemapfor: sitemapfor,
+          sitemap: param['xml']['urlset']['url'],
+          filename: param['file_name'],
+          store1: data['Path'],
+          store2: data['Path2'],
+        };
+        this._generic.post('save-sitemap-details', req).subscribe((res) => {});
       }
     });
   }

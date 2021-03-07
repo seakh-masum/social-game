@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/internal/operators/filter';
 import { environment } from 'src/environments/environment';
+import { GlobalService } from './services/global.service';
 
 @Component({
   selector: 'app-root',
@@ -22,8 +23,10 @@ export class AppComponent {
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _title: Title
+    private _title: Title,
+    private _global: GlobalService
   ) {
+    console.log('app component');
     // if (environment.production) {
     //   console.log = console.debug = console.error = () => {};
     // }
@@ -56,6 +59,9 @@ export class AppComponent {
     }
     console.log(routing_data);
     this.title = routing_data.title;
+    if (this.title == 'Flames') {
+      this._global.headerSubject.next(this.title);
+    }
     // this.isBottombarVisible = routing_data.isBottombarVisible !== undefined && routing_data.isBottombarVisible ? true : false;
     this.isLoggedIn =
       routing_data.isLoggedIn !== undefined && routing_data.isLoggedIn

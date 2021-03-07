@@ -10,6 +10,11 @@ const routes: Routes = [
         (m) => m.SecretMessageModule
       ),
   },
+  {
+    path: 'flames',
+    loadChildren: () =>
+      import('./flames/flames.module').then((m) => m.FlamesModule),
+  },
 ];
 
 @NgModule({

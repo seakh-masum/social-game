@@ -32,6 +32,7 @@
     "@angular/router": "~11.0.0",
     "@angular/service-worker": "~11.0.0",
     "@auth0/angular-jwt": "^5.0.2",
+    "@ng-toolkit/universal": "^8.1.0",
     "@nguniversal/express-engine": "^11.0.1",
     "@ngx-meta/core": "^9.0.0",
     "@ngx-translate/core": "^13.0.0",
