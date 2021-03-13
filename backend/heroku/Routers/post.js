@@ -703,24 +703,32 @@ router.post("/love-percentage", async (req, res) => {
           resType["Data"] = params[index];
           return res.status(200).send(resType);
         } else {
-          resType["Data"] = await loveCrush.create({
-            uname: req.body.uname,
-            crushname: req.body.crushname,
-            percentage: Math.floor(Math.random() * (100 - 0 + 1) + 0),
+          let coomonChar = 0;
+          req.body.uname.toLowerCase().forEarch((e) => {
+            console.log(e);
           });
-          resType["Status"] = true;
-          resType["Message"] = "Successful";
-          return res.status(200).send(resType);
+          // resType["Data"] = await loveCrush.create({
+          //   uname: req.body.uname,
+          //   crushname: req.body.crushname,
+          //   percentage: Math.floor(Math.random() * (100 - 0 + 1) + 0),
+          // });
+          // resType["Status"] = true;
+          // resType["Message"] = "Successful";
+          // return res.status(200).send(resType);
         }
       } else {
-        resType["Data"] = await loveCrush.create({
-          uname: req.body.uname,
-          crushname: req.body.crushname,
-          percentage: Math.floor(Math.random() * (100 - 0 + 1) + 0),
+        let coomonChar = 0;
+        req.body.uname.toLowerCase().forEarch((e) => {
+          console.log(e);
         });
-        resType["Status"] = true;
-        resType["Message"] = "Successful";
-        return res.status(200).send(resType);
+        // resType["Data"] = await loveCrush.create({
+        //   uname: req.body.uname,
+        //   crushname: req.body.crushname,
+        //   percentage: Math.floor(Math.random() * (100 - 0 + 1) + 0),
+        // });
+        // resType["Status"] = true;
+        // resType["Message"] = "Successful";
+        // return res.status(200).send(resType);
       }
     });
   } catch (err) {
