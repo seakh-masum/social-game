@@ -4,6 +4,7 @@ const messages = require("../Models/messages");
 const deviceInfo = require("../Models/device-details");
 const firebasePush = require("../Models/firebase-push-details");
 const siteMap = require("../Models/sitemap-details");
+const loveCrush = require("../Models/love-crush");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
@@ -138,7 +139,7 @@ router.post("/savemessages", async (req, res) => {
     Data: [],
     Message: "",
   };
-  let userName='';
+  let userName = "";
   if (!req.body.userid) {
     resType["Message"] = "User's Id is Required";
     return res.status(400).send(resType);
@@ -146,7 +147,7 @@ router.post("/savemessages", async (req, res) => {
   try {
     const userData = await userDetails.findOne({ _id: req.body.userid });
     if (userData) {
-      userName=userData.encyptduser;
+      userName = userData.encyptduser;
       await messages.findOne(
         { userid: req.body.userid },
         async (err, params) => {
@@ -222,8 +223,7 @@ router.post("/savemessages", async (req, res) => {
                 }`,
                 icon:
                   "https://res.cloudinary.com/dzruu87x0/image/upload/v1612033640/secret-message_lgicit.png",
-                click_action:
-                  `https://socail-game.web.app/secret-message/messages/${userName}`,
+                click_action: `https://socail-game.web.app/secret-message/messages/${userName}`,
               },
               to: req.body.endpoints,
             },
@@ -643,6 +643,86 @@ router.post("/save-sitemap-details", async (req, res) => {
         return res.status(200).send(resType);
       }
     );
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
+  }
+});
+// Get Love Percentage
+router.post("/love-percentage", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body.uname) {
+    resType["Message"] = "Your name is Required";
+    return res.status(400).send(resType);
+  }
+  if (!req.body.crushname) {
+    resType["Message"] = "Your Crush name is Required";
+    return res.status(400).send(resType);
+  }
+  try {
+    loveCrush.find({}, async (err, params) => {
+      if (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+      if (params && params.length > 0) {
+        if (
+          params.findIndex(
+            (x) =>
+              x.uname.toLowerCase() === req.body.uname.toLowerCase() &&
+              x.crushname.toLowerCase() === req.body.crushname.toLowerCase()
+          ) > -1
+        ) {
+          let index = params.findIndex(
+            (x) =>
+              x.uname.toLowerCase() === req.body.uname.toLowerCase() &&
+              x.crushname.toLowerCase() === req.body.crushname.toLowerCase()
+          );
+          resType["Message"] = "Successful";
+          resType["Status"] = true;
+          resType["Data"] = params[index];
+          return res.status(200).send(resType);
+        } else if (
+          params.findIndex(
+            (x) =>
+              x.uname.toLowerCase() === req.body.crushname.toLowerCase() &&
+              x.crushname.toLowerCase() === req.body.uname.toLowerCase()
+          ) > -1
+        ) {
+          let index = params.findIndex(
+            (x) =>
+              x.uname.toLowerCase() === req.body.crushname.toLowerCase() &&
+              x.crushname.toLowerCase() === req.body.uname.toLowerCase()
+          );
+          resType["Message"] = "Successful";
+          resType["Status"] = true;
+          resType["Data"] = params[index];
+          return res.status(200).send(resType);
+        } else {
+          resType["Data"] = await loveCrush.create({
+            uname: req.body.uname,
+            crushname: req.body.crushname,
+            percentage: Math.floor(Math.random() * (100 - 0 + 1) + 0),
+          });
+          resType["Status"] = true;
+          resType["Message"] = "Successful";
+          return res.status(200).send(resType);
+        }
+      } else {
+        resType["Data"] = await loveCrush.create({
+          uname: req.body.uname,
+          crushname: req.body.crushname,
+          percentage: Math.floor(Math.random() * (100 - 0 + 1) + 0),
+        });
+        resType["Status"] = true;
+        resType["Message"] = "Successful";
+        return res.status(200).send(resType);
+      }
+    });
   } catch (err) {
     resType["Message"] = err.message;
     return res.status(400).send(resType);
