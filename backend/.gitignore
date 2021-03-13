@@ -46,6 +46,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+social-games-sksayon/
 
 # Optional npm cache directory
 .npm
