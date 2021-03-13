@@ -1,8 +1,8 @@
-<header fxLayout=row>
-  <div fxFlex=90 fxLayoutAlign="start center">
-    <h1>Secret Message</h1>
+<header fxLayout="row">
+  <div fxFlex="90" fxLayoutAlign="start center">
+    <h1>{{ header }}</h1>
   </div>
-  <div fxFlex=10 fxLayoutAlign="center center" *ngIf="isLogoutVisible">
-    <img src="assets/icons/logout.svg" (click)="onLogout()">
+  <div fxFlex="10" fxLayoutAlign="center center" *ngIf="isLogoutVisible">
+    <img src="assets/icons/logout.svg" (click)="onLogout()" />
   </div>
 </header>

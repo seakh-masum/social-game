@@ -7,9 +7,15 @@ import { MetadataService } from './services/meta-data.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { UniversalDeviceDetectorService } from './services/universal-device-detector.service';
 import { FlexLayoutServerModule } from '@angular/flex-layout/server';
+import { NgtUniversalModule } from '@ng-toolkit/universal';
 
 @NgModule({
-  imports: [AppModule, ServerModule, FlexLayoutServerModule],
+  imports: [
+    AppModule,
+    ServerModule,
+    FlexLayoutServerModule,
+    NgtUniversalModule,
+  ],
   providers: [
     MetadataService,
     {

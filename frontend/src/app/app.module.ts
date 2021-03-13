@@ -20,6 +20,8 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterResolverService } from './resolver/router.resolver';
 import { MetafrenzyModule } from 'ngx-metafrenzy';
+import { NgtUniversalModule } from '@ng-toolkit/universal';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -27,6 +29,7 @@ import { MetafrenzyModule } from 'ngx-metafrenzy';
     AppRoutingModule,
     BrowserAnimationsModule,
     SharedModule,
+    NgtUniversalModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
     }),

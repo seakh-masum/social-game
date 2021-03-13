@@ -1,0 +1,30 @@
+<div *ngIf="playFlag">
+  <mat-form-field>
+    <mat-label>Your Name</mat-label>
+    <input matInput [(ngModel)]="nameJSON.firstName" />
+  </mat-form-field>
+  <br /><br />
+  <mat-form-field>
+    <mat-label>Your Friend's Name</mat-label>
+    <input matInput [(ngModel)]="nameJSON.secondName" />
+  </mat-form-field>
+  <br /><br />
+  <button mat-stroked-button color="warn" (click)="onSubmit()">Play</button>
+</div>
+<button *ngIf="hideFlag" mat-stroked-button color="warn" (click)="playAgain()">
+  Play Again
+</button>
+<p *ngIf="displayFlag">
+  {{
+    nameJSON.firstName +
+      " and " +
+      nameJSON.firstName +
+      "'s Crush " +
+      nameJSON.secondName +
+      " are: "
+  }}
+  <span *ngIf="loaderFlag">{{ showValue }}</span>
+  <span *ngIf="!loaderFlag">
+    <b>{{ showValue }}</b>
+  </span>
+</p>
