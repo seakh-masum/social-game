@@ -1,0 +1,13 @@
+<mat-form-field>
+  <mat-label>Your Name</mat-label>
+  <input matInput [(ngModel)]="loveJSON.uname" />
+</mat-form-field>
+<br /><br />
+<mat-form-field>
+  <mat-label>Your Crush Name</mat-label>
+  <input matInput [(ngModel)]="loveJSON.crushname" />
+</mat-form-field>
+<br /><br />
+<button mat-stroked-button color="warn" (click)="onSubmit()">Calculate</button>
+<br /><br />
+<p>{{ percentage }}</p>

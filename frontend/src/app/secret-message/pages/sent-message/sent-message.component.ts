@@ -36,11 +36,18 @@ export class SentMessageComponent implements OnInit {
     _route.params.pipe(map((p) => p.id)).subscribe((res: any) => {
       if (res) {
         this._global.userId = res;
-        try{
-          this.dynamicMeta = `#❤️Hey 🙈 message to 🤟${atob(res)}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
-        }
-        catch(err){
-          this.dynamicMeta = `#❤️Hey 🙈 message to 🤟${Buffer.from(res, 'base64').toString('binary')}🤟,😬😬 don't worry ${Buffer.from(res, 'base64').toString('binary')} will not know your name😉❤️#`;
+        try {
+          this.dynamicMeta = `#❤️Hey 🙈 message to 🤟${atob(
+            res
+          )}🤟,😬😬 don't worry ${atob(res)} will not know your name😉❤️#`;
+        } catch (err) {
+          this.dynamicMeta = `#❤️Hey 🙈 message to 🤟${Buffer.from(
+            res,
+            'base64'
+          ).toString('binary')}🤟,😬😬 don't worry ${Buffer.from(
+            res,
+            'base64'
+          ).toString('binary')} will not know your name😉❤️#`;
         }
         // title.setTitle('Send Message');
         // if (isPlatformBrowser(this.platformId)) {
@@ -104,8 +111,10 @@ export class SentMessageComponent implements OnInit {
     let url: any;
     try {
       url = 'user-details/' + atob(this._global.userId);
-    }catch(err){
-      url = 'user-details/' + Buffer.from(this._global.userId, 'base64').toString('binary');
+    } catch (err) {
+      url =
+        'user-details/' +
+        Buffer.from(this._global.userId, 'base64').toString('binary');
     }
     console.log(url);
     this._generic.get(url).subscribe((res: any) => {
@@ -162,7 +171,7 @@ export class SentMessageComponent implements OnInit {
           }
         },
         (err) => {
-          this._global.openSnackbar(err.Message, 'success');
+          this._global.openSnackbar(err.Message, 'Error');
         }
       );
       // this._dialog.open(MessageReviewComponent, {
