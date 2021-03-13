@@ -15,6 +15,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./flames/flames.module').then((m) => m.FlamesModule),
   },
+  {
+    path: 'love-crush',
+    loadChildren: () =>
+      import('./modules/love-crush/love-crush.module').then(
+        (m) => m.LoveCrushModule
+      ),
+  },
 ];
 
 @NgModule({
