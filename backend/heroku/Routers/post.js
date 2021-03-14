@@ -663,6 +663,10 @@ router.post("/love-percentage", async (req, res) => {
     resType["Message"] = "Your Crush name is Required";
     return res.status(400).send(resType);
   }
+  let commonChar = 0,
+    uncommonChar = 0,
+    sameChar = [],
+    percentage;
   try {
     loveCrush.find({}, async (err, params) => {
       if (err) {
@@ -703,32 +707,128 @@ router.post("/love-percentage", async (req, res) => {
           resType["Data"] = params[index];
           return res.status(200).send(resType);
         } else {
-          let coomonChar = 0;
-          req.body.uname.toLowerCase().forEarch((e) => {
-            console.log(e);
+          if (req.body.uname.includes(" ")) {
+            req.body.uname
+              .toLowerCase()
+              .split("")
+              .forEach((e) => {
+                if (
+                  e != " " &&
+                  e != "" &&
+                  sameChar.findIndex((x) => x === e) === -1 &&
+                  req.body.crushname.split("").findIndex((x) => x === e) > -1
+                ) {
+                  commonChar += 1;
+                  sameChar.push(e);
+                }
+              });
+            uncommonChar = req.body.crushname.includes(" ")
+              ? req.body.crushname.split(" ").join("").length +
+                req.body.uname.split(" ").join("").length -
+                commonChar
+              : req.body.uname.split(" ").join("").length +
+                req.body.crushname.length -
+                commonChar;
+            if (commonChar < 5) {
+              percentage =
+                commonChar * 20 + uncommonChar > 100
+                  ? commonChar * 20 +
+                    Math.floor(
+                      Math.random() *
+                        (uncommonChar -
+                          (commonChar * 20 + uncommonChar - 100) -
+                          0 +
+                          1) +
+                        0
+                    )
+                  : commonChar * 20 + uncommonChar;
+            } else if (commonChar > 5) {
+              percentage =
+                commonChar * 10 + uncommonChar > 100
+                  ? commonChar * 10 +
+                    Math.floor(
+                      Math.random() *
+                        (uncommonChar -
+                          (commonChar * 10 + uncommonChar - 100) -
+                          0 +
+                          1) +
+                        0
+                    )
+                  : commonChar * 10 + uncommonChar;
+            } else if (commonChar === 5) {
+              percentage = commonChar * 20;
+            }
+          }
+          resType["Data"] = await loveCrush.create({
+            uname: req.body.uname,
+            crushname: req.body.crushname,
+            percentage: percentage,
           });
-          // resType["Data"] = await loveCrush.create({
-          //   uname: req.body.uname,
-          //   crushname: req.body.crushname,
-          //   percentage: Math.floor(Math.random() * (100 - 0 + 1) + 0),
-          // });
-          // resType["Status"] = true;
-          // resType["Message"] = "Successful";
-          // return res.status(200).send(resType);
+          resType["Status"] = true;
+          resType["Message"] = "Successful";
+          return res.status(200).send(resType);
         }
       } else {
-        let coomonChar = 0;
-        req.body.uname.toLowerCase().forEarch((e) => {
-          console.log(e);
+        if (req.body.uname.includes(" ")) {
+          req.body.uname
+            .toLowerCase()
+            .split("")
+            .forEach((e) => {
+              if (
+                e != " " &&
+                e != "" &&
+                sameChar.findIndex((x) => x === e) === -1 &&
+                req.body.crushname.split("").findIndex((x) => x === e) > -1
+              ) {
+                commonChar += 1;
+                sameChar.push(e);
+              }
+            });
+          uncommonChar = req.body.crushname.includes(" ")
+            ? req.body.crushname.split(" ").join("").length +
+              req.body.uname.split(" ").join("").length -
+              commonChar
+            : req.body.uname.split(" ").join("").length +
+              req.body.crushname.length -
+              commonChar;
+          if (commonChar < 5) {
+            percentage =
+              commonChar * 20 + uncommonChar > 100
+                ? commonChar * 20 +
+                  Math.floor(
+                    Math.random() *
+                      (uncommonChar -
+                        (commonChar * 20 + uncommonChar - 100) -
+                        0 +
+                        1) +
+                      0
+                  )
+                : commonChar * 20 + uncommonChar;
+          } else if (commonChar > 5) {
+            percentage =
+              commonChar * 10 + uncommonChar > 100
+                ? commonChar * 10 +
+                  Math.floor(
+                    Math.random() *
+                      (uncommonChar -
+                        (commonChar * 10 + uncommonChar - 100) -
+                        0 +
+                        1) +
+                      0
+                  )
+                : commonChar * 10 + uncommonChar;
+          } else if (commonChar === 5) {
+            percentage = commonChar * 20;
+          }
+        }
+        resType["Data"] = await loveCrush.create({
+          uname: req.body.uname,
+          crushname: req.body.crushname,
+          percentage: percentage,
         });
-        // resType["Data"] = await loveCrush.create({
-        //   uname: req.body.uname,
-        //   crushname: req.body.crushname,
-        //   percentage: Math.floor(Math.random() * (100 - 0 + 1) + 0),
-        // });
-        // resType["Status"] = true;
-        // resType["Message"] = "Successful";
-        // return res.status(200).send(resType);
+        resType["Status"] = true;
+        resType["Message"] = "Successful";
+        return res.status(200).send(resType);
       }
     });
   } catch (err) {
