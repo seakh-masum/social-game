@@ -27,8 +27,8 @@ export class LoveCrushComponent implements OnInit {
         if (res['Status']) {
           if (res['Data']) {
             this.percentage = res['Data']['percentage'];
-            this.loveJSON['uname'] = '';
-            this.loveJSON['crushname'] = '';
+            // this.loveJSON['uname'] = '';
+            // this.loveJSON['crushname'] = '';
           }
         }
       },
