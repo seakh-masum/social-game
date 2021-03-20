@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  // secretbaseurl: 'https://social-games-sksayon.herokuapp.com/api/',
+  secretbaseurl: 'http://localhost:3000/api/',
+  // secretbaseurl: 'http://192.168.0.107:3000/api/',
+  hostingurl: 'https://socail-game.web.app/',
 };
 
 /*

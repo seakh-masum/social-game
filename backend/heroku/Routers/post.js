@@ -5,6 +5,7 @@ const deviceInfo = require("../Models/device-details");
 const firebasePush = require("../Models/firebase-push-details");
 const siteMap = require("../Models/sitemap-details");
 const loveCrush = require("../Models/love-crush");
+const adminUser = require("../Models/admin-user");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
@@ -835,5 +836,148 @@ router.post("/love-percentage", async (req, res) => {
     resType["Message"] = err.message;
     return res.status(400).send(resType);
   }
+});
+router.post("/signup-admin", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+  if (!req.body.uname) {
+    resType["Message"] = "Username is Required !";
+    return res.status(400).send(resType);
+  }
+  if (!req.body.password) {
+    resType["Message"] = "Password is Required !";
+    return res.status(400).send(resType);
+  }
+  if (req.body.password && req.body.password.length < 6) {
+    resType["Message"] = "Password length is less than 6";
+    return res.status(400).send(resType);
+  }
+  if (req.body.password && !format.test(req.body.password)) {
+    resType["Message"] = "Password has not includes any Special Character";
+    return res.status(400).send(resType);
+  }
+  if (
+    req.body.password &&
+    req.body.password == req.body.password.toLowerCase()
+  ) {
+    resType["Message"] = "Password has no Uppercase";
+    return res.status(400).send(resType);
+  }
+  if (req.body.password && req.body.password.includes(" ")) {
+    resType["Message"] = "No Space will be present in Password";
+    return res.status(400).send(resType);
+  }
+  await adminUser.findOne({ uname: req.body.uname }, async (err, params) => {
+    if (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+    try {
+      if (params && params != null) {
+        resType["Message"] = "Username is Available";
+        return res.status(400).send(resType);
+      } else {
+        resType["Data"] = await adminUser.create({
+          uname: req.body.uname,
+          password: Buffer.from(req.body.password).toString("base64"),
+        });
+        resType["Status"] = true;
+        resType["Message"] = "Successful";
+        return res.status(200).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  });
+});
+router.post("/login-admin", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body.uname) {
+    resType["Message"] = "Username is Required !";
+    return res.status(400).send(resType);
+  }
+  if (!req.body.password) {
+    resType["Message"] = "Password is Required !";
+    return res.status(400).send(resType);
+  }
+  await adminUser.findOne({ uname: req.body.uname }, async (err, params) => {
+    if (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+    try {
+      if (params && params != null) {
+        if (
+          Buffer.from(params.password, "base64").toString() ===
+          req.body.password
+        ) {
+          resType["Status"] = true;
+          resType["Message"] = "Login Successful";
+          return res.status(200).send(resType);
+        } else {
+          resType["Message"] = "Password is Incorrect";
+          return res.status(400).send(resType);
+        }
+      } else {
+        resType["Message"] = "Username is Incorrect";
+        return res.status(400).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  });
+});
+router.post("/edit-love-calculator", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body._id) {
+    resType["Message"] = "Id is Required";
+    return res.status(400).send(resType);
+  }
+  if (!req.body.uname) {
+    resType["Message"] = "Your name is Required";
+    return res.status(400).send(resType);
+  }
+  if (!req.body.crushname) {
+    resType["Message"] = "Your Crush name is Required";
+    return res.status(400).send(resType);
+  }
+  await loveCrush.findOneAndUpdate(
+    { _id: req.body._id },
+    {
+      uname: req.body.uname,
+      crushname: req.body.crushname,
+      percentage: req.body.percentage,
+    },
+    (err, params) => {
+      if (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+      try {
+        if (params && params != null) {
+          resType["Status"] = true;
+          resType["Message"] = "Successful";
+          return res.status(200).send(resType);
+        }
+      } catch (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+    }
+  );
 });
 module.exports = router;

@@ -17,7 +17,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [],
@@ -42,6 +45,9 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatDialogModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatPaginatorModule,
   ],
   exports: [
     HttpClientModule,
@@ -63,6 +69,9 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatDialogModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
+    MatSidenavModule,
+    MatTableModule,
+    MatPaginatorModule,
   ],
 })
 export class CoreModule {}

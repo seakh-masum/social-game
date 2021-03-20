@@ -1,0 +1,145 @@
+<div mat-dialog-title>
+  <div fxLayout="row">
+    <span fxFlex>
+      {{
+        data["action"] === "secret-messages"
+          ? "Messages of <" + data["userDetails"]["displayname"] + ">"
+          : data["action"] === "love-crush"
+          ? "Edit Percentage"
+          : data["action"] === "delete-popup"
+          ? "Are You Want to Delete ?"
+          : ""
+      }}</span
+    >
+    <mat-icon
+      fxFlex="10"
+      fxLayoutAlign="end end"
+      [mat-dialog-close]="0"
+      style="cursor: pointer"
+      >close</mat-icon
+    >
+  </div>
+</div>
+<div mat-dialog-content *ngIf="data['action'] === 'secret-messages'">
+  <mat-accordion *ngFor="let message of data['messageDetails']; let i = index">
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title
+          >{{ message.date | date: "dd/MM/yyyy, h:mm:ss a" }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ message.message }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div fxLayout="column">
+        <div fxLayout="row">
+          <div fxFlex="20">Browser</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.browser }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">Browser Version</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.browser_version }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">Device</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.device }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">Device Type</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.deviceType }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">Ip</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.ip }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">Longitude</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.longitude }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">Latitude</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.latitude }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">Orientation</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.orientation }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">OS</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.os }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">OS Version</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.os_version }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">Message Seen</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.seen }}</div>
+        </div>
+        <div fxLayout="row">
+          <div fxFlex="20">User Agent</div>
+          <div fxFlex="5">:</div>
+          <div fxFlex>{{ message.userAgent }}</div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<div mat-dialog-content *ngIf="data['action'] === 'love-crush'">
+  <form [formGroup]="loveCrush">
+    <mat-form-field appearance="outline">
+      <mat-label>Username</mat-label>
+      <input matInput placeholder="Username" formControlName="uname" />
+    </mat-form-field>
+    <br />
+    <br />
+    <mat-form-field appearance="outline">
+      <mat-label>User's Crush Name</mat-label>
+      <input
+        matInput
+        placeholder="User's Crush Name"
+        formControlName="crushname"
+      />
+    </mat-form-field>
+    <br />
+    <br />
+    <mat-form-field appearance="outline">
+      <mat-label>Percentage</mat-label>
+      <input matInput placeholder="Percentage" formControlName="percentage" />
+      <span matSuffix>%</span>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="0">Close</button>
+  <button
+    *ngIf="data['action'] === 'love-crush'"
+    (click)="onSubmit()"
+    mat-button
+    cdkFocusInitial
+  >
+    Edit
+  </button>
+  <button
+    mat-stroked-button
+    color="accent"
+    *ngIf="data['action'] === 'delete-popup'"
+    [mat-dialog-close]="1"
+  >
+    Ok
+  </button>
+</div>

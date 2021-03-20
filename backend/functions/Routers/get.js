@@ -3,7 +3,8 @@ const jwtTokenVerify = require("../Service/jwt-token-verify");
 const messages = require("../Models/messages");
 const userDetails = require("../Models/user-details");
 const firebasePush = require("../Models/firebase-push-details");
-// Message Details By Username
+const lovecrush = require("../Models/love-crush");
+//Secret Message Details By Username
 router.get("/message-details/:_id", async (req, res) => {
   const resType = {
     Status: false,
@@ -56,6 +57,61 @@ router.get("/message-details/:_id", async (req, res) => {
     return res.status(400).send(resType);
   }
 });
+// Secret Message Users
+router.get("/secret-message-user-details", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  await userDetails.find({}, async (err, params) => {
+    if (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+    try {
+      if (params === null) {
+        resType["Message"] = "You have no user yet";
+        return res.status(400).send(resType);
+      }
+      if (!req.query.currentpage || req.query.currentpage == 0) {
+        resType["Message"] = "Current Page is Required and it can not be Zero";
+        return res.status(400).send(resType);
+      }
+      if (!req.query.pagelimit || req.query.pagelimit == 0) {
+        resType["Message"] = "Page limit is Required and it can not be Zero";
+        return res.status(400).send(resType);
+      }
+      var startIndex = (req.query.currentpage - 1) * req.query.pagelimit;
+      var messageDetails = [];
+      for (
+        let i = startIndex;
+        i <= req.query.pagelimit * req.query.currentpage - 1;
+        i++
+      ) {
+        if (params[i]) {
+          messageDetails.push(params[i]);
+        } else {
+          break;
+        }
+      }
+      if (messageDetails && messageDetails.length > 0) {
+        resType["Message"] = "Successful";
+        resType["Data"] = messageDetails;
+        resType["Count"] = params.length;
+        resType["Status"] = true;
+        return res.status(200).send(resType);
+      } else {
+        resType["Message"] = "No User is Found";
+        return res.status(400).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  });
+});
+// Secret Message Username is available or not
 router.get("/search-user/:searchdata", async (req, res) => {
   const resType = {
     Status: false,
@@ -86,6 +142,7 @@ router.get("/search-user/:searchdata", async (req, res) => {
     return res.status(400).send(resType);
   }
 });
+// Secret Message User Details
 router.get("/user-details/:username", async (req, res) => {
   const resType = {
     Status: false,
@@ -125,5 +182,90 @@ router.get("/user-details/:username", async (req, res) => {
     resType["Message"] = err.message;
     return res.status(400).send(resType);
   }
+});
+// All Site map Links
+router.get("/all-sitemap-links", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  try {
+    await userDetails.find({}, async (err, params) => {
+      if (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+      if (params) {
+        let sitemapArray = [];
+        params.forEach((element) => {
+          if (element.link.includes("secret-message/share-link/")) {
+            sitemapArray.push({ url: element.link });
+          }
+        });
+        resType["Message"] = "Successful";
+        resType["Status"] = true;
+        resType["Data"] = sitemapArray;
+        return res.status(200).send(resType);
+      }
+    });
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
+  }
+});
+// Love-Crush Users
+router.get("/flames-users", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  await lovecrush.find({}, (err, params) => {
+    if (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+    try {
+      if (params === null) {
+        resType["Message"] = "You have no user yet";
+        return res.status(400).send(resType);
+      }
+      if (!req.query.currentpage || req.query.currentpage == 0) {
+        resType["Message"] = "Current Page is Required and it can not be Zero";
+        return res.status(400).send(resType);
+      }
+      if (!req.query.pagelimit || req.query.pagelimit == 0) {
+        resType["Message"] = "Page limit is Required and it can not be Zero";
+        return res.status(400).send(resType);
+      }
+      var startIndex = (req.query.currentpage - 1) * req.query.pagelimit;
+      var loveCrushDetails = [];
+      for (
+        let i = startIndex;
+        i <= req.query.pagelimit * req.query.currentpage - 1;
+        i++
+      ) {
+        if (params[i]) {
+          loveCrushDetails.push(params[i]);
+        } else {
+          break;
+        }
+      }
+      if (loveCrushDetails && loveCrushDetails.length > 0) {
+        resType["Message"] = "Successful";
+        resType["Data"] = loveCrushDetails;
+        resType["Count"] = params.length;
+        resType["Status"] = true;
+        return res.status(200).send(resType);
+      } else {
+        resType["Message"] = "No User is Found";
+        return res.status(400).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  });
 });
 module.exports = router;
