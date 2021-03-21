@@ -6,6 +6,7 @@ const firebasePush = require("../Models/firebase-push-details");
 const siteMap = require("../Models/sitemap-details");
 const loveCrush = require("../Models/love-crush");
 const adminUser = require("../Models/admin-user");
+const dareDetails = require("../Models/dare-details");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
@@ -979,5 +980,94 @@ router.post("/edit-love-calculator", async (req, res) => {
       }
     }
   );
+});
+router.post("/add-qna-dare", async (req, res) => {
+  var resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body.qna) {
+    resType["Message"] = "No Question & Answer Found";
+    return res.status(400).send(resType);
+  }
+  req.body.qna.forEach((x) => {
+    if (
+      x.question === "" ||
+      (x.answers && x.answers.length === 0) ||
+      x.answers[0] === "" ||
+      x.answers[1] === "" ||
+      x.answers[2] === "" ||
+      x.answers[3] === ""
+    ) {
+      resType["Message"] = "Please Fill All the Fields";
+      return res.status(400).send(resType);
+    }
+  });
+  if (!req.body.qna[0]._id) {
+    req.body.qna.forEach(async (x) => {
+      try {
+        if (x.question != "" || x.answers != []) {
+          await dareDetails.findOne(
+            { question: x.question },
+            async (err, params) => {
+              if (err) {
+                resType["Message"] = err.message;
+                return res.status(400).send(resType);
+              }
+              try {
+                if (params && params != null) {
+                  params["question"] = x.question;
+                  params["answers"] = x.answers;
+                  params["available"] = x.available;
+                  await params.save();
+                } else {
+                  await dareDetails.create({
+                    question: x.question,
+                    answers: x.answers,
+                    available: x.available,
+                  });
+                }
+              } catch (err) {
+                resType["Message"] = err.message;
+                return res.status(400).send(resType);
+              }
+            }
+          );
+        }
+      } catch (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+    });
+    try {
+      resType["Message"] = "Successful";
+      resType["Status"] = true;
+      return res.status(200).send(resType);
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  } else {
+    await dareDetails.findByIdAndUpdate(
+      req.body.qna[0]._id,
+      {
+        question: req.body.qna[0].question,
+        answers: req.body.qna[0].answers,
+        available: req.body.qna[0].available,
+      },
+      (err, params) => {
+        if (err) {
+          resType["Message"] = err.message;
+          return res.status(400).send(resType);
+        }
+        if (params && params != null) {
+          resType["Message"] = "Successful";
+          resType["Status"] = true;
+          return res.status(200).send(resType);
+        }
+      }
+    );
+  }
 });
 module.exports = router;

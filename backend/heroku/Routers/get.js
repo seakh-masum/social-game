@@ -4,6 +4,7 @@ const messages = require("../Models/messages");
 const userDetails = require("../Models/user-details");
 const firebasePush = require("../Models/firebase-push-details");
 const lovecrush = require("../Models/love-crush");
+const dareDetails = require("../Models/dare-details");
 //Secret Message Details By Username
 router.get("/message-details/:_id", async (req, res) => {
   const resType = {
@@ -261,6 +262,40 @@ router.get("/flames-users", async (req, res) => {
       } else {
         resType["Message"] = "No User is Found";
         return res.status(400).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  });
+});
+//Dare-Details
+router.get("/dare-details", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  await dareDetails.find({}, (err, params) => {
+    if (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+    try {
+      if (params && params != null) {
+        params.forEach((x) => {
+          resType["Data"].push({
+            _id: x._id,
+            question: x.question,
+            answers: x.answers,
+            available: x.available,
+            date: x.date,
+            disabled: true,
+          });
+        });
+        resType["Message"] = "Successful";
+        resType["Status"] = true;
+        return res.status(200).send(resType);
       }
     } catch (err) {
       resType["Message"] = err.message;

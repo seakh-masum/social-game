@@ -8,6 +8,8 @@
           ? "Edit Percentage"
           : data["action"] === "delete-popup"
           ? "Are You Want to Delete ?"
+          : data["action"] === "add-popup"
+          ? "Are You Want to Save ?"
           : ""
       }}</span
     >
@@ -137,7 +139,7 @@
   <button
     mat-stroked-button
     color="accent"
-    *ngIf="data['action'] === 'delete-popup'"
+    *ngIf="data['action'] === 'delete-popup' || data['action'] === 'add-popup'"
     [mat-dialog-close]="1"
   >
     Ok

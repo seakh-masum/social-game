@@ -1,1 +1,212 @@
-<p>dare-game works!</p>
+<div fxLayout="row">
+  <h2 fxFlex fxLayoutAlign="center center">
+    {{
+      listingFlag ? "Dare Questions & Answers" : "Add New Questions & Answers"
+    }}
+  </h2>
+  <button
+    fxFlex="15"
+    mat-stroked-button
+    (click)="listingFlag = !listingFlag; listingFlag ? this.getqnaList() : ''"
+  >
+    {{ listingFlag ? "Add New Q&A" : "Listing Details" }}</button
+  >&nbsp;&nbsp;
+</div>
+<br />
+<div *ngIf="listingFlag">
+  <mat-accordion *ngIf="listingArray && listingArray.length > 0">
+    <mat-expansion-panel *ngFor="let item of listingArray; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title> Question {{ i + 1 }} </mat-panel-title>
+        <mat-panel-description>
+          {{ item["question"] }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div fxLayout="column">
+        <div fxFlex="30">
+          <div fxLayout="row">
+            <mat-form-field fxFlex="30" appearance="outline">
+              <mat-label>Enter Your Question</mat-label>
+              <input
+                matInput
+                [(ngModel)]="item['question']"
+                [disabled]="item['disabled']"
+              />
+            </mat-form-field>
+            <div fxFlex fxLayoutAlign="center center">
+              <mat-slide-toggle
+                [(ngModel)]="item['available']"
+                [disabled]="item['disabled']"
+                >Available</mat-slide-toggle
+              >
+            </div>
+          </div>
+        </div>
+        <br /><br />
+        <div fxFlex>
+          <h3>Answers</h3>
+          <div fxLayout="row" fxLayoutGap="5px">
+            <mat-form-field fxFlex appearance="outline">
+              <mat-label>Option 1</mat-label>
+              <input
+                matInput
+                [(ngModel)]="item['answers'][0]"
+                [disabled]="item['disabled']"
+              />
+            </mat-form-field>
+            <mat-form-field fxFlex appearance="outline">
+              <mat-label>Option 2</mat-label>
+              <input
+                matInput
+                [(ngModel)]="item['answers'][1]"
+                [disabled]="item['disabled']"
+              />
+            </mat-form-field>
+            <mat-form-field fxFlex appearance="outline">
+              <mat-label>Option 3</mat-label>
+              <input
+                matInput
+                [(ngModel)]="item['answers'][2]"
+                [disabled]="item['disabled']"
+              />
+            </mat-form-field>
+            <mat-form-field fxFlex appearance="outline">
+              <mat-label>Option 4</mat-label>
+              <input
+                matInput
+                [(ngModel)]="item['answers'][3]"
+                [disabled]="item['disabled']"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <mat-action-row>
+        <button
+          *ngIf="item['disabled']"
+          mat-stroked-button
+          color="warn"
+          (click)="onDelete(item._id)"
+        >
+          Delete
+        </button>
+        <button
+          *ngIf="item['disabled']"
+          mat-stroked-button
+          color="accent"
+          (click)="item['disabled'] = false"
+        >
+          Edit
+        </button>
+        <button
+          *ngIf="!item['disabled']"
+          mat-stroked-button
+          color="accent"
+          (click)="item['disabled'] = true"
+        >
+          Cancel
+        </button>
+        <button
+          *ngIf="!item['disabled']"
+          mat-stroked-button
+          color="accent"
+          (click)="onEdit(item)"
+        >
+          Save
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<div *ngIf="!listingFlag">
+  <div
+    fxLayout="row"
+    fxLayoutGap="5px"
+    *ngIf="dynamicExpension && dynamicExpension.length === 0"
+  >
+    <mat-form-field fxFlex="50" appearance="outline" fxLayoutAlign="end center">
+      <mat-label>Enter Questions Length</mat-label>
+      <input matInput placeholder="Ex- 5,10" [(ngModel)]="qLength" />
+    </mat-form-field>
+    <div fxFlex fxLayoutAlign="start center">
+      <button color="accent" mat-stroked-button (click)="qLengthSubmit()">
+        Submit
+      </button>
+    </div>
+  </div>
+  <mat-accordion *ngIf="dynamicExpension && dynamicExpension.length > 0">
+    <mat-expansion-panel
+      *ngFor="let item of dynamicExpension; let i = index"
+      [expanded]="step === i"
+      (opened)="setStep(i)"
+      hideToggle
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> Question {{ item["no"] }} </mat-panel-title>
+        <mat-panel-description>
+          Enter Your Question and All Posible Answers with Image
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div fxLayout="column">
+        <div fxFlex="30">
+          <div fxLayout="row">
+            <mat-form-field fxFlex="30" appearance="outline">
+              <mat-label>Enter Your Question</mat-label>
+              <input matInput [(ngModel)]="item['question']" />
+            </mat-form-field>
+            <div fxFlex="50" fxLayoutAlign="center center">
+              <!-- <input type="file" (change)="readURL($event, i)" />
+              <img
+                *ngIf="item['image']"
+                [src]="item['image']"
+                [alt]="'Question ' + i + 1"
+                width="250px"
+                style="border-radius: 10%; border: red 1px solid"
+              /> -->
+              <mat-slide-toggle [(ngModel)]="item['available']"
+                >Available</mat-slide-toggle
+              >
+            </div>
+            <div fxFlex="50" fxLayoutAlign="end center">
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="dynamicExpension.splice(i, 1)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <br /><br />
+        <div fxFlex>
+          <h3>Answers</h3>
+          <div fxLayout="row" fxLayoutGap="5px">
+            <mat-form-field fxFlex appearance="outline">
+              <mat-label>Option 1</mat-label>
+              <input matInput [(ngModel)]="item['answers'][0]" />
+            </mat-form-field>
+            <mat-form-field fxFlex appearance="outline">
+              <mat-label>Option 2</mat-label>
+              <input matInput [(ngModel)]="item['answers'][1]" />
+            </mat-form-field>
+            <mat-form-field fxFlex appearance="outline">
+              <mat-label>Option 3</mat-label>
+              <input matInput [(ngModel)]="item['answers'][2]" />
+            </mat-form-field>
+            <mat-form-field fxFlex appearance="outline">
+              <mat-label>Option 4</mat-label>
+              <input matInput [(ngModel)]="item['answers'][3]" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <mat-action-row>
+        <button mat-button color="warn" *ngIf="i != 0" (click)="prevStep()">
+          Previous
+        </button>
+        <button mat-button color="accent" (click)="nextStep()">Next</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

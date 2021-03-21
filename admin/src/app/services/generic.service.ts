@@ -50,9 +50,9 @@ export class GenericService {
     return this._http.post(this.apiURL + url, data);
   }
 
-  delete(url: string, data: any) {
+  delete(url: string, data: any, type: any) {
     console.log(data);
-    return this._http.delete(this.apiURL + url + data);
+    return this._http.delete(this.apiURL + url + data + '/' + type);
   }
 
   put(url: string, data: any) {

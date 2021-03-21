@@ -98,7 +98,7 @@ export class LoveCalculatorComponent implements OnInit, OnDestroy {
       dialog.afterClosed().subscribe((res) => {
         if (res == 1) {
           this.subscribtion.push(
-            this._generic.delete('delete-love-crush/', id).subscribe(
+            this._generic.delete('delete-details/', id, 'love-crush').subscribe(
               (res: any) => {
                 if (res['Status']) {
                   this._snackBar.open(res['Message'], 'Success', {
