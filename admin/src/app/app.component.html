@@ -1,21 +1,69 @@
 <mat-drawer-container class="main-container" autosize>
   <mat-drawer class="sidenav-container" #drawer mode="side">
-    <button
-      class="side-nav"
-      *ngFor="let item of sidenavArray"
-      type="button"
-      mat-stroked-button
-      [routerLink]="[item.routerLink]"
-      (click)="drawer.close()"
-    >
-      <span style="font-size: medium">{{ item.name }}</span>
-    </button>
+    <div fxLayout="column" fxLayoutGap="10px">
+      <div fxFlex="20">
+        <div fxLayout="row" fxLayoutGap="15px">
+          <div fxFlex="30">
+            <img
+              src="https://res.cloudinary.com/dzruu87x0/image/upload/v1615662680/140004660-elegant-hand-holding-social-game-inscription-social-networking-concept_t9vgyn.jpg"
+              alt="Avatar"
+              class="avatar"
+            />
+          </div>
+          <div fxFlex>
+            <br />
+            <span style="font-size: larger"
+              >Hii Admin !! {{ adminName ? adminName : "" }}</span
+            >
+            <br />
+            <span *ngIf="creatinDate"
+              >Admin Since:
+              {{
+                creatinDate ? (creatinDate | date: "dd/MM/yyyy, h:mm:ss a") : ""
+              }}</span
+            >
+          </div>
+        </div>
+      </div>
+      <div fxFlex>
+        <button
+          class="side-nav"
+          *ngFor="let item of sidenavArray"
+          type="button"
+          mat-stroked-button
+          [routerLink]="[item.routerLink]"
+          (click)="drawer.close()"
+        >
+          <span style="font-size: medium">{{ item.name }}</span>
+        </button>
+      </div>
+    </div>
   </mat-drawer>
 
   <div>
-    <button type="button" mat-icon-button (click)="drawer.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
+    <div *ngIf="isLogin" fxLayout="row">
+      <div fxFlex="80" fxLayoutAlign="start start">
+        <div fxLayout="row">
+          <div fxFlex="20" fxLayoutAlign="center start">
+            <button type="button" mat-icon-button (click)="drawer.toggle()">
+              <mat-icon>menu</mat-icon>
+            </button>
+          </div>
+          <div fxFlex fxLayoutAlign="center start">
+            <h2 style="position: relative; top: 5px">{{ header }}</h2>
+          </div>
+        </div>
+      </div>
+      <div fxFlex fxLayoutAlign="end end">
+        <button
+          type="button"
+          mat-icon-button
+          (click)="logout(); drawer.close()"
+        >
+          <mat-icon fxFlex>logout</mat-icon>
+        </button>
+      </div>
+    </div>
     <router-outlet></router-outlet>
   </div>
 </mat-drawer-container>

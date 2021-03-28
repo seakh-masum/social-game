@@ -1,5 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -7,7 +9,11 @@ import { environment } from 'src/environments/environment';
 })
 export class GenericService {
   public apiURL = environment.secretbaseurl;
-  constructor(private _http: HttpClient) {}
+  public headerSubject: BehaviorSubject<any> = new BehaviorSubject<any>('');
+  public loginState: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
+  constructor(private _http: HttpClient, private _router: Router) {}
   isLogin() {
     var date1 = new Date(localStorage.getItem('LoginTime'));
     var date2 = new Date();
@@ -24,9 +30,11 @@ export class GenericService {
       hh < 8
     ) {
       console.log('********* 8hrs Not Gone **********');
+      this.loginState.next(true);
       return true;
     } else {
       console.log('********* 8hrs Gone **********');
+      this.loginState.next(false);
       return false;
     }
   }

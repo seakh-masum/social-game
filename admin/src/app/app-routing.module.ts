@@ -9,8 +9,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('../app/layout/layout.module').then((m) => m.LayoutModule),
+    data: { header: 'Dashboard' },
   },
-  { path: 'login-admin', component: AuthenticationComponent },
+  {
+    path: 'login-admin',
+    component: AuthenticationComponent,
+  },
 ];
 
 @NgModule({

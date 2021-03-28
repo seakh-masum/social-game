@@ -921,6 +921,7 @@ router.post("/login-admin", async (req, res) => {
           Buffer.from(params.password, "base64").toString() ===
           req.body.password
         ) {
+          resType["Data"] = [{ admin: params["uname"], date: params["date"] }];
           resType["Status"] = true;
           resType["Message"] = "Login Successful";
           return res.status(200).send(resType);

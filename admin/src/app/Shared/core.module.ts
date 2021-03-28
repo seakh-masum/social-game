@@ -21,6 +21,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [],
@@ -48,6 +49,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatSidenavModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSelectModule,
   ],
   exports: [
     HttpClientModule,
@@ -72,6 +74,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatSidenavModule,
     MatTableModule,
     MatPaginatorModule,
+    MatSelectModule,
   ],
 })
 export class CoreModule {}

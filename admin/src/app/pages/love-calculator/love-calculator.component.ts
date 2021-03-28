@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DetailsDialogComponent } from 'src/app/dialog/details-dialog/details-dialog.component';
 import { GenericService } from 'src/app/services/generic.service';
@@ -32,8 +33,11 @@ export class LoveCalculatorComponent implements OnInit, OnDestroy {
   constructor(
     private _generic: GenericService,
     private _snackBar: MatSnackBar,
-    private _dialog: MatDialog
-  ) {}
+    private _dialog: MatDialog,
+    private _activatedRoute: ActivatedRoute
+  ) {
+    _generic.headerSubject.next(this._activatedRoute.snapshot.data);
+  }
 
   ngOnInit(): void {
     this.getLoveCalculatorUsers();

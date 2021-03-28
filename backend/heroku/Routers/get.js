@@ -303,4 +303,320 @@ router.get("/dare-details", async (req, res) => {
     }
   });
 });
+router.get("/get-total-userdetails", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  var secretGames = [],
+    dareGames = [],
+    loveCrush = [];
+  secretGames = await userDetails.find({});
+  dareGames = await dareDetails.find({});
+  loveCrush = await lovecrush.find({});
+  try {
+    resType["Data"] = [
+      {
+        title: "Secret Games",
+        sub_title: "Total User Registered",
+        users: secretGames ? secretGames.length : 0,
+        router_link: "/pages/secret-messages",
+      },
+      {
+        title: "Dare Games",
+        sub_title: "Total User Registered",
+        users: dareGames ? dareGames.length : 0,
+        router_link: "/pages/dare-games",
+      },
+      {
+        title: "Love Calculator",
+        sub_title: "Total User Registered",
+        users: loveCrush ? loveCrush.length : 0,
+        router_link: "/pages/love-calculator",
+      },
+    ];
+    resType["Message"] = "Successful";
+    resType["Status"] = true;
+    return res.status(200).send(resType);
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
+  }
+});
+router.get("/get-userdetails-by-year/:year", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  var secretGames = [],
+    dareGames = [],
+    loveCrush = [],
+    secretGamesYear = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    dareGamesYear = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    loveCrushYear = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    yearArray = [];
+  secretGames = await userDetails.find({});
+  dareGames = await dareDetails.find({});
+  loveCrush = await lovecrush.find({});
+  try {
+    secretGames.forEach((x) => {
+      if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 0
+      ) {
+        secretGamesYear[0] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 1
+      ) {
+        secretGamesYear[1] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 2
+      ) {
+        secretGamesYear[2] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 3
+      ) {
+        secretGamesYear[3] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 4
+      ) {
+        secretGamesYear[4] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 5
+      ) {
+        secretGamesYear[5] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 6
+      ) {
+        secretGamesYear[6] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 7
+      ) {
+        secretGamesYear[7] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 8
+      ) {
+        secretGamesYear[8] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 9
+      ) {
+        secretGamesYear[9] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 10
+      ) {
+        secretGamesYear[10] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 11
+      ) {
+        secretGamesYear[11] += 1;
+      }
+      if (
+        yearArray.findIndex((y) => y === new Date(x.date).getFullYear()) === -1
+      ) {
+        yearArray.push(new Date(x.date).getFullYear());
+      }
+    });
+    dareGames.forEach((x) => {
+      if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 0
+      ) {
+        dareGamesYear[0] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 1
+      ) {
+        dareGamesYear[1] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 2
+      ) {
+        dareGamesYear[2] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 3
+      ) {
+        dareGamesYear[3] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 4
+      ) {
+        dareGamesYear[4] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 5
+      ) {
+        dareGamesYear[5] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 6
+      ) {
+        dareGamesYear[6] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 7
+      ) {
+        dareGamesYear[7] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 8
+      ) {
+        dareGamesYear[8] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 9
+      ) {
+        dareGamesYear[9] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 10
+      ) {
+        dareGamesYear[10] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 11
+      ) {
+        dareGamesYear[11] += 1;
+      }
+
+      if (
+        yearArray.findIndex((y) => y === new Date(x.date).getFullYear()) === -1
+      ) {
+        yearArray.push(new Date(x.date).getFullYear());
+      }
+    });
+    loveCrush.forEach((x) => {
+      if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 0
+      ) {
+        loveCrushYear[0] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 1
+      ) {
+        loveCrushYear[1] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 2
+      ) {
+        loveCrushYear[2] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 3
+      ) {
+        loveCrushYear[3] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 4
+      ) {
+        loveCrushYear[4] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 5
+      ) {
+        loveCrushYear[5] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 6
+      ) {
+        loveCrushYear[6] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 7
+      ) {
+        loveCrushYear[7] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 8
+      ) {
+        loveCrushYear[8] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 9
+      ) {
+        loveCrushYear[9] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 10
+      ) {
+        loveCrushYear[10] += 1;
+      } else if (
+        new Date(x.date).getFullYear() === Number(req.params.year) &&
+        new Date(x.date).getMonth() === 11
+      ) {
+        loveCrushYear[11] += 1;
+      }
+
+      if (
+        yearArray.findIndex((y) => y === new Date(x.date).getFullYear()) === -1
+      ) {
+        yearArray.push(new Date(x.date).getFullYear());
+      }
+    });
+    var config = {
+      type: "line",
+      data: {
+        labels: [
+          // Date Objects
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+        datasets: [
+          {
+            label: "Secret Message",
+            backgroundColor: "blue",
+            borderColor: "yellow",
+            fill: false,
+            data: secretGamesYear,
+          },
+          {
+            label: "Dare Games",
+            backgroundColor: "red",
+            borderColor: "green",
+            fill: false,
+            data: dareGamesYear,
+          },
+          {
+            label: "Love Calculator",
+            backgroundColor: "pink",
+            borderColor: "white",
+            fill: false,
+            data: loveCrushYear,
+          },
+        ],
+      },
+    };
+    resType["Data"] = { config: config, year: yearArray };
+    resType["Message"] = "Successful";
+    resType["Status"] = true;
+    return res.status(200).send(resType);
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
+  }
+});
 module.exports = router;

@@ -6,9 +6,21 @@ import { SecretMessagesComponent } from './secret-messages/secret-messages.compo
 
 const routes: Routes = [
   { path: '', redirectTo: 'secret-messages', pathMatch: 'full' },
-  { path: 'secret-messages', component: SecretMessagesComponent },
-  { path: 'love-calculator', component: LoveCalculatorComponent },
-  { path: 'dare-games', component: DareGameComponent },
+  {
+    path: 'secret-messages',
+    component: SecretMessagesComponent,
+    data: { header: 'Secret Messages' },
+  },
+  {
+    path: 'love-calculator',
+    component: LoveCalculatorComponent,
+    data: { header: 'Love Calculator' },
+  },
+  {
+    path: 'dare-games',
+    component: DareGameComponent,
+    data: { header: 'Dare Games' },
+  },
 ];
 
 @NgModule({

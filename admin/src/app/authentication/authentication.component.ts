@@ -18,6 +18,9 @@ export class AuthenticationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this._generic.isLogin()) {
+      this._router.navigate(['']);
+    }
     this.authForm = new FormGroup({
       uname: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
@@ -25,11 +28,13 @@ export class AuthenticationComponent implements OnInit {
   }
   onSubmit() {
     if (this.authForm.valid) {
-      console.log(this.authForm.value);
       this._generic.post('login-admin', this.authForm.value).subscribe(
         (res: any) => {
           if (res['Status']) {
+            localStorage.setItem('isLogin', 'true');
             localStorage.setItem('LoginTime', new Date().toString());
+            localStorage.setItem('uname', res['Data'][0]['admin']);
+            localStorage.setItem('date', res['Data'][0]['date']);
             this._snackBar.open(res['Message'], 'Success', { duration: 3000 });
             this._router.navigate(['']);
           } else {
