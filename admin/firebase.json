@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "social-game-admin",
+    "public": "dist/admin",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
