@@ -14,8 +14,8 @@ export const environment = {
     measurementId: 'G-MSTYNGMTX4',
   },
   // secretbaseurl: 'https://social-games-sksayon.herokuapp.com/api/',
-  // secretbaseurl: 'http://localhost:3000/api/',
-  secretbaseurl: 'http://192.168.0.107:3000/api/',
+  secretbaseurl: 'http://localhost:3000/api/',
+  // secretbaseurl: 'http://192.168.0.107:3000/api/',
   hostingurl: 'https://socail-game.web.app/',
 };
 

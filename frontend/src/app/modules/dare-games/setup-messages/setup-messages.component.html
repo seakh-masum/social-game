@@ -1,0 +1,29 @@
+<mat-card
+  style="margin-top: 10px"
+  *ngFor="let item of questions; let i = index"
+>
+  <mat-card-header>
+    <mat-card-title
+      ><mat-checkbox [(ngModel)]="item.checkFlag"
+        >Question {{ i + 1 }}</mat-checkbox
+      ></mat-card-title
+    >
+  </mat-card-header>
+  <mat-card-content>
+    <h3>
+      {{ item.question }}
+    </h3>
+    <h4>Answer :</h4>
+    <mat-radio-group [(ngModel)]="item.answerValue">
+      <mat-radio-button *ngFor="let season of item['answers']" [value]="season">
+        {{ season }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card-content>
+</mat-card>
+<br />
+<div>
+  <button mat-stroked-button color="accent" type="submit" (click)="onSubmit()">
+    Save
+  </button>
+</div>

@@ -7,6 +7,7 @@ const siteMap = require("../Models/sitemap-details");
 const loveCrush = require("../Models/love-crush");
 const adminUser = require("../Models/admin-user");
 const dareDetails = require("../Models/dare-details");
+const dareUsers = require("../Models/dare-users");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
@@ -284,6 +285,52 @@ router.post("/user-login", async (req, res) => {
   if (req.body.role == "user") {
     try {
       const userData = await userDetails.findOne({
+        username: req.body.username,
+      });
+      if (!userData) {
+        resType["Message"] = "Username is not registered";
+        return res.status(400).send(resType);
+      }
+      if (
+        userData.userpin &&
+        req.body.userpin &&
+        userData.userpin != req.body.userpin
+      ) {
+        resType["Message"] = "Your pin is Incorrect";
+        return res.status(400).send(resType);
+      } else if (
+        userData.userpin &&
+        req.body.userpin &&
+        userData.userpin === req.body.userpin
+      ) {
+        resType["Status"] = true;
+        resType["Message"] = `${userData.displayname} is Successfully login`;
+        resType["Data"] = [
+          {
+            _id: userData._id,
+            username: userData.username,
+            displayname: userData.displayname,
+            userpin: userData.userpin,
+            token: userData.token,
+            link: userData.link,
+            encyptduser: userData.encyptduser,
+            longitude: userData.longitude,
+            latitude: userData.latitude,
+            date: userData.date,
+          },
+        ];
+        return res.status(200).send(resType);
+      } else {
+        resType["Message"] = "User's pin is not set in our Database";
+        return res.status(400).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  } else if (req.body.role == "dare-games") {
+    try {
+      const userData = await dareUsers.findOne({
         username: req.body.username,
       });
       if (!userData) {
@@ -1071,4 +1118,120 @@ router.post("/add-qna-dare", async (req, res) => {
     );
   }
 });
+// Signup Dare Games User
+router.post("/save-dare-user", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body.username) {
+    resType["Message"] = "User's Name is Required";
+    return res.status(400).send(resType);
+  }
+  if (!req.body.role) {
+    resType["Message"] = "User's Role is Required";
+    return res.status(400).send(resType);
+  }
+  try {
+    let checkname = req.body.username.split(" ").join("");
+    const prevData = await dareUsers.findOne({ username: checkname });
+    if (prevData) {
+      let username = "";
+      if (req.body.username.includes(" ")) {
+        username =
+          req.body.username.split(" ").join("") +
+          Math.random().toString(36).substring(7);
+      } else {
+        username = req.body.username + Math.random().toString(36).substring(7);
+      }
+      const afterUserNameSet = await dareUsers.findOne({
+        username: username,
+      });
+      if (afterUserNameSet) {
+        // let username = "";
+        if (req.body.username.includes(" ")) {
+          username =
+            req.body.username.split(" ").join("") +
+            Math.random().toString(36).substring(7);
+        } else {
+          username =
+            req.body.username + Math.random().toString(36).substring(7);
+        }
+      }
+      const token = jwt.sign(
+        { _id: username, role: req.body.role },
+        process.env.TOKEN_SECRET,
+        {
+          issuer: "unimansyst@gmail.com",
+          audience: username,
+        }
+      );
+      const saveDetails = new dareUsers({
+        username: username,
+        displayname: req.body.username,
+        role: req.body.role,
+        token: token,
+        link: "dare-games/share-link/" + btoa(username),
+        encyptduser: btoa(username),
+        userpin: (Math.random() * 1000000).toFixed(),
+        longitude: "",
+        latitude: "",
+      });
+      try {
+        resType[
+          "Message"
+        ] = `${saveDetails.displayname} is Register Successfully`;
+        resType["Status"] = true;
+        resType["Data"] = [await saveDetails.save()];
+        return res.status(200).send(resType);
+      } catch (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+    } else {
+      let username = "";
+      if (req.body.username.includes(" ")) {
+        username = req.body.username.split(" ").join("");
+      } else {
+        username = req.body.username;
+      }
+      const token = jwt.sign(
+        { _id: username, role: req.body.role },
+        process.env.TOKEN_SECRET,
+        {
+          issuer: "sayonchakraborty1998@gmail.com",
+          audience: username,
+        }
+      );
+      const saveDetails = new dareUsers({
+        username: username,
+        displayname: req.body.username,
+        role: req.body.role,
+        token: token,
+        link: "dare-games/share-link/" + btoa(username),
+        encyptduser: btoa(username),
+        userpin: (Math.random() * 1000000).toFixed(),
+        longitude: "",
+        latitude: "",
+      });
+      try {
+        resType[
+          "Message"
+        ] = `${saveDetails.displayname} is Register Successfully`;
+        resType["Status"] = true;
+        resType["Data"] = [await saveDetails.save()];
+        return res.status(200).send(resType);
+      } catch (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+    }
+  } catch (err) {
+    resType["Message"] = err.message;
+    return res.status(400).send(resType);
+  }
+});
+// Dare Games User id with Question and Answers
+
 module.exports = router;

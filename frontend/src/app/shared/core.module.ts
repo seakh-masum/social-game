@@ -17,7 +17,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [],
@@ -42,6 +43,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatDialogModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
+    MatRadioModule,
   ],
   exports: [
     HttpClientModule,
@@ -63,6 +65,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
     MatDialogModule,
     MatSlideToggleModule,
     MatButtonToggleModule,
+    MatRadioModule,
   ],
 })
 export class CoreModule {}

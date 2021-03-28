@@ -22,6 +22,13 @@ const routes: Routes = [
         (m) => m.LoveCrushModule
       ),
   },
+  {
+    path: 'dare-games',
+    loadChildren: () =>
+      import('./modules/dare-games/dare-games.module').then(
+        (m) => m.DareGamesModule
+      ),
+  },
 ];
 
 @NgModule({
