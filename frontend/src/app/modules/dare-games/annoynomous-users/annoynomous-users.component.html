@@ -1,1 +1,130 @@
-<p>annoynomous-users works!</p>
+<div *ngIf="!flag" style="margin-top: 50%" fxLayout="column" fxLayoutGap="25px">
+  <div fxFlex="70" class="mat-elevation-z6" style="border-radius: 20px">
+    <mat-form-field appearance="fill">
+      <input
+        matInput
+        placeholder="Enter your name"
+        [(ngModel)]="annoyName"
+        [ngModelOptions]="{ standalone: true }"
+        #name
+      />
+      <mat-hint>Enter your name to answer {{ username }}'s question</mat-hint>
+    </mat-form-field>
+  </div>
+  <button
+    [disabled]="annoyName === ''"
+    fxFlex
+    mat-stroked-button
+    color="accent"
+    (click)="flag = true"
+  >
+    Enter
+  </button>
+</div>
+<!-- Questions n Answers -->
+<div *ngIf="flag && markFlag == false">
+  <div fxLayout="row">
+    <span fxFlex fxLayoutAlign="center center"
+      >Hey {{ annoyName }},Answer to {{ username }}'s Question</span
+    >
+  </div>
+  <div *ngFor="let item of questions; let i = index">
+    <mat-card style="margin-top: 50%" *ngIf="item.showFlag">
+      <mat-card-header>
+        <mat-card-title>Question {{ i + 1 }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h3>
+          {{ item.question }}
+        </h3>
+        <h4 style="margin-top: 2%">Answer :</h4>
+        <mat-radio-group style="margin-top: 2%" [(ngModel)]="item.userValue">
+          <div fxLayout="row" fxLayoutGap="20%">
+            <div fxLayout="column">
+              <div *ngFor="let season of item['answers']; let i = index">
+                <mat-radio-button *ngIf="i <= 1" fxFlex [value]="season">
+                  {{ season }}
+                </mat-radio-button>
+              </div>
+            </div>
+            <div fxLayout="column">
+              <div *ngFor="let season of item['answers']; let i = index">
+                <mat-radio-button *ngIf="i > 1" fxFlex [value]="season">
+                  {{ season }}
+                </mat-radio-button>
+              </div>
+            </div>
+          </div>
+        </mat-radio-group>
+      </mat-card-content>
+      <mat-card-actions fxLayout="row">
+        <div *ngIf="i === 0" fxFlex></div>
+        <button
+          fxFlex="50"
+          *ngIf="i != 0"
+          mat-stroked-button
+          color="warn"
+          (click)="
+            questions[i].showFlag = false; questions[i - 1].showFlag = true
+          "
+        >
+          Previous
+        </button>
+        <button
+          fxFlex="50"
+          *ngIf="questions[0].userValue && i < questions.length - 1"
+          mat-stroked-button
+          color="accent"
+          [disabled]="item.userValue === ''"
+          (click)="
+            questions[i].showFlag = false; questions[i + 1].showFlag = true
+          "
+        >
+          Next
+        </button>
+        <button
+          fxFlex="50"
+          [disabled]="item.userValue === ''"
+          *ngIf="i === questions.length - 1"
+          mat-stroked-button
+          color="accent"
+          (click)="onSubmit()"
+        >
+          Submit
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Marks -->
+<div *ngIf="flag && markFlag == true">
+  <h3>Checkout the result,</h3>
+  <h3>that how much you know to</h3>
+  <h3 fxLayout="row" fxLayoutAlign="center center">❤️❤️{{ username }}❤️❤️</h3>
+  <br />
+  <div class="mat-elevation-z8" style="border-radius: 20px">
+    <mat-card fxLayout="column">
+      <div fxFlex fxLayout="row">
+        <h4 fxFlex fxLayoutAlign="center center">Name</h4>
+        <h4 fxFlex fxLayoutAlign="center center">Marks</h4>
+      </div>
+      <div fxFlex fxLayout="row" *ngFor="let item of markArray">
+        <span fxFlex fxLayoutAlign="center center">{{ item.username }}</span>
+        <span fxFlex fxLayoutAlign="center center">{{ item.marks }}</span>
+      </div>
+    </mat-card>
+  </div>
+  <br />
+  <div
+    class="mat-elevation-z8"
+    fxLayout="column"
+    style="border-radius: 10px"
+    fxLayoutGap="5px"
+  >
+    <h4 fxFlex fxLayoutAlign="center center">👇Generate Your Link👇</h4>
+    <a fxFlex fxLayoutAlign="center center" href="/dare-games/auth"
+      >Click Here</a
+    >
+  </div>
+</div>

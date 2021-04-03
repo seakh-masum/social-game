@@ -1,10 +1,15 @@
 <section fxLayout="row" fxLayoutGap="16px">
   <div fxFlex="20" fxLayoutAlign="center center">
-    <div  fxLayout="column" fxLayoutAlign="center center" class="circle" [style.backgroundColor]="circleColor">
-      <div class="initials">{{initials}}</div>
+    <div
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      class="circle"
+      [style.backgroundColor]="circleColor"
+    >
+      <div class="initials">{{ initials }}</div>
     </div>
   </div>
   <div fxFlex="80" fxLayoutAlign="start center">
-    <h3>Hi! {{displayName}}</h3>
+    <h3>Hi! {{ displayName }}</h3>
   </div>
 </section>

@@ -61,6 +61,8 @@ export class AppComponent {
     this.title = routing_data.title;
     if (this.title == 'Flames') {
       this._global.headerSubject.next(this.title);
+    } else if (this.title == 'Dare Games') {
+      this._global.headerSubject.next(this.title);
     }
     // this.isBottombarVisible = routing_data.isBottombarVisible !== undefined && routing_data.isBottombarVisible ? true : false;
     this.isLoggedIn =

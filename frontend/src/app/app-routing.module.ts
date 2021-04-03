@@ -24,6 +24,7 @@ const routes: Routes = [
   },
   {
     path: 'dare-games',
+    data: { title: 'Dare Games', isLoggedIn: false, activeIcon: '' },
     loadChildren: () =>
       import('./modules/dare-games/dare-games.module').then(
         (m) => m.DareGamesModule

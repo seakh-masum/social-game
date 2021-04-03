@@ -5,6 +5,8 @@ const userDetails = require("../Models/user-details");
 const firebasePush = require("../Models/firebase-push-details");
 const lovecrush = require("../Models/love-crush");
 const dareDetails = require("../Models/dare-details");
+const dareQnAUser = require("../Models/dare-question-with-user");
+const dareUser = require("../Models/dare-users");
 //Secret Message Details By Username
 router.get("/message-details/:_id", async (req, res) => {
   const resType = {
@@ -204,6 +206,19 @@ router.get("/all-sitemap-links", async (req, res) => {
             sitemapArray.push({ url: element.link });
           }
         });
+        await dareUser.find({}, (err, params) => {
+          if (err) {
+            resType["Message"] = err.message;
+            return res.status(400).send(resType);
+          }
+          if (params) {
+            params.forEach((element) => {
+              if (element.link.includes("dare-games/share-link/")) {
+                sitemapArray.push({ url: element.link });
+              }
+            });
+          }
+        });
         resType["Message"] = "Successful";
         resType["Status"] = true;
         resType["Data"] = sitemapArray;
@@ -303,6 +318,67 @@ router.get("/dare-details", async (req, res) => {
     }
   });
 });
+// Get Dare User Details
+router.get("/dare-user-details/:username", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  dareUser.findOne(
+    { encyptduser: req.params.username },
+    async (err, params) => {
+      if (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+      try {
+        if (params === null) {
+          resType["Message"] = "User is not Available";
+          return res.status(200).send(resType);
+        } else {
+          resType["Data"] = [params];
+          resType["Status"] = true;
+          resType["Message"] = "Successful";
+          return res.status(200).send(resType);
+        }
+      } catch (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+    }
+  );
+});
+// Dare Games User Q n A Details
+router.get("/qna-by-userid/:userid", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  dareQnAUser.findOne({ userid: req.params.userid }, async (err, params) => {
+    if (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+    try {
+      if (params === null) {
+        resType["Status"] = true;
+        resType["Message"] = "Successful";
+        return res.status(200).send(resType);
+      } else {
+        resType["Data"] = [params];
+        resType["Status"] = true;
+        resType["Message"] = "Successful";
+        return res.status(200).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  });
+});
+// Admin Total User Details
 router.get("/get-total-userdetails", async (req, res) => {
   const resType = {
     Status: false,
@@ -344,6 +420,7 @@ router.get("/get-total-userdetails", async (req, res) => {
     return res.status(400).send(resType);
   }
 });
+// Admin Total User Details by Year
 router.get("/get-userdetails-by-year/:year", async (req, res) => {
   const resType = {
     Status: false,

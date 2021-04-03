@@ -8,6 +8,7 @@ const loveCrush = require("../Models/love-crush");
 const adminUser = require("../Models/admin-user");
 const dareDetails = require("../Models/dare-details");
 const dareUsers = require("../Models/dare-users");
+const dareQnAUser = require("../Models/dare-question-with-user");
 const jwt = require("jsonwebtoken");
 const jwtTokenVerify = require("../Service/jwt-token-verify");
 const btoa = require("btoa");
@@ -1233,5 +1234,88 @@ router.post("/save-dare-user", async (req, res) => {
   }
 });
 // Dare Games User id with Question and Answers
-
+router.post("/daregames-user-questions-answers", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body.userid) {
+    resType["Message"] = "User's Id is Required";
+    return res.status(400).send(resType);
+  }
+  if (
+    req.body.questionid_and_answer &&
+    req.body.questionid_and_answer.length <= 0
+  ) {
+    resType["Message"] = "User's Question and Answer is Required";
+    return res.status(400).send(resType);
+  }
+  dareQnAUser.findOne({ userid: req.body.userid }, async (err, params) => {
+    if (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+    try {
+      if (params === null) {
+        resType["Data"] = await dareQnAUser.create({
+          userid: req.body.userid,
+          question_and_answer: req.body.questionid_and_answer,
+        });
+        resType["Message"] = "Successful";
+        resType["Status"] = true;
+        return res.status(200).send(resType);
+      } else {
+        params["question_and_answer"] = req.body.questionid_and_answer;
+        resType["Data"] = await params.save();
+        resType["Message"] = "Updated Successfully";
+        resType["Status"] = true;
+        return res.status(200).send(resType);
+      }
+    } catch (err) {
+      resType["Message"] = err.message;
+      return res.status(400).send(resType);
+    }
+  });
+});
+// Dare Games save value of annonymous user
+router.post("/daregames-annoymouse-user-value", async (req, res) => {
+  const resType = {
+    Status: false,
+    Data: [],
+    Message: "",
+  };
+  if (!req.body.annonyUser) {
+    resType["Message"] = "User Details is Required";
+    return res.status(400).send(resType);
+  }
+  if (!req.body.userid) {
+    resType["Message"] = "User's Id' is Required";
+    return res.status(400).send(resType);
+  }
+  await dareQnAUser.findOne(
+    { userid: req.body.userid },
+    async (err, params) => {
+      if (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+      try {
+        if (params != null) {
+          params["annonyUser"].push(req.body.annonyUser);
+          resType["Data"] = await params.save();
+          resType["Status"] = true;
+          resType["Message"] = "Successful";
+          return res.status(200).send(resType);
+        } else {
+          resType["Message"] = "User Details is not Present";
+          return res.status(400).send(resType);
+        }
+      } catch (err) {
+        resType["Message"] = err.message;
+        return res.status(400).send(resType);
+      }
+    }
+  );
+});
 module.exports = router;

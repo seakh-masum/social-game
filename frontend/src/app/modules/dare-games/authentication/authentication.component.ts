@@ -88,13 +88,13 @@ export class AuthenticationComponent implements OnInit {
     }
   }
   setData(data: any) {
-    localStorage.setItem('link', data.link);
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('displayName', data.displayname);
-    localStorage.setItem('id', data._id);
-    localStorage.setItem('encyptduser', data.encyptduser);
-    localStorage.setItem('userpin', data.userpin);
-    localStorage.setItem('username', data.username);
+    localStorage.setItem('darelink', data.link);
+    localStorage.setItem('daretoken', data.token);
+    localStorage.setItem('daredisplayName', data.displayname);
+    localStorage.setItem('dareid', data._id);
+    localStorage.setItem('dareencyptduser', data.encyptduser);
+    localStorage.setItem('dareuserpin', data.userpin);
+    localStorage.setItem('dareusername', data.username);
   }
 
   postData(url: string, data: any) {
@@ -108,7 +108,7 @@ export class AuthenticationComponent implements OnInit {
           }
           this.isButtonDisabled = false;
           this._global.openSnackbar(response['Message'], 'success');
-          this._router.navigate([response.Data[0].link]);
+          this._router.navigate(['/dare-games/create-question-answer']);
         } else {
           this.isButtonDisabled = false;
           this._global.openSnackbar(response['Message'], 'error');
