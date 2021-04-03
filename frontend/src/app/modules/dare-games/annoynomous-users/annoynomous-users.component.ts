@@ -15,9 +15,10 @@ export class AnnoynomousUsersComponent implements OnInit {
   public username: String = 'User';
   public annoyName: String = '';
   public flag: boolean = false;
-  public userid: String = '';
+  public userid: any = '';
   public markArray: any[] = [];
   public markFlag: boolean = false;
+  public uname: any = '';
   constructor(
     private _generic: GenericService,
     private _global: GlobalService,
@@ -26,12 +27,15 @@ export class AnnoynomousUsersComponent implements OnInit {
   ) {
     this._route.params.pipe(map((p) => p.id)).subscribe((res: any) => {
       if (res) {
+        console.log(res);
+        this.uname = res;
         if (
-          typeof localStorage.getItem('dareid') === 'undefined' &&
-          localStorage.getItem('dareid') === undefined
+          !localStorage.getItem('dareencyptduser') ||
+          (localStorage.getItem('dareencyptduser') &&
+            res != localStorage.getItem('dareencyptduser'))
         ) {
           this.getDareUserDetails(res);
-        } else {
+        } else if (res === localStorage.getItem('dareencyptduser')) {
           _router.navigate(['/dare-games/create-question-answer']);
         }
       }
@@ -47,9 +51,9 @@ export class AnnoynomousUsersComponent implements OnInit {
         if (res['Status']) {
           console.log(res['Data']);
           if (res['Data'] && res['Data'].length > 0) {
-            this.getUserQuestionsDetails();
             this.username = res['Data'][0]['displayname'];
             this.userid = res['Data'][0]['_id'];
+            this.getUserQuestionsDetails();
           }
         } else {
           this._global.openSnackbar(res['Message'], 'Error');
@@ -71,7 +75,7 @@ export class AnnoynomousUsersComponent implements OnInit {
 
   getUserQuestionsDetails() {
     const url = `qna-by-userid/`;
-    this._generic.get(url, String(localStorage.getItem('dareid'))).subscribe(
+    this._generic.get(url, this.userid).subscribe(
       (res: any) => {
         if (res['Status']) {
           if (res['Data'] && res['Data'].length > 0) {
