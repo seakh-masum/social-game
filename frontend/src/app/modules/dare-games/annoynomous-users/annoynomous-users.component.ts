@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
@@ -23,20 +24,29 @@ export class AnnoynomousUsersComponent implements OnInit {
     private _generic: GenericService,
     private _global: GlobalService,
     private _route: ActivatedRoute,
-    private _router: Router
+    private _router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this._route.params.pipe(map((p) => p.id)).subscribe((res: any) => {
       if (res) {
-        console.log(res);
+        console.log(
+          atob(res),
+          atob(String(localStorage.getItem('dareencyptduser')))
+        );
         this.uname = res;
-        if (
-          !localStorage.getItem('dareencyptduser') ||
-          (localStorage.getItem('dareencyptduser') &&
-            res != localStorage.getItem('dareencyptduser'))
-        ) {
-          this.getDareUserDetails(res);
-        } else if (res === localStorage.getItem('dareencyptduser')) {
-          _router.navigate(['/dare-games/create-question-answer']);
+        if (isPlatformBrowser(platformId)) {
+          if (
+            !localStorage.getItem('dareencyptduser') ||
+            (localStorage.getItem('dareencyptduser') &&
+              atob(res) !=
+                atob(String(localStorage.getItem('dareencyptduser'))))
+          ) {
+            this.getDareUserDetails(res);
+          } else if (
+            atob(res) === atob(String(localStorage.getItem('dareencyptduser')))
+          ) {
+            _router.navigate(['/dare-games/create-question-answer']);
+          }
         }
       }
     });
@@ -72,7 +82,6 @@ export class AnnoynomousUsersComponent implements OnInit {
       }
     );
   }
-
   getUserQuestionsDetails() {
     const url = `qna-by-userid/`;
     this._generic.get(url, this.userid).subscribe(

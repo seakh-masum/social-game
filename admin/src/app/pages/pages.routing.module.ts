@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DareGameComponent } from './dare-game/dare-game.component';
 import { LoveCalculatorComponent } from './love-calculator/love-calculator.component';
 import { SecretMessagesComponent } from './secret-messages/secret-messages.component';
+import { SocialGamesComponent } from './social-games/social-games.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'secret-messages', pathMatch: 'full' },
@@ -20,6 +21,11 @@ const routes: Routes = [
     path: 'dare-games',
     component: DareGameComponent,
     data: { header: 'Dare Games' },
+  },
+  {
+    path: 'social-games',
+    component: SocialGamesComponent,
+    data: { header: 'Social Games' },
   },
 ];
 

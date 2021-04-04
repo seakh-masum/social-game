@@ -24,7 +24,7 @@ export class SetupMessagesComponent implements OnInit {
   public markArray: any[] = [];
   fileList: any;
   shareImgUrl: any =
-    'https://res.cloudinary.com/dzruu87x0/image/upload/c_thumb,w_200,g_face/v1617484678/screenshot-localhost_4200-2021.04.04-02_45_51_ddgdrq.png';
+    'https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1617484678/screenshot-localhost_4200-2021.04.04-02_45_51_ddgdrq.png';
   public shareFlag: any;
   public isQuestionAvailFlag: boolean = false;
   constructor(
@@ -79,6 +79,7 @@ export class SetupMessagesComponent implements OnInit {
         (res: any) => {
           if (res['Status']) {
             if (res['Data'] && res['Data'].length > 0) {
+              this.setData(res['Data'][0]);
               this.uname = localStorage.getItem('dareusername');
               this.upin = localStorage.getItem('dareuserpin');
               this.getUserQuestionsDetails();
@@ -99,6 +100,15 @@ export class SetupMessagesComponent implements OnInit {
           this._global.openSnackbar(err.Message, 'Error');
         }
       );
+  }
+  setData(data: any) {
+    localStorage.setItem('darelink', data.link);
+    localStorage.setItem('daretoken', data.token);
+    localStorage.setItem('daredisplayName', data.displayname);
+    localStorage.setItem('dareid', data._id);
+    localStorage.setItem('dareencyptduser', data.encyptduser);
+    localStorage.setItem('dareuserpin', data.userpin);
+    localStorage.setItem('dareusername', data.username);
   }
   async shareData() {
     this._dialog

@@ -326,7 +326,7 @@ router.get("/dare-user-details/:username", async (req, res) => {
     Message: "",
   };
   dareUser.findOne(
-    { encyptduser: req.params.username },
+    { username: Buffer.from(req.params.username, "base64").toString("binary") },
     async (err, params) => {
       if (err) {
         resType["Message"] = err.message;
@@ -389,7 +389,7 @@ router.get("/get-total-userdetails", async (req, res) => {
     dareGames = [],
     loveCrush = [];
   secretGames = await userDetails.find({});
-  dareGames = await dareDetails.find({});
+  dareGames = await dareUser.find({});
   loveCrush = await lovecrush.find({});
   try {
     resType["Data"] = [

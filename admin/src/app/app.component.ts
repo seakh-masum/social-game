@@ -18,6 +18,7 @@ export class AppComponent {
     { name: 'Secret Messages', routerLink: 'pages/secret-messages' },
     { name: 'Love Calculator', routerLink: 'pages/love-calculator' },
     { name: 'Dare Games', routerLink: 'pages/dare-games' },
+    { name: 'Social Games', routerLink: 'pages/social-games' },
   ];
   constructor(private _router: Router, public _generic: GenericService) {
     _generic.loginState.subscribe((flag) => {

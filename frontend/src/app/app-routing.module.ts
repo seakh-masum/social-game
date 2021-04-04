@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { DareGamesResolverService } from './resolver/router.resolver';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'secret-message', pathMatch: 'full' },
+  // { path: '', redirectTo: 'secret-message', pathMatch: 'full' },
   {
     path: 'secret-message',
+    data: { title: 'Secret Messages', isLoggedIn: false, activeIcon: '' },
     loadChildren: () =>
       import('./secret-message/secret-message.module').then(
         (m) => m.SecretMessageModule

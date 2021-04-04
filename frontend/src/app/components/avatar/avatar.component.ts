@@ -24,17 +24,17 @@ export class AvatarComponent implements OnInit {
             this.displayName != ''
               ? this.displayName.split('')[0] + this.displayName.split('')[1]
               : '';
-        } else if (window.location.href.includes('secret-message')) {
-          if (
-            typeof localStorage.getItem('displayName') !== undefined &&
-            localStorage.getItem('displayName') !== null
-          ) {
-            this.displayName = localStorage.getItem('displayName');
-            this.initials =
-              this.displayName != ''
-                ? this.displayName.split('')[0] + this.displayName.split('')[1]
-                : '';
-          }
+        }
+      } else if (window.location.href.includes('secret-message')) {
+        if (
+          typeof localStorage.getItem('displayName') !== undefined &&
+          localStorage.getItem('displayName') !== null
+        ) {
+          this.displayName = localStorage.getItem('displayName');
+          this.initials =
+            this.displayName != ''
+              ? this.displayName.split('')[0] + this.displayName.split('')[1]
+              : '';
         }
       }
     }
