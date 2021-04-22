@@ -7,11 +7,92 @@
       </div> -->
       <!-- <app-user-type [isLoggedIn]="isLoggedIn" [selectedValue]=""></app-user-type> -->
       <div>
-  
+        <mat-card *ngIf="!isHide">
+          <mat-card-header>
+            <mat-card-title
+              >Hey Everyone, Play awesome games and make fun with friends, Also
+              share your expirence to the Social Media.</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content fxLayout="column">
+            <div fxFlex fxLayout="row">
+              <div fxFlex>
+                <button mat-mini-fab color="primary">
+                  <mat-icon>comment</mat-icon>
+                </button>
+              </div>
+              <div fxFlex="70" fxLayoutAlign="center center">
+                Secret Messages
+              </div>
+              <div fxFlex fxLayoutAlign="center center">
+                <mat-icon
+                  style="cursor: pointer; color: purple"
+                  [routerLink]="['/secret-message/create']"
+                  (click)="isHide = true"
+                  >arrow_forward</mat-icon
+                >
+              </div>
+            </div>
+            <div fxFlex fxLayout="row">
+              <div fxFlex>
+                <button mat-mini-fab color="primary">
+                  <mat-icon>favorite</mat-icon>
+                </button>
+              </div>
+              <div fxFlex="70" fxLayoutAlign="center center">
+                Love Calculator
+              </div>
+              <div fxFlex fxLayoutAlign="center center">
+                <mat-icon
+                  style="cursor: pointer; color: purple"
+                  [routerLink]="['/love-crush']"
+                  (click)="isHide = true"
+                  >arrow_forward</mat-icon
+                >
+              </div>
+            </div>
+            <div fxFlex fxLayout="row">
+              <div fxFlex>
+                <button mat-mini-fab color="primary">
+                  <mat-icon>games</mat-icon>
+                </button>
+              </div>
+              <div fxFlex="70" fxLayoutAlign="center center">Dare Games</div>
+              <div fxFlex fxLayoutAlign="center center">
+                <mat-icon
+                  style="cursor: pointer; color: purple"
+                  [routerLink]="['/dare-games/auth']"
+                  (click)="isHide = true"
+                  >arrow_forward</mat-icon
+                >
+              </div>
+            </div>
+            <div fxFlex fxLayout="row">
+              <div fxFlex>
+                <button mat-mini-fab color="primary">
+                  <mat-icon>people</mat-icon>
+                </button>
+              </div>
+              <div fxFlex="70" fxLayoutAlign="center center">Flames</div>
+              <div fxFlex fxLayoutAlign="center center">
+                <mat-icon
+                  style="cursor: pointer; color: purple"
+                  [routerLink]="['/flames']"
+                  (click)="isHide = true"
+                  >arrow_forward</mat-icon
+                >
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
         <router-outlet></router-outlet>
         <!-- <ng-content></ng-content> -->
       </div>
     </div>
   </main>
-  <app-bottom-bar *ngIf="isLoggedIn" [activeIcon]="activeIcon" [class.hide-bar]="hideBar"></app-bottom-bar>
+  <app-bottom-bar
+    *ngIf="isLoggedIn"
+    [activeIcon]="activeIcon"
+    [class.hide-bar]="hideBar"
+  ></app-bottom-bar>
 </div>

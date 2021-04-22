@@ -17,7 +17,7 @@ const routes: Routes = [
   {
     path: 'messages/:id',
     component: ViewMessageComponent,
-    data: { title: 'Your Messages', isLoggedIn: true, activeIcon: 'message' },
+    data: { isLoggedIn: true, activeIcon: 'message' },
   },
   {
     path: 'sent/:id',
@@ -28,22 +28,17 @@ const routes: Routes = [
   {
     path: 'create',
     component: CreateProfileComponent,
-    data: {
-      title: 'Create Profile',
-      isLoggedIn: false,
-      userType: 'registration',
-    },
   },
   {
     path: 'share-link/:id',
     component: ShareLinkComponent,
-    data: { title: 'Share your link', isLoggedIn: true, activeIcon: 'share' },
-    resolve: [RouterResolverService]
+    data: { isLoggedIn: true, activeIcon: 'share' },
+    resolve: [RouterResolverService],
   },
   {
     path: 'view-profile',
     component: ViewProfileComponent,
-    data: { title: 'View Profile', isLoggedIn: true, activeIcon: 'profile' },
+    data: { isLoggedIn: true, activeIcon: 'profile' },
   },
 ];
 

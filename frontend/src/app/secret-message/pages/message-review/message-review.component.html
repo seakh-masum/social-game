@@ -9,37 +9,92 @@
   </a>
 </div> -->
 <mat-dialog-content>
-  <div id="msg" class="msg" [style.backgroundColor]="customBackgroundColor" (click)="changeBackgroundColor()" (swipeleft)="swipe($event.type)" (swiperight)="swipe($event.type)">
-    <p id="text" (click)="changeFontStyle()" [style.fontSize.px]="customFontSize">{{data.msg}}</p>
+  <div
+    *ngIf="!this.data['from']"
+    id="msg"
+    class="msg"
+    [style.backgroundColor]="customBackgroundColor"
+    (click)="changeBackgroundColor()"
+    (swipeleft)="swipe($event.type)"
+    (swiperight)="swipe($event.type)"
+  >
+    <p
+      id="text"
+      (click)="changeFontStyle()"
+      [style.fontSize.px]="customFontSize"
+    >
+      {{ data.msg }}
+    </p>
+  </div>
+  <div
+    *ngIf="this.data['from']"
+    id="msg"
+    class="msg"
+    [style.backgroundColor]="customBackgroundColor"
+    (click)="changeBackgroundColor()"
+    (swipeleft)="swipe($event.type)"
+    (swiperight)="swipe($event.type)"
+  >
+    <div
+      fxLayout="column"
+      id="text"
+      (click)="changeFontStyle()"
+      [style.fontSize.px]="customFontSize"
+    >
+      <span>Dare Games Result of {{ uname }}</span>
+      <div fxFlex fxLayout="row" fxLayoutGap="20px">
+        <h5 fxFlex fxLayoutAlign="start center">Name</h5>
+        <h5 fxFlex fxLayoutAlign="end center">Marks</h5>
+      </div>
+      <div
+        fxFlex
+        fxLayout="row"
+        fxLayoutGap="20px"
+        *ngFor="let item of data['msg']"
+      >
+        <span fxFlex fxLayoutAlign="start center">{{ item.username }}</span>
+        <span fxFlex fxLayoutAlign="end center">{{ item.marks }}</span>
+      </div>
+      <span>Authorized by Social-Games website.</span>
+      <span>For Play Dare Games go to following website:</span>
+      <h6>👉https://socail-game.web.app/dare-games/auth👈</h6>
+    </div>
   </div>
 </mat-dialog-content>
-<mat-dialog-actions align="center" [style.backgroundColor]="customBackgroundColor">
+<mat-dialog-actions
+  align="center"
+  [style.backgroundColor]="customBackgroundColor"
+>
   <!-- <button mat-flat-button color="primary" (click)="shareImage('msg')" [disabled]="isButtonDisabled">
-    
+
     <ng-template #showButtonBlock>Share Your Message</ng-template>
   </button>
   <button>Apply This Style</button> -->
-  <div *ngIf="isStyleSelected"  fxLayout="row" fxLayoutGap="10px">
+  <div *ngIf="isStyleSelected" fxLayout="row" fxLayoutGap="10px">
     <a mat-dialog-close>
-      <img src="assets/icons/cross.svg">
+      <img src="assets/icons/cross.svg" />
     </a>
     <a (click)="genarateImage()">
-      <img src="assets/icons/done.svg">
+      <img src="assets/icons/done.svg" />
     </a>
   </div>
-  <div *ngIf="!isGenarateImage && !isStyleSelected"  fxLayout="row" fxLayoutGap="10px">
+  <div
+    *ngIf="!isGenarateImage && !isStyleSelected"
+    fxLayout="row"
+    fxLayoutGap="10px"
+  >
     <a mat-dialog-close>
-      <img src="assets/icons/cross.svg">
+      <img src="assets/icons/cross.svg" />
     </a>
     <a (click)="shareImage()">
-      <img src="assets/icons/share3.svg">
+      <img src="assets/icons/share3.svg" />
     </a>
   </div>
   <!-- <ng-template #showProccesingBlock> -->
-    <div id="wave" *ngIf="isGenarateImage">
-      <span class="dot"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
+  <div id="wave" *ngIf="isGenarateImage">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
   <!-- </ng-template> -->
 </mat-dialog-actions>

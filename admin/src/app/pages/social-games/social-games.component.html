@@ -1,0 +1,60 @@
+<div fxLayout="row" fxLayoutGap="10px">
+  <mat-card fxFlex class="mat-elevation-z8">
+    <mat-card-header>
+      <mat-card-title>Frontend Panel</mat-card-title>
+      <mat-card-subtitle>Set icons and title of games</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Set Icon Name</mat-label>
+        <input type="text" matInput [(ngModel)]="frontendIcon.icon" />
+      </mat-form-field>
+      &nbsp;
+      <mat-form-field appearance="outline">
+        <mat-label>Set Title of Game</mat-label>
+        <input type="text" matInput [(ngModel)]="frontendIcon.title" />
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions fxLayout="row">
+      <button fxFlex mat-stroked-button color="accent" (click)="onPreview()">
+        Preview
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  <mat-card fxFlex class="mat-elevation-z8">
+    <mat-card-header>
+      <mat-card-title>Icon and Title Preview</mat-card-title>
+    </mat-card-header>
+    <mat-card-content fxLayout="column" fxLayoutGap="5px">
+      <div fxFlex fxLayout="row" *ngFor="let item of iconArray; let i = index">
+        <h2 fxFlex>{{ i + 1 }})</h2>
+        <div fxFlex>
+          <button mat-mini-fab color="primary">
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </button>
+        </div>
+        <span
+          fxFlex="70"
+          fxLayoutAlign="center center"
+          style="font-size: large"
+          >{{ item.title }}</span
+        >
+        <div fxFlex fxLayoutAlign="center center">
+          <mat-icon style="cursor: pointer; color: green" (click)="onEdit(i)"
+            >edit</mat-icon
+          >
+        </div>
+        <div fxFlex fxLayoutAlign="center center">
+          <mat-icon style="cursor: pointer; color: red" (click)="onCancel(i)"
+            >cancel</mat-icon
+          >
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions fxLayout="row">
+      <button fxFlex mat-stroked-button color="accent" (click)="onSave()">
+        Submit
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

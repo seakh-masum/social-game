@@ -9,7 +9,7 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class HeaderComponent implements OnInit {
   @Input() isLogoutVisible: boolean = true;
-  public header: string = 'Secret Message';
+  public header: string = 'Social Games';
   constructor(private _router: Router, private _global: GlobalService) {
     _global.headerSubject.subscribe((title) => {
       if (title) {

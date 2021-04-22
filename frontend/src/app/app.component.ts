@@ -12,12 +12,13 @@ import { GlobalService } from './services/global.service';
 })
 export class AppComponent {
   title = 'social-game';
-  isLogoutVisible: boolean = true;
-  isBottombarVisible: boolean = true;
-  isLoggedIn: boolean = true;
+  isLogoutVisible: boolean = false;
+  isBottombarVisible: boolean = false;
+  isLoggedIn: boolean = false;
   activeIcon: string = '';
   scrollTop: number = 0;
   hideBar: boolean = false;
+  public isHide: boolean = false;
   // iconList = [];
 
   constructor(
@@ -48,27 +49,35 @@ export class AppComponent {
         const routing_data: any =
             _activatedRoute.root.firstChild?.children[0].snapshot.data,
           current_url = _router.url.split('?')[0];
-
+        if (current_url === '/') {
+          this.isHide = false;
+        } else {
+          this.isHide = true;
+        }
         this.setPageConfig(current_url, routing_data);
       });
   }
 
   setPageConfig(current_url: string, routing_data: any) {
-    if (routing_data.title) {
+    console.log(routing_data, current_url);
+    if (routing_data) {
       this._title.setTitle(routing_data.title);
+      this.title = routing_data.title;
+      if (this.title == 'Flames') {
+        this._global.headerSubject.next(this.title);
+      } else if (this.title == 'Dare Games') {
+        this._global.headerSubject.next(this.title);
+      } else if (this.title == 'Secret Messages') {
+        this._global.headerSubject.next(this.title);
+      }
+      // this.isBottombarVisible = routing_data.isBottombarVisible !== undefined && routing_data.isBottombarVisible ? true : false;
+      this.isLoggedIn =
+        routing_data.isLoggedIn !== undefined && routing_data.isLoggedIn
+          ? true
+          : false;
+      this.activeIcon =
+        routing_data.activeIcon !== undefined ? routing_data.activeIcon : '';
     }
-    console.log(routing_data);
-    this.title = routing_data.title;
-    if (this.title == 'Flames') {
-      this._global.headerSubject.next(this.title);
-    }
-    // this.isBottombarVisible = routing_data.isBottombarVisible !== undefined && routing_data.isBottombarVisible ? true : false;
-    this.isLoggedIn =
-      routing_data.isLoggedIn !== undefined && routing_data.isLoggedIn
-        ? true
-        : false;
-    this.activeIcon =
-      routing_data.activeIcon !== undefined ? routing_data.activeIcon : '';
   }
 
   onScroll(event: any) {

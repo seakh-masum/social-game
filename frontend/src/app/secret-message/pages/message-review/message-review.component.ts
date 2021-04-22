@@ -29,6 +29,7 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
   changeDetected: boolean = false;
   isGenarateImage: boolean = false;
   isStyleSelected: boolean = true;
+  public uname: any;
 
   constructor(
     private _generic: GenericService,
@@ -38,8 +39,12 @@ export class MessageReviewComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.data.msg.length > 50) {
-      this.customFontSize = 25;
+    if (!this.data['from']) {
+      if (this.data.msg.length > 50) {
+        this.customFontSize = 25;
+      }
+    } else {
+      this.uname = localStorage.getItem('daredisplayName');
     }
   }
 
