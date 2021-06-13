@@ -1,0 +1,31 @@
+.box {
+  color: white;
+  text-decoration: none;
+  padding: 20px;
+  border-radius: 20px;
+
+  img {
+    max-width: 40px;
+    max-height: 40px;
+  }
+
+  &#facebook {
+    background: radial-gradient(81.45% 131.02% at 9.49% 7.26%, #3B5998 0%, #5581DD 100%);
+  }
+  &#whatsapp {
+    background: linear-gradient(128.24deg, #0EB74D 13.71%, #33EF79 91.23%);
+  }
+  &#device {
+    background: radial-gradient(100% 967.27% at 0% 0%, #812FF7 0%, #01F2F2 100%);
+  }
+}
+
+.mat-flat-button {
+  border-radius: 20px;
+  height: 40px;
+}
+
+.heading {
+  text-align: center;
+  padding: 20px;
+}

@@ -1,0 +1,41 @@
+<!-- <div class="floating-btn">
+  <button mat-fab color="primary" type="submit" (click)="onReload()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div> -->
+<div fxLayout="column" fxLayoutGap="20px">
+  <div class="heading">
+    <h2>Your Messages</h2>
+  </div>
+  <div>
+    <app-avatar></app-avatar>
+  </div>
+  <div class="msg-block">
+    <ng-container *ngIf="messages && messages.length > 0; else noMessageBlock">
+      <mat-card
+        *ngFor="let item of messages; let i = index"
+        class="msg-list"
+        fxLayout="row"
+      >
+        <div fxFlex="90" fxLayout="column">
+          <p fxLayoutAlign="start center">{{ item.message }}</p>
+          <span fxLayoutAlign="start center">{{ item.date | date }}</span>
+          <!-- <div [id]="i" class="talk-bubble tri-right border round btm-left-in">
+            <div class="talktext">
+              <p>{{ item.message }}</p>
+            </div>
+          </div> -->
+          <!-- <canvas [id]="i"  width="200" height="100" style="border:1px solid #d3d3d3;">
+            {{item.message}}
+          </canvas> -->
+        </div>
+        <div fxLayoutAlign="center center" fxFlex="10" (click)="shareData(item.message)">
+          <img src="assets/icons/share.svg">
+        </div>
+      </mat-card>
+    </ng-container>
+    <ng-template #noMessageBlock>
+      <div class="no-msg">No Message yet recieved!!</div>
+    </ng-template>
+  </div>
+</div>

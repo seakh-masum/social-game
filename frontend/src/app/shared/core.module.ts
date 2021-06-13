@@ -19,6 +19,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatRadioModule } from '@angular/material/radio';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [],
@@ -44,6 +45,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatSlideToggleModule,
     MatButtonToggleModule,
     MatRadioModule,
+    MatGridListModule,
   ],
   exports: [
     HttpClientModule,
@@ -66,6 +68,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatSlideToggleModule,
     MatButtonToggleModule,
     MatRadioModule,
+    MatGridListModule,
   ],
 })
 export class CoreModule {}

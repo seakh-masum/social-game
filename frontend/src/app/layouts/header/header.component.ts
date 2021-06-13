@@ -9,6 +9,10 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class HeaderComponent implements OnInit {
   @Input() isLogoutVisible: boolean = true;
+
+  @Input() title: string = '';
+
+  @Input() headerIcon: string = '';
   public header: string = 'Social Games';
   constructor(private _router: Router, private _global: GlobalService) {
     _global.headerSubject.subscribe((title) => {
@@ -23,5 +27,13 @@ export class HeaderComponent implements OnInit {
   onLogout() {
     localStorage.clear();
     this._router.navigate(['/secret-message/create']);
+  }
+
+  onShare() {
+
+  }
+
+  onReload() {
+    window.location.reload();
   }
 }

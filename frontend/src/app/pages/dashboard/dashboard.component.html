@@ -1,0 +1,17 @@
+<h1 class="heading">Dashboard</h1>
+
+<div class="grid-container">
+  <div class="box" *ngFor="let item of tiles" [class.span2]="item.cols==2" [ngClass]="item.class" (click)="onRoutes(item.routes)">
+    <mat-icon>{{item.icon}}</mat-icon>
+    <p>{{item.text}}</p>
+  </div>
+</div>
+
+<h1 class="heading">Coming Soon</h1>
+
+<div class="grid-container">
+  <div class="box" *ngFor="let item of comingSoon" [class.span2]="item.cols==2" [ngClass]="item.class" (click)="onOpenSnackbar(item.text)">
+    <mat-icon>{{item.icon}}</mat-icon>
+    <p>{{item.text}}</p>
+  </div>
+</div>

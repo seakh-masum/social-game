@@ -1,8 +1,12 @@
-<header fxLayout="row">
-  <div fxFlex="90" fxLayoutAlign="start center">
-    <h1>{{ header }}</h1>
-  </div>
-  <div fxFlex="10" fxLayoutAlign="center center" *ngIf="isLogoutVisible">
-    <img src="assets/icons/logout.svg" (click)="onLogout()" />
+<header fxLayout="row" fxLayoutAlign="center center">
+  <h1>{{ title }}</h1>
+  <div class="icon" [ngSwitch]="headerIcon">
+    <div *ngSwitchCase="'share'">
+      <img src="assets/img/share.svg" (click)="onShare()"/>
+    </div>
+    <div *ngSwitchCase="'reload'">
+      <img src="assets/img/reload.svg" (click)="onReload()"/>
+    </div>
+    <div *ngSwitchDefault></div>
   </div>
 </header>

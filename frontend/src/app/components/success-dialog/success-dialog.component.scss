@@ -1,0 +1,25 @@
+.container {
+  position: relative;
+
+  .mat-icon {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    color: #cdcdcd;
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+  }
+
+  img {
+    width: 120px;
+  }
+
+  h3 {
+    text-align: center;
+  }
+
+  button {
+    width: 100%;
+  }
+}

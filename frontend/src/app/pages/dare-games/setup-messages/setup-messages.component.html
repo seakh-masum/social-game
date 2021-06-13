@@ -1,0 +1,188 @@
+<div class="heading" fxLayout="row">
+  <h2 fxFlex>{{ shareFlag ? "Share your link" : "Create your link" }}</h2>
+  <button
+    fxFlex="15"
+    mat-mini-fab
+    color="warn"
+    fxLayoutAlign="center center"
+    [disabled]="markArray && markArray.length <= 0"
+    (click)="shareData()"
+  >
+    <mat-icon>score</mat-icon>
+  </button>
+</div>
+<app-avatar></app-avatar>
+<br />
+<mat-card class="mat-elevation-z9" style="border: groove 3px purple">
+  <div fxLayout="row">
+    <h5 fxFlex fxLayoutAlign="start center">user :</h5>
+    <span fxFlex fxLayoutAlign="start start">{{ uname }}</span>
+  </div>
+  <div fxLayout="row">
+    <h5 fxFlex fxLayoutAlign="start center">pin :</h5>
+    <span fxFlex fxLayoutAlign="start start">{{ upin }}</span>
+  </div>
+</mat-card>
+<br />
+<!-- Question And Answer -->
+<div *ngIf="shareFlag != undefined && !shareFlag">
+  <mat-card fxLayout="row">
+    <h3 fxFlex="85">Add or Modify Your Questions</h3>
+    <button
+      *ngIf="isQuestionAvailFlag"
+      fxFlex
+      mat-icon-button
+      color="warn"
+      (click)="onEditQ()"
+    >
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </mat-card>
+  <br />
+  <mat-card
+    style="margin-top: 10px"
+    *ngFor="let item of questions; let i = index"
+  >
+    <mat-card-header>
+      <mat-card-title
+        ><mat-checkbox [(ngModel)]="item.checkFlag"
+          >Question {{ i + 1 }}</mat-checkbox
+        ></mat-card-title
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <h3>
+        {{ item.question }}
+      </h3>
+      <h4>Answer :</h4>
+      <mat-radio-group [(ngModel)]="item.answerValue">
+        <mat-radio-button
+          *ngFor="let season of item['answers']"
+          [value]="season"
+        >
+          {{ season }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <div *ngIf="shareFlag != undefined && !shareFlag">
+    <button
+      mat-stroked-button
+      color="accent"
+      type="submit"
+      (click)="onSubmit()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+<!-- Share Link -->
+<div *ngIf="shareFlag != undefined && shareFlag">
+  <form fxLayout="column" fxLayoutGap="20px">
+    <div fxLayoutAlign="center center">
+      <mat-form-field appearance="fill">
+        <input
+          disabled
+          matInput
+          [(ngModel)]="url"
+          [ngModelOptions]="{ standalone: true }"
+          #name
+        />
+        <img
+          matSuffix
+          [cdkCopyToClipboard]="url"
+          src="assets/icons/copy_to_clipboard.svg"
+          (click)="urlCopied()"
+        />
+      </mat-form-field>
+    </div>
+    <div gdAreas="device device | wap fb" gdGap="16px" gdRows="auto auto">
+      <a
+        (click)="sendToDevice(name.value)"
+        class="box"
+        id="device"
+        gdArea="device"
+        fxLayout="column"
+        fxLayoutGap="10px"
+      >
+        <div fxLayoutAlign="center center">
+          <img src="assets/icons/device.svg" />
+        </div>
+        <mat-label fxLayoutAlign="center center">To Device</mat-label>
+      </a>
+      <a
+        class="box"
+        id="whatsapp"
+        gdArea="wap"
+        fxLayout="column"
+        fxLayoutGap="10px"
+        [href]="wapUrl"
+      >
+        <div fxLayoutAlign="center center">
+          <img src="assets/img/whatsapp.svg" />
+        </div>
+        <mat-label fxLayoutAlign="center center">Whatsapp</mat-label>
+      </a>
+      <a
+        class="box"
+        id="facebook"
+        gdArea="fb"
+        fxLayout="column"
+        fxLayoutGap="10px"
+        [href]="fbUrl"
+      >
+        <div fxLayoutAlign="center center">
+          <img src="assets/img/facebook.svg" />
+        </div>
+        <mat-label fxLayoutAlign="center center">Facebook</mat-label>
+      </a>
+    </div>
+  </form>
+  <br />
+  <mat-card fxLayout="row">
+    <h3 fxFlex="85">Your Selected Questions</h3>
+    <button fxFlex mat-icon-button color="accent" (click)="onEditQ()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </mat-card>
+  <br />
+  <!-- User's created q n a -->
+  <mat-card
+    style="margin-top: 10px"
+    *ngFor="let item of questions; let i = index"
+  >
+    <mat-card-header fxLayout="row">
+      <mat-card-title fxFlex fxLayoutAlign="start start"
+        >Question {{ i + 1 }}
+      </mat-card-title>
+      <div fxFlex fxLayoutAlign="end center">
+        <mat-icon
+          style="cursor: pointer"
+          (click)="item.disabledFlag = !item.disabledFlag"
+          >edit</mat-icon
+        >
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <h3>
+        {{ item.question }}
+      </h3>
+      <h4>Answer :</h4>
+      <mat-radio-group [(ngModel)]="item.answerValue">
+        <mat-radio-button
+          [disabled]="item.disabledFlag"
+          *ngFor="let season of item['answers']"
+          [value]="season"
+        >
+          {{ season }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card-content>
+    <mat-card-actions *ngIf="!item.disabledFlag">
+      <button mat-stroked-button color="accent" (click)="onSubmit()">
+        Save
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
