@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Hachi+Maru+Pop&family=Pacifico&family=Permanent+Marker&family=Shadows+Into+Light&display=swap');
+
+.msg {
+  display: flex;
+  align-items: center;
+  place-content: center;
+  // background-color: radial-gradient(100% 967.27% at 0% 0%, #812FF7 0%, #01F2F2 100%);
+  // background-color: violet;
+  color: #fff;
+  min-height: 400px;
+  text-align: center;
+  width: 100%;
+  font-family: 'Dancing Script', cursive;
+  min-width: 80vw;
+}
+
+// a {
+//   // padding: 10px;
+// }
+

@@ -19,6 +19,8 @@ export class AppComponent {
   scrollTop: number = 0;
   hideBar: boolean = false;
   public isHide: boolean = false;
+  headerIcon: string = '';
+
   // iconList = [];
 
   constructor(
@@ -46,6 +48,9 @@ export class AppComponent {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((params) => {
         _router.navigated = false; // the Router into believing it's last link wasn't previously loaded
+
+        console.log(_activatedRoute);
+        
         const routing_data: any =
             _activatedRoute.root.firstChild?.children[0].snapshot.data,
           current_url = _router.url.split('?')[0];
@@ -71,12 +76,15 @@ export class AppComponent {
         this._global.headerSubject.next(this.title);
       }
       // this.isBottombarVisible = routing_data.isBottombarVisible !== undefined && routing_data.isBottombarVisible ? true : false;
+
+      this.title = routing_data.title; 
       this.isLoggedIn =
         routing_data.isLoggedIn !== undefined && routing_data.isLoggedIn
           ? true
           : false;
       this.activeIcon =
         routing_data.activeIcon !== undefined ? routing_data.activeIcon : '';
+      this.headerIcon = routing_data.headerIcon !== undefined ? routing_data.headerIcon : '';
     }
   }
 

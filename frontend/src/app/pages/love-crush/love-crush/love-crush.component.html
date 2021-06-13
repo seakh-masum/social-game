@@ -1,0 +1,15 @@
+<h1 class="heading">Check your result</h1>
+
+<div class="grid-container">
+  <mat-form-field appearance="fill">
+    <!-- <mat-label>Your Name</mat-label> -->
+    <input matInput placeholder="Enter your name" [(ngModel)]="loveJSON.uname" #name/>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <!-- <mat-label>Crush Name</mat-label> -->
+    <input matInput placeholder="Enter crush name" [(ngModel)]="loveJSON.crushname" #crush/>
+  </mat-form-field>
+
+  <button mat-raised-button color="warn" (click)="onSubmit()">Calculate</button>
+
+</div>

@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
+
+.container {
+  h2 {
+    text-transform: uppercase;
+    letter-spacing: 7px;
+    padding: 20px 0;
+    font-family: 'Montserrat', sans-serif;
+
+    &.uname {
+      color: #812FF7;
+    }
+
+    &.pname {
+      color: #13DFDF;
+    }
+  }
+}

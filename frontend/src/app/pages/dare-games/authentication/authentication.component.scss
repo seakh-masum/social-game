@@ -1,0 +1,62 @@
+::ng-deep {
+  .mat-button-toggle {
+    width: 130px !important;
+    &-group {
+      border-radius: 30px !important;
+    }
+    &-checked {
+      color: #fff !important;
+      background: radial-gradient(
+        75.48% 774.66% at 11.31% 14.29%,
+        #812ff7 0%,
+        #01f2f2 100%
+      ) !important;
+    }
+  }
+}
+
+#tab {
+  padding: 30px;
+}
+.heading {
+  text-align: center;
+  padding: 20px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  border-radius: 30px;
+  background: #f2f2f2;
+  margin: 0;
+  cursor: pointer;
+  // transition: .4s;
+  z-index: 1;
+  &Text {
+    text-decoration: none;
+    width: 50%;
+    padding: 12px 20px;
+    text-align: center;
+    &.active {
+      background: radial-gradient(
+        75.48% 774.66% at 11.31% 14.29%,
+        #812ff7 0%,
+        #01f2f2 100%
+      );
+      color: white;
+      border-radius: 30px;
+      width: 55%;
+      // transition: .4s;
+      z-index: 2;
+    }
+  }
+}
+
+.form {
+  button {
+    margin-top: 20px;
+  }
+  mat-checkbox {
+    padding: 5px;
+  }
+}

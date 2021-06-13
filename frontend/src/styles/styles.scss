@@ -2,7 +2,6 @@
 @import "./material.scss";
 @import "./icon.scss";
 @import "./panel.scss";
-@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap");
 
 html,
 body {
@@ -22,13 +21,14 @@ span {
   font-family: "Poppins", sans-serif;
 }
 
-.heading {
-  text-align: center;
-  padding: 20px;
-  h2 {
-    font-family: "Raleway", sans-serif;
-    font-size: 26px;
-    font-weight: 700;
+h1.heading {
+  font-weight: 600;
+  font-size: 26px;
+  padding: 20px 0;
+  color: #3C3A3A;
+
+  &.center {
+    text-align: center;
   }
 }
 

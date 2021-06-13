@@ -1,0 +1,15 @@
+<h1 class="heading center">Checking your relation</h1>
+
+<div class="container" fxLayout="column">
+  <h2 class="uname"  fxLayoutAlign="start center">
+    <span #uname *ngFor="let fs of firstNameArr">{{fs}}</span>
+  </h2>
+  
+  <div class="percentage" fxLayoutAlign="center center">
+    <img src="assets/img/connected.svg" alt="">
+  </div>
+
+  <h2 class="pname"  fxLayoutAlign="end center">
+    <span #pname *ngFor="let ls of lastNameArr">{{ls}}</span>
+  </h2>
+</div>

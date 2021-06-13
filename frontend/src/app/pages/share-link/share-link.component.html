@@ -1,0 +1,83 @@
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ location }}" />
+<meta property="og:title" content="SocialGame" />
+<meta property="og:description" content="{{ userMeta }}" />
+<meta
+  property="og:image"
+  content="https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png"
+/>
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta
+  property="twitter:url"
+  content="https://socail-game.web.app/secret-message/create"
+/>
+<meta property="twitter:title" content="SocialGame" />
+<meta property="twitter:description" content="{{ userMeta }}" />
+<meta
+  property="twitter:image"
+  content="https://res.cloudinary.com/dzruu87x0/image/upload/c_scale,h_200,w_200/v1612033640/secret-message_lgicit.png"
+/>
+<form fxLayout="column" fxLayoutGap="20px">
+  <h2 class="heading center">Share your link</h2>
+  <div fxLayoutAlign="center center">
+    <mat-form-field appearance="fill">
+      <input
+        disabled
+        matInput
+        placeholder="Enter your name"
+        [(ngModel)]="url"
+        [ngModelOptions]="{ standalone: true }"
+        #name
+      />
+      <img
+        matSuffix
+        [cdkCopyToClipboard]="url"
+        src="assets/icons/copy_to_clipboard.svg"
+        (click)="urlCopied()"
+      />
+    </mat-form-field>
+  </div>
+  <div gdAreas="device device | wap fb" gdGap="16px" gdRows="auto auto">
+    <a
+      (click)="sendToDevice(name.value)"
+      class="box"
+      id="device"
+      gdArea="device"
+      fxLayout="column"
+      fxLayoutGap="10px"
+    >
+      <div fxLayoutAlign="center center">
+        <img src="assets/icons/device.svg" />
+      </div>
+      <mat-label fxLayoutAlign="center center">To Device</mat-label>
+    </a>
+    <a
+      class="box"
+      id="whatsapp"
+      gdArea="wap"
+      fxLayout="column"
+      fxLayoutGap="10px"
+      [href]="wapUrl"
+    >
+      <div fxLayoutAlign="center center">
+        <img src="assets/img/whatsapp.svg" />
+      </div>
+      <mat-label fxLayoutAlign="center center">Whatsapp</mat-label>
+    </a>
+    <a
+      class="box"
+      id="facebook"
+      gdArea="fb"
+      fxLayout="column"
+      fxLayoutGap="10px"
+      [href]="fbUrl"
+    >
+      <div fxLayoutAlign="center center">
+        <img src="assets/img/facebook.svg" />
+      </div>
+      <mat-label fxLayoutAlign="center center">Facebook</mat-label>
+    </a>
+  </div>
+</form>
